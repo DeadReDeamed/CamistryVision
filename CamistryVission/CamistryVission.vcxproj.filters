@@ -20,9 +20,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\VisualCamistryJSON.json">
+    <CopyFileToFolders Include="tutorial_camera_params.yml">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="VisualCamistryJSON.json">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

@@ -11,8 +11,11 @@ void generateImages();
 
 inline static bool readCameraParameters(std::string filename, cv::Mat& camMatrix, cv::Mat& distCoeffs) {
     cv::FileStorage fs(filename, cv::FileStorage::READ);
-    if (!fs.isOpened())
+    if (!fs.isOpened()) {
+        std::cout << "Could not open file!" << std::endl;
         return false;
+    }
+    std::cout << "Succesfully opened file!" << std::endl;
     fs["camera_matrix"] >> camMatrix;
     fs["distortion_coefficients"] >> distCoeffs;
     return true;
@@ -46,7 +49,7 @@ int main()
 
     cv::Mat cameraMatrix, distCoeffs;
 
-    readCameraParameters("C:\\opencv2\\source\\opencv_contrib\\modules\\aruco\\samples\\tutorial_camera_params.yml",
+    readCameraParameters("tutorial_camera_params.yml",
         cameraMatrix, distCoeffs);
 
 
