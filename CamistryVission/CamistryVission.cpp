@@ -18,6 +18,7 @@ inline static bool readCameraParameters(std::string filename, cv::Mat& camMatrix
     return true;
 }
 
+
 int main()
 {
     /* generateImages();
