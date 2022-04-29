@@ -9,6 +9,7 @@ As a project for Avans University Of Applied Sciences our projectgroup are worki
 - David Stulemeijer
 - Jasper Baijens
 - Jeroen Visser
+- Luca Brugel
 
 #### Code style guide
 https://google.github.io/styleguide/cppguide.html
