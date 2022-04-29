@@ -1,0 +1,201 @@
+{
+  "atoms": [
+    {
+      "name": "Waterstof",
+      "symbol": "H",
+      "protons": 1,
+      "neutrons": 1,
+      "elektrons": [
+        1
+      ],
+      "description": "Waterstof is een atoom",
+      "mass": 1.00784,
+      "atomnumber": 1
+    },
+    {
+      "name": "Koolstof",
+      "symbol": "C",
+      "protons": 6,
+      "neutrons": 8,
+      "elektrons": [
+        4
+      ],
+      "description": "Koolstof is een atoom",
+      "mass": 12.001,
+      "atomnumber": 6
+    },
+    {
+      "name": "Stikstof",
+      "symbol": "N",
+      "protons": 7,
+      "netrons": 10,
+      "elektrons": [
+        5
+      ],
+      "description": "Stikstof is een atoom",
+      "mass": 14.0067,
+      "atomnumber": 7
+    },
+    {
+      "name": "Zuurstof",
+      "symbol": "O",
+      "protons": 8,
+      "netrons": 12,
+      "elektrons": [
+        2,
+        6
+      ],
+      "description": "Zuurstof is een atoom",
+      "mass": 15.999,
+      "atomnumber": 8
+    },
+    {
+      "name": "Natrium",
+      "symbol": "Na",
+      "protons": 11,
+      "netrons": 18,
+      "elektrons": [
+        2,
+        8,
+        1
+      ],
+      "description": "Natrium is een atoom",
+      "mass": 22.989769,
+      "atomnumber": 11
+    },
+    {
+      "name": "Chloor",
+      "symbol": "Cl",
+      "protons": 17,
+      "netrons": 28,
+      "elektrons": [
+        2,
+        8,
+        7
+      ],
+      "description": "Chloor is een atoom",
+      "mass": 35.453,
+      "atomnumber": 17
+    },
+    {
+      "name": "Uranium",
+      "symbol": "U",
+      "protons": 92,
+      "netrons": 217,
+      "elektrons": [
+        2,
+        8,
+        18,
+        32,
+        21,
+        9,
+        2
+      ],
+      "description": "Uranium is een atoom",
+      "mass": 238.02891,
+      "atomnumber": 92
+    }
+  ],
+  "substances": [
+    {
+      "name": "Waterstof",
+      "symbol": "H2",
+      "description": "In dit geval is waterstof een stof en geen atoom",
+      "atoms": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Water",
+      "symbol": "H2O",
+      "description": "Water is vloeibaar",
+      "atoms": [
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "name": "Methaan",
+      "symbol": "CH4",
+      "description": "Water is vloeibaar",
+      "atoms": [
+        6,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Ammoniak",
+      "symbol": "NH3",
+      "description": "Ja, dit koop je in de AH",
+      "atoms": [
+        7,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Keukenzout",
+      "symbol": "NaCl",
+      "description": "Dit staat in je keuken",
+      "atoms": [
+        11,
+        17
+      ]
+    },
+    {
+      "name": "Koolstofmono-oxide",
+      "symbol": "CO",
+      "description": "Adem dit niet in",
+      "atoms": [
+        6,
+        8
+      ]
+    },
+    {
+      "name": "Koolstofdioxide",
+      "symbol": "CO2",
+      "description": "Broeikaseffect",
+      "atoms": [
+        6,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "Hydrochloride",
+      "symbol": "HCl",
+      "description": "Niet met water mengen!",
+      "atoms": [
+        1,
+        17
+      ]
+    },
+    {
+      "name": "Zoutzuur",
+      "symbol": "HCl.H2O",
+      "description": "Je moest t met water mengen....",
+      "atoms": [
+        1,
+        17,
+        1,
+        1,
+        8
+      ]
+    },
+    {
+      "name": "Stikstof",
+      "symbol": "N2",
+      "description": "Broeikaseffect",
+      "atoms": [
+        7,
+        7
+      ]
+    }
+  ]
+}
