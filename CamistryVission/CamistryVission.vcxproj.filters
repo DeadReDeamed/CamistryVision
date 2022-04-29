@@ -19,4 +19,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VisualCamistryJSON.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+  </ItemGroup>
 </Project>
