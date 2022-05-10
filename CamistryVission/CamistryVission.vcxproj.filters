@@ -18,11 +18,19 @@
     <ClCompile Include="CamistryVission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tigl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\VisualCamistryJSON.json">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tigl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
