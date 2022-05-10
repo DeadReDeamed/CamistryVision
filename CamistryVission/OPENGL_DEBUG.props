@@ -9,6 +9,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\opencv\build\install\x64\vc17\lib;$(SolutionDir)CamistryVission\lib\glfw-3.3.2\$(Platform);$(SolutionDir)CamistryVission\lib\glew-2.1.0\lib\Release\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
