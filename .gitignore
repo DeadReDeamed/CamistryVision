@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+!CamistryVission\lib\glfw-3.3.2\x64
+
 # User-specific files
 *.rsuser
 *.suo
@@ -351,4 +353,4 @@ MigrationBackup/
 
 # Camistry Vission
 opencv/build
-!CamistryVission/lib/*
+
