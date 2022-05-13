@@ -3,7 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-!CamistryVission/lib/glfw-3.3.2/x64/
+!CamistryVission/lib/
 
 # User-specific files
 *.rsuser
@@ -351,6 +351,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Camistry Vission
-opencv/build
-
+!CamistryVission/lib/glew-2.1./*
