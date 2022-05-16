@@ -153,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Data\Matter\Atom.h" />
+    <ClInclude Include="Data\Matter\Matter.h" />
+    <ClInclude Include="Data\Matter\Molecule.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
