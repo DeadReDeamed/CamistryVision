@@ -5,10 +5,11 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\opencv\build\install\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV_DIR)\build\install\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)\opencv\build\install\x64\vc17\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)\build\install\x64\vc17\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_aruco455d.lib;opencv_calib3d455d.lib;opencv_core455d.lib;opencv_dnn455d.lib;opencv_features2d455d.lib;opencv_flann455d.lib;opencv_gapi455d.lib;opencv_highgui455d.lib;opencv_imgcodecs455d.lib;opencv_imgproc455d.lib;opencv_ml455d.lib;opencv_objdetect455d.lib;opencv_photo455d.lib;opencv_stitching455d.lib;opencv_video455d.lib;opencv_videoio455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
