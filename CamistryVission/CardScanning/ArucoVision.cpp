@@ -1,7 +1,10 @@
 #include "ArucoVision.h"
 
 #include <opencv2/calib3d.hpp>
-//class ArucoVisionImpl : public ArucoVision {
+
+namespace Aruco {
+   
+    //class ArucoVisionImpl : public ArucoVision {
     cv::Mat cameraMatrix, distCoeffs;
     cv::Ptr<cv::aruco::Dictionary> dictionary;
 
@@ -14,7 +17,7 @@
         fs.release();
         return true;
     }
-
+    ArucoVision::ArucoVision() {}
     ArucoVision::ArucoVision(std::string cameraParamPath,
         cv::aruco::PREDEFINED_DICTIONARY_NAME dictionaryType) {
         printf("Loading camera parameters");
@@ -24,20 +27,21 @@
         dictionary = cv::aruco::getPredefinedDictionary(dictionaryType);
     }
 
-    ArucoVision::SimpleMarkerData ArucoVision::detectMarkers(cv::InputArray image) {
-        ArucoVision::SimpleMarkerData markerdata;
+    SimpleMarkerData ArucoVision::detectMarkers(cv::InputArray image) {
+        Aruco::SimpleMarkerData markerdata;
         cv::aruco::detectMarkers(image, dictionary, markerdata.corners, markerdata.ids);
         return markerdata;
     }
-    ArucoVision::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
-        ArucoVision::AdvancedMarkerData markerdata;
+    Aruco::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
+        Aruco::AdvancedMarkerData markerdata;
         cv::aruco::estimatePoseSingleMarkers(corners, 0.05, cameraMatrix, distCoeffs,
             markerdata.rvecs, markerdata.tvecs);
         return markerdata;
     }
-    void ArucoVision::drawFrameAxes(cv::InputOutputArray image, int markerAmount, ArucoVision::AdvancedMarkerData markerdata) {
+    void ArucoVision::drawFrameAxes(cv::InputOutputArray image, int markerAmount, Aruco::AdvancedMarkerData markerdata) {
         for (int i = 0; i < markerAmount; i++) {
             cv::drawFrameAxes(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
         }
     }
+}
 //}
