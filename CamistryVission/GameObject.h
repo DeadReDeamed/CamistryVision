@@ -3,7 +3,8 @@
 
 #include <list>
 #include "glm/vec3.hpp"
-#include "Components/component.h"
+#include "Components/Component.h"
+#include "Components/DrawComponent.h"
 
 namespace camvis
 {
@@ -11,7 +12,7 @@ namespace camvis
 	{
 	private:
 		glm::vec3 position, rotation, scale;
-		// std::list<DrawComponent*> drawComponents;
+	    std::list<DrawComponent*> drawComponents;
 		std::list<Component*> components;
 		std::list<GameObject*> gameObjects;
 
