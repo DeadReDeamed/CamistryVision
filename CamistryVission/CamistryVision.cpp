@@ -1,10 +1,7 @@
 #include <iostream>
 #include <opencv2/aruco.hpp>
-
 #include "tigl.h"
 #include <GLFW/glfw3.h>
-
-
 
 double lastUpdateTime;
 void update();
@@ -41,7 +38,6 @@ int main()
 
 	return 0;
 }
-
 
 void init()
 {

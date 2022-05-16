@@ -143,6 +143,8 @@
   <ItemGroup>
     <ClCompile Include="CamistryVision.cpp" />
     <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="Util\FiloIO.cpp" />
+    <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
@@ -150,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h" />
+    <ClInclude Include="Util\FiloIO.h" />
+    <ClInclude Include="Util\JSONParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
