@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CamistryVision.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="tigl.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
