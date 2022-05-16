@@ -141,14 +141,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArucoVision.cpp" />
     <ClCompile Include="CamistryVission.cpp" />
     <ClCompile Include="tigl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+    <None Include="Resources\cam_params.yml" />
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArucoVision.h" />
     <ClInclude Include="tigl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
