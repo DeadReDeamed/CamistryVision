@@ -21,15 +21,23 @@
     <ClCompile Include="tigl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ArucoVision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\VisualCamistryJSON.json">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+    <None Include="Resources\cam_params.yml">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArucoVision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
