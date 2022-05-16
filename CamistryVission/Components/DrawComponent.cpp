@@ -1,5 +1,4 @@
 #include "DrawComponent.h"
-#include <string>
 
 namespace camvis {
 	namespace component
