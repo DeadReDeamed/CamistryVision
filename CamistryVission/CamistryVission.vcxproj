@@ -141,16 +141,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CamistryVision.cpp" />
+    <ClCompile Include="ArucoVision.cpp" />
+    <ClCompile Include="CamistryVission.cpp" />
     <ClCompile Include="tigl.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+    <None Include="Resources\cam_params.yml" />
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArucoVision.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />
