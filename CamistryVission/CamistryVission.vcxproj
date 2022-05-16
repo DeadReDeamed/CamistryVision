@@ -143,12 +143,14 @@
   <ItemGroup>
     <ClCompile Include="CamistryVision.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="CardScanning\ArucoHandler.cpp" />
+    <ClCompile Include="CardScanning\ArucoVision.cpp" />
     <ClCompile Include="tigl.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Dowloads\OPENCV_DEBUG.props" />
+    <None Include="Resources\cam_params.yml" />
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +159,9 @@
     <ClInclude Include="Data\Matter\Matter.h" />
     <ClInclude Include="Data\Matter\Molecule.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="CardScanning\ArucoHandler.h" />
+    <ClInclude Include="CardScanning\ArucoVision.h" />
+    <ClInclude Include="CardScanning\MarkerData.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />
