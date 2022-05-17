@@ -158,6 +158,7 @@
     <ClInclude Include="Data\Matter\Atom.h" />
     <ClInclude Include="Data\Matter\Matter.h" />
     <ClInclude Include="Data\Matter\Molecule.h" />
+    <ClInclude Include="Data\Scene.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="CardScanning\ArucoHandler.h" />
     <ClInclude Include="CardScanning\ArucoVision.h" />

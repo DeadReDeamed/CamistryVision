@@ -79,5 +79,8 @@
     <ClInclude Include="CardScanning\MarkerData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Data\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
