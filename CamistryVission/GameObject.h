@@ -12,12 +12,12 @@ namespace camvis
 	{
 	private:
 		glm::vec3 position, rotation, scale;
-	    std::list<DrawComponent*> drawComponents;
-		std::list<Component*> components;
+	    std::list<component::DrawComponent*> drawComponents;
+		std::list<component::Component*> components;
 		std::list<GameObject*> gameObjects;
 
 	public:
-		void addComponent(Component& component);
+		void addComponent(component::Component& component);
 		void update(float deltaTime);
 		void draw();
 
