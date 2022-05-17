@@ -13,12 +13,14 @@ namespace Aruco {
 			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(img);
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
 
+			if (simpleData.ids.size() <= 0) continue;
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
 				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i]);
 				markerList.push_back(md);
 			}
 			DetectedMarkers = markerList;
+			
 			aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 			cv::imshow("ArucoDebug", img);
 			cv::waitKey(10);

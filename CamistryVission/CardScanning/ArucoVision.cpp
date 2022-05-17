@@ -38,8 +38,8 @@ namespace Aruco {
         return markerdata;
     }
     void ArucoVision::drawFrameAxes(cv::InputOutputArray image, int markerAmount, Aruco::AdvancedMarkerData markerdata) {
-        for (int i = 0; i < markerAmount; i++) {
-            cv::drawFrameAxes(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
-        }
+       
+        cv::drawFrameAxes(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
+        
     }
 }
