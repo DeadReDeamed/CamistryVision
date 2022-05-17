@@ -1,11 +1,12 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "../GameObject.h"
-
-namespace camvis {
+namespace camvis 
+{
 	namespace component
 	{
+		class GameObject;
+
 		class Component
 		{
 		protected:

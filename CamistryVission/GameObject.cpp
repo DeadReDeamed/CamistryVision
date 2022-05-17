@@ -2,7 +2,7 @@
 
 namespace camvis
 {
-	void GameObject::addComponent(Component& component)
+	void GameObject::addComponent(component::Component& component)
 	{
 		throw "Function not implemented!";
 	}

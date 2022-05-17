@@ -93,9 +93,6 @@
     <ClInclude Include="Util\JSONParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -172,6 +169,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Data\Model\MatterModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
