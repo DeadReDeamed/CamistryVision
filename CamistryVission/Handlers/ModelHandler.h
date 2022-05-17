@@ -4,7 +4,7 @@
 #include <string>
 
 namespace camvis {
-	namespace handler {
+	namespace handlers {
 
 		class ModelHandler
 		{
