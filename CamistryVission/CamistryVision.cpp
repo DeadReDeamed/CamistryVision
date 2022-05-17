@@ -7,12 +7,10 @@ double lastUpdateTime;
 void update();
 void draw();
 void init();
-#include "CardScanning/ArucoHandler.h"
+
 int main()
 {	
-	Aruco::ArucoHandler a = Aruco::ArucoHandler();
-	a.start();
-
+	
 	std::cout << "start camistry vision" << std::endl;
 
 	if (!glfwInit())
@@ -32,7 +30,6 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		//cv::imshow("Aruco Debug", a.getLastImage());
 		update();
 		draw();
 		glfwSwapBuffers(window);

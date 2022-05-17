@@ -41,5 +41,6 @@ namespace Aruco {
        
         cv::drawFrameAxes(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
         
+        
     }
 }
