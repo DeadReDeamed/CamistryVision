@@ -18,12 +18,30 @@ namespace Aruco {
 	private:
 		void run();
 	public:
-		ArucoHandler() {}
+		ArucoHandler() { isRunning = false; }
 
+		/**
+		* Used to start marker detection.
+		*/
 		void start();
+		/**
+		* Used to stop marker detection.
+		*/
 		void stop();
+		/*
+		* Used to get a list of markers that are currently detected.
+		* @return a list of MarkerData.
+		*/
 		std::vector<MarkerData> getMarkers();
+		/**
+		* Used to get some data of the camera.
+		* @return A 2d vector which contains the width and height of the camera view.
+		*/
 		cv::Vec2d getCameraData();
+		/**
+		* Used to get the last captured image.
+		* @return A Mat.
+		*/
 		cv::Mat getLastImage();
 	};
 

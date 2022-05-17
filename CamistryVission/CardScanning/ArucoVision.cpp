@@ -4,7 +4,6 @@
 
 namespace Aruco {
    
-    //class ArucoVisionImpl : public ArucoVision {
     cv::Mat cameraMatrix, distCoeffs;
     cv::Ptr<cv::aruco::Dictionary> dictionary;
 
@@ -44,4 +43,3 @@ namespace Aruco {
         }
     }
 }
-//}
