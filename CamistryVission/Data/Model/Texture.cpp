@@ -23,7 +23,6 @@ camvis::data::Texture::Texture(const std::string& fileName)
 
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
 }
 
 void camvis::data::Texture::bind()
