@@ -1,18 +1,21 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <GL/glew.h>
+#include <string>
+
 namespace camvis
 {
 	namespace data
 	{
 		class Texture
 		{
-		public:
-			int id;
+		private:
+			GLuint id;
 
 		public:
-			Texture(int id)
-				: id(id) {}
+			Texture(const std::string& fileName);
+			void bind();
 		};
 	}
 }

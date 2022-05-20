@@ -151,13 +151,15 @@
     <ClCompile Include="Components\RotationComponent.cpp" />
     <ClCompile Include="Components\SplitComponent.cpp" />
     <ClCompile Include="Components\SubstanceComponent.cpp" />
+    <ClCompile Include="Data\Model\Model.cpp" />
+    <ClCompile Include="Data\Model\Texture.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="CardScanning\ArucoHandler.cpp" />
     <ClCompile Include="CardScanning\ArucoVision.cpp" />
     <ClCompile Include="Handlers\DataHandler.cpp" />
     <ClCompile Include="Handlers\ModelHandler.cpp" />
     <ClCompile Include="Handlers\SceneHandler.cpp" />
-    <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="lib\tigl\tigl.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
@@ -195,7 +197,10 @@
     <ClInclude Include="Handlers\DataHandler.h" />
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
-    <ClInclude Include="tigl.h" />
+    <ClInclude Include="lib\stb\stb_image.h" />
+    <ClInclude Include="lib\stb\stb_image_resize.h" />
+    <ClInclude Include="lib\stb\stb_image_write.h" />
+    <ClInclude Include="lib\tigl\tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />
   </ItemGroup>
