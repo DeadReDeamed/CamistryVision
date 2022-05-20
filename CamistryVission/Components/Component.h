@@ -3,18 +3,18 @@
 
 namespace camvis 
 {
+	class GameObject;
+
 	namespace component
 	{
-		class GameObject;
-
 		class Component
 		{
 		protected:
-			GameObject* gameObject;
+			camvis::GameObject* gameObject;
 
 		public:
 			virtual void update(float deltaTime) = 0;
-			inline void setGameObject(GameObject* gameObject) { this->gameObject = gameObject; }
+			inline void setGameObject(camvis::GameObject* gameObject) { this->gameObject = gameObject; }
 		};
 	}
 }

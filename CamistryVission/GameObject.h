@@ -10,8 +10,10 @@ namespace camvis
 {
 	class GameObject
 	{
-	private:
+	public:
 		glm::vec3 position, rotation, scale;
+
+	private:
 	    std::list<component::DrawComponent*> drawComponents;
 		std::list<component::Component*> components;
 		std::list<GameObject*> gameObjects;
