@@ -7,7 +7,7 @@ double lastUpdateTime;
 void update();
 void draw();
 void init();
-
+#include "CardScanning/ArucoHandler.h"
 int main()
 {	
 	
@@ -17,6 +17,10 @@ int main()
 		throw "Could not initialize glwf";
 
 	auto window = glfwCreateWindow(1000, 800, "CamistryVision", NULL, NULL);
+	
+	Aruco::ArucoHandler a = Aruco::ArucoHandler();
+	a.start();
+
 	if (!window)
 	{
 		glfwTerminate();
