@@ -93,9 +93,6 @@
     <ClInclude Include="Util\JSONParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -154,6 +151,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Handlers\SceneHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\Face.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\Group.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Model\MatterModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -181,6 +181,12 @@
     <ClInclude Include="Data\Matter\Atom.h" />
     <ClInclude Include="Data\Matter\Matter.h" />
     <ClInclude Include="Data\Matter\Molecule.h" />
+    <ClInclude Include="Data\Model\Face.h" />
+    <ClInclude Include="Data\Model\Group.h" />
+    <ClInclude Include="Data\Model\MatterModel.h" />
+    <ClInclude Include="Data\Model\Model.h" />
+    <ClInclude Include="Data\Model\Texture.h" />
+    <ClInclude Include="Data\Model\Vertex.h" />
     <ClInclude Include="Data\Scene.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="CardScanning\ArucoHandler.h" />

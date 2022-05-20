@@ -10,15 +10,19 @@ namespace Aruco {
 		while (camera.grab() && isRunning) {
 			cv::Mat img;
 			camera.retrieve(img);
-			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(img);
+			cv::Mat grey;
+			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
+			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
 
+			if (simpleData.ids.size() <= 0) continue;
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
 				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i]);
 				markerList.push_back(md);
 			}
 			DetectedMarkers = markerList;
+			
 			aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 			cv::imshow("ArucoDebug", img);
 			cv::waitKey(10);
@@ -33,6 +37,7 @@ namespace Aruco {
 		arucothread = (std::thread(&ArucoHandler::run, this));
 		isRunning = true;
 	}
+
 	void ArucoHandler::stop() {
 		isRunning = false;
 		arucothread.join();
@@ -45,6 +50,10 @@ namespace Aruco {
 	}
 	cv::Mat ArucoHandler::getLastImage() {
 		return lastImage;
+	}
+
+	void CalibrateCamera() {
+
 	}
 
 }

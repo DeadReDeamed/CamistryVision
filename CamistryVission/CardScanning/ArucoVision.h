@@ -25,9 +25,11 @@ namespace Aruco {
 	public:
 
 	private:
-
+		cv::Mat cameraMatrix, distCoeffs;
+		cv::Ptr<cv::aruco::Dictionary> dictionary;
 	public:
 		ArucoVision();
+		ArucoVision(cv::aruco::PREDEFINED_DICTIONARY_NAME dictionaryType);
 		ArucoVision(std::string cameraParamPath,
 			cv::aruco::PREDEFINED_DICTIONARY_NAME dictionaryType);
 
@@ -50,6 +52,9 @@ namespace Aruco {
 		* @param[in] markerdata is a struct of AdvancedMarkerData.
 		*/
 		void drawFrameAxes(cv::InputOutputArray image, int markerAmount, AdvancedMarkerData markerdata);
+
+	private:
+		void calibrateCamera();
 	};
 }
 
