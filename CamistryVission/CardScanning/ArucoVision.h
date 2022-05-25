@@ -54,6 +54,13 @@ namespace Aruco {
 		void drawFrameAxes(cv::InputOutputArray image, int markerAmount, AdvancedMarkerData markerdata);
 
 	private:
+		/**
+		* Used to calibrate the camera used for detecting markers.
+		* While calibrating it is wise to take atleast 20 pictures at different angles.
+		* The calibration board exists of a 5x5 chess board. Most preferably black and white.
+		* 
+		* @note calibration might take a while. For 20 images it will take around 1-2 minutes to calibrate in debug mode.
+		*/
 		void calibrateCamera();
 	};
 }
