@@ -21,10 +21,35 @@ namespace camvis
 		std::list<GameObject*> gameObjects;
 
 	public:
+
+		/// <summary>
+		/// Adds the given component to the gameobject
+		/// </summary>
+		/// <param name="component">The component to add to the gameobject</param>
 		void addComponent(component::Component* component);
+
+		/// <summary>
+		/// Updates the gameobject
+		/// </summary>
+		/// <param name="deltaTime">delta time since last frame</param>
 		void update(float deltaTime);
+		
+		/// <summary>
+		/// Draws the gameobject to the screen
+		/// </summary>
 		void draw();
 
+		/// <summary>
+		/// Removes the given component from the components
+		/// </summary>
+		/// <param name="component">The component to delete</param>
+		void removeComponent(component::Component* component);
+
+		/// <summary>
+		/// Gets the component of the giben time
+		/// </summary>
+		/// <typeparam name="T">The type of component to search for</typeparam>
+		/// <returns>The component with the requested type, NULL if not found</returns>
 		template<class T>
 		T* getComponent()
 		{
@@ -35,8 +60,6 @@ namespace camvis
 			}
 			return NULL;
 		}
-
-		void removeComponent(component::Component* component);
 	};
 }
 

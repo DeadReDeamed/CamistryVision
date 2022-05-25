@@ -61,7 +61,7 @@ void init()
 
 	// Create first test gameobject
 	GameObject* testObject = new GameObject();
-	testObject->scale = glm::vec3(0.2, 0.2, 0.2);
+	testObject->scale = glm::vec3(0.1, 0.1, 0.1);
 
 	component::AtomComponent* atomComponent = new component::AtomComponent(7);
 	testObject->addComponent(atomComponent);

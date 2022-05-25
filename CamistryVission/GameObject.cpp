@@ -17,8 +17,6 @@ namespace camvis
 
 	void GameObject::update(float deltaTime)
 	{
-		rotation.y += deltaTime * 20;
-
 		// Update all components
 		for (auto* component : components)
 			component->update(deltaTime);
@@ -44,8 +42,9 @@ namespace camvis
 	{
 		components.remove(component);
 
+		// Remove component if it is a drawcomponent
 		if (component::DrawComponent* v = dynamic_cast<component::DrawComponent*>(component))
-		drawComponents.remove(v);
+			drawComponents.remove(v);
 	}
 
 }
