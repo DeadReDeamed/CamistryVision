@@ -141,17 +141,63 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArucoVision.cpp" />
-    <ClCompile Include="CamistryVission.cpp" />
+    <ClCompile Include="CamistryVision.cpp" />
+    <ClCompile Include="Components\AtomComponent.cpp" />
+    <ClCompile Include="Components\CardComponent.cpp" />
+    <ClCompile Include="Components\DrawComponent.cpp" />
+    <ClCompile Include="Components\ElectronComponent.cpp" />
+    <ClCompile Include="Components\MergeComponent.cpp" />
+    <ClCompile Include="Components\MoleculeComponent.cpp" />
+    <ClCompile Include="Components\RotationComponent.cpp" />
+    <ClCompile Include="Components\SplitComponent.cpp" />
+    <ClCompile Include="Components\SubstanceComponent.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="CardScanning\ArucoHandler.cpp" />
+    <ClCompile Include="CardScanning\ArucoVision.cpp" />
+    <ClCompile Include="Handlers\DataHandler.cpp" />
+    <ClCompile Include="Handlers\ModelHandler.cpp" />
+    <ClCompile Include="Handlers\SceneHandler.cpp" />
     <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="Util\FiloIO.cpp" />
+    <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OPENCV_DEBUG.props" />
+    <None Include="OPENGL_DEBUG.props" />
     <None Include="Resources\cam_params.yml" />
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArucoVision.h" />
+    <ClInclude Include="Components\AtomComponent.h" />
+    <ClInclude Include="Components\CardComponent.h" />
+    <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Components\DrawComponent.h" />
+    <ClInclude Include="Components\ElectronComponent.h" />
+    <ClInclude Include="Components\MergeComponent.h" />
+    <ClInclude Include="Components\MoleculeComponent.h" />
+    <ClInclude Include="Components\RotationComponent.h" />
+    <ClInclude Include="Components\SplitComponent.h" />
+    <ClInclude Include="Components\SubstanceComponent.h" />
+    <ClInclude Include="Data\Matter\Atom.h" />
+    <ClInclude Include="Data\Matter\Matter.h" />
+    <ClInclude Include="Data\Matter\Molecule.h" />
+    <ClInclude Include="Data\Model\Face.h" />
+    <ClInclude Include="Data\Model\Group.h" />
+    <ClInclude Include="Data\Model\MatterModel.h" />
+    <ClInclude Include="Data\Model\Model.h" />
+    <ClInclude Include="Data\Model\Texture.h" />
+    <ClInclude Include="Data\Model\Vertex.h" />
+    <ClInclude Include="Data\Scene.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="CardScanning\ArucoHandler.h" />
+    <ClInclude Include="CardScanning\ArucoVision.h" />
+    <ClInclude Include="CardScanning\MarkerData.h" />
+    <ClInclude Include="Handlers\DataHandler.h" />
+    <ClInclude Include="Handlers\ModelHandler.h" />
+    <ClInclude Include="Handlers\SceneHandler.h" />
     <ClInclude Include="tigl.h" />
+    <ClInclude Include="Util\FiloIO.h" />
+    <ClInclude Include="Util\JSONParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
