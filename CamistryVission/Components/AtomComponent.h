@@ -10,17 +10,29 @@ namespace camvis {
 		class AtomComponent : public DrawComponent
 		{
 		private:
-
+			// Atom structure
 			std::vector<std::tuple<glm::mat4, glm::vec4>> core;
 
-			// Atom structure
+			// Number of parts in the atom
 			int bolAmount;
 
 		public:
 
+			/// <summary>
+			/// Constructs the atom component with the given amound of size
+			/// </summary>
+			/// <param name="bolAmount">The number of parts in the core</param>
 			AtomComponent(int bolAmount) : bolAmount(bolAmount) {};
 
+			/// <summary>
+			/// Updates the component
+			/// </summary>
+			/// <param name="deltaTime">delta time since last frame</param>
 			void update(float deltaTime);
+
+			/// <summary>
+			/// Draws the compenent parts to the screen
+			/// </summary>
 			void draw();
 
 		private:

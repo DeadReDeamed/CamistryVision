@@ -8,14 +8,17 @@
 
 using tigl::Vertex;
 
+#define COLOR_RED glm::vec4(1, 0, 0, 0)
+#define COLOR_YELLOW glm::vec4(1, 1, 0, 0)
+
 #define DISTANCE_SIZE 1.0f
 
 namespace camvis {
 	namespace component
 	{
         std::vector<glm::vec4> colors = {
-             glm::vec4(1, 0, 0, 0),
-             glm::vec4(1, 1, 0, 0),
+             COLOR_RED,
+             COLOR_YELLOW,
         };
 
 
@@ -90,10 +93,10 @@ namespace camvis {
                 Vertex::PC(glm::vec3(0, 0, 1), color),
             };
 
-            // Move the cube based on gameObject posistion
-            //model *= objectMatrix;
+            // Move the cube based on gameObject position
             model = objectMatrix * model;
 
+            // Draw the model
             tigl::shader->setModelMatrix(model);
             tigl::drawVertices(GL_QUADS, cube);
 
