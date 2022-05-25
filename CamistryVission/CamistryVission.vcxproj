@@ -195,6 +195,7 @@
     <ClInclude Include="Handlers\DataHandler.h" />
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />

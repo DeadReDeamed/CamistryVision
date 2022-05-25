@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include "../json.hpp"
 
 namespace camvis
 {
@@ -11,7 +12,7 @@ namespace camvis
 	public:
 		static bool saveFile(const std::string& filePath, const std::string& data);
 
-		static std::string loadFile(const std::string& filePath);
+		static nlohmann::json loadJsonFile(const std::string& filePath);
 
 		static unsigned char* loadTexture(const std::string& filePath);
 

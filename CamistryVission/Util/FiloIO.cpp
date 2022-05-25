@@ -28,7 +28,7 @@ namespace camvis
         return true;
     }
 
-    std::string FileIO::loadFile(const std::string& filePath)
+    nlohmann::json FileIO::loadJsonFile(const std::string& filePath)
     {
         // Open file.
         std::ifstream file(filePath);
@@ -38,8 +38,8 @@ namespace camvis
             return std::string(); // File failed to open.
         }
 
-        std::stringstream buffer;
-        buffer << file.rdbuf();
+        nlohmann::json jsonObject;
+        file >> jsonObject;
 
         const std::ios_base::iostate& state = file.rdstate();
 
@@ -50,7 +50,7 @@ namespace camvis
             return std::string();
         }
 
-        return buffer.str();
+        return jsonObject;
     }
 
 	unsigned char* FileIO::loadTexture(const std::string& filePath)
