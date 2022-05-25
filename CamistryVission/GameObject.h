@@ -19,7 +19,7 @@ namespace camvis
 		std::list<GameObject*> gameObjects;
 
 	public:
-		void addComponent(component::Component& component);
+		void addComponent(component::Component* component);
 		void update(float deltaTime);
 		void draw();
 
