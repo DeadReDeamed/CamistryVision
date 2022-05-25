@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "GameObject.h"
+#include "Components/AtomComponent.h"
 
 double lastUpdateTime;
 void update();
@@ -12,6 +13,9 @@ void init();
 #include "CardScanning/ArucoHandler.h"
 
 using namespace camvis;
+
+GLFWwindow* window;
+Aruco::ArucoHandler a;
 
 std::vector<GameObject*> gameObjects;
 
@@ -23,9 +27,9 @@ int main()
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
-	auto window = glfwCreateWindow(1000, 800, "CamistryVision", NULL, NULL);
+	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
 	
-	Aruco::ArucoHandler a = Aruco::ArucoHandler();
+	a = Aruco::ArucoHandler();
 	a.start();
 
 	if (!window)
@@ -57,8 +61,13 @@ void init()
 
 	// Create first test gameobject
 	GameObject* testObject = new GameObject();
+	testObject->scale = glm::vec3(0.2, 0.2, 0.2);
+
+	component::AtomComponent* atomComponent = new component::AtomComponent(7);
+	testObject->addComponent(atomComponent);
 
 	gameObjects.push_back(testObject);
+	component::AtomComponent* comp = testObject->getComponent<component::AtomComponent>();
 }
 
 void update()
@@ -81,7 +90,7 @@ void draw()
 
 	glEnable(GL_DEPTH_TEST);
 
-	tigl::shader->enableTexture(true);
+	//tigl::shader->enableTexture(true);
 	tigl::shader->enableColor(true);
 
 	for (auto gameobject : gameObjects)

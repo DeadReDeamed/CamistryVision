@@ -2,6 +2,8 @@
 #define GAME_OBJECT_H
 
 #include <list>
+#include <iostream>
+#include <iterator>
 #include "glm/vec3.hpp"
 #include "Components/Component.h"
 #include "Components/DrawComponent.h"
@@ -24,10 +26,17 @@ namespace camvis
 		void draw();
 
 		template<class T>
-		T getComponent();
+		T* getComponent()
+		{
+			for (auto component : components)
+			{
+				if (T* v = dynamic_cast<T*>(component))
+					return v;
+			}
+			return NULL;
+		}
 
-		template<class T>
-		void removeComponent();
+		void removeComponent(component::Component* component);
 	};
 }
 

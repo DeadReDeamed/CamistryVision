@@ -17,6 +17,8 @@ namespace camvis
 
 	void GameObject::update(float deltaTime)
 	{
+		rotation.y += deltaTime * 20;
+
 		// Update all components
 		for (auto* component : components)
 			component->update(deltaTime);
@@ -37,16 +39,13 @@ namespace camvis
 		for (auto* gameObject : gameObjects)
 			gameObject->draw();
 	}
-
-	template<class T>
-	T GameObject::getComponent()
-	{
-		throw "Function not implemented!";
-	}
 	
-	template<class T>
-	void GameObject::removeComponent()
+	void GameObject::removeComponent(component::Component* component)
 	{
-		throw "Function not implemented!";
+		components.remove(component);
+
+		if (component::DrawComponent* v = dynamic_cast<component::DrawComponent*>(component))
+		drawComponents.remove(v);
 	}
+
 }

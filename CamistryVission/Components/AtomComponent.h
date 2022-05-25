@@ -28,6 +28,8 @@ namespace camvis {
 			void generateCore(int size, glm::mat4 model);
 			glm::vec4 selectCoreColor();
 
+			glm::mat4 objectMatrix = glm::mat4(1.0f);
+
 		};
 	}
 }

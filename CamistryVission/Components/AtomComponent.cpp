@@ -8,7 +8,7 @@
 
 using tigl::Vertex;
 
-#define DISTANCE_SIZE 0.8f
+#define DISTANCE_SIZE 1.0f
 
 namespace camvis {
 	namespace component
@@ -26,15 +26,14 @@ namespace camvis {
 
 		void AtomComponent::draw()
 		{
-            glm::mat4 position = glm::mat4(1.0f);
+            objectMatrix = glm::mat4(1.0f);
 
-            position = glm::translate(position, gameObject->position);
-            position = glm::rotate(position, glm::radians(gameObject->rotation.x), glm::vec3(1, 0, 0));
-            position = glm::rotate(position, glm::radians(gameObject->rotation.y), glm::vec3(0, 1, 0));
-            position = glm::rotate(position, glm::radians(gameObject->rotation.z), glm::vec3(0, 0, 1));
-            position = glm::scale(position, gameObject->scale);
+            objectMatrix = glm::scale(objectMatrix, gameObject->scale);
+            objectMatrix = glm::translate(objectMatrix, gameObject->position);
+            objectMatrix = glm::rotate(objectMatrix, glm::radians(gameObject->rotation.x), glm::vec3(1, 0, 0));
+            objectMatrix = glm::rotate(objectMatrix, glm::radians(gameObject->rotation.y), glm::vec3(0, 1, 0));
+            objectMatrix = glm::rotate(objectMatrix, glm::radians(gameObject->rotation.z), glm::vec3(0, 0, 1));
             
-
             if (core.empty()) { generateCore(bolAmount, glm::mat4(1.0f)); }
 
             for (auto& model : core)
@@ -90,6 +89,10 @@ namespace camvis {
                 Vertex::PC(glm::vec3(1, 0, 1), color),
                 Vertex::PC(glm::vec3(0, 0, 1), color),
             };
+
+            // Move the cube based on gameObject posistion
+            //model *= objectMatrix;
+            model = objectMatrix * model;
 
             tigl::shader->setModelMatrix(model);
             tigl::drawVertices(GL_QUADS, cube);

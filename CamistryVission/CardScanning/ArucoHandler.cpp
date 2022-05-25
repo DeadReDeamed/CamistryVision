@@ -42,6 +42,7 @@ namespace Aruco {
 		isRunning = false;
 		arucothread.join();
 	}
+
 	std::vector<MarkerData> ArucoHandler::getMarkers() {
 		return DetectedMarkers;
 	}
