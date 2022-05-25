@@ -8,14 +8,17 @@ namespace camvis
 {
 	class JsonParser
 	{
-		template<class T>
-		static T deserializeObject(const std::string& jsonString);
+	public:
+		JsonParser() {};
 
-		template<class T>
-		static std::vector<T> deserializeList(const std::string& jsonString);
+		template<typename T>
+		T deserializeObject(const std::string& jsonString);
 
-		template<class T>
-		static std::string serializeObject(const T& object);
+		template<typename T>
+		std::vector<T> deserializeList(const std::string& jsonString);
+
+		template<typename T>
+		std::string serializeObject(const T& object);
 	};
 }
 

@@ -3,11 +3,16 @@
 #include "tigl.h"
 #include <GLFW/glfw3.h>
 
+
+
 double lastUpdateTime;
 void update();
 void draw();
 void init();
+
 #include "CardScanning/ArucoHandler.h"
+#include "Util/JSONParser.h"
+
 int main()
 {	
 	
@@ -55,7 +60,7 @@ void update()
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
 
-	std::cout << deltaTime << std::endl;
+	//std::cout << deltaTime << std::endl;
 }
 
 void draw()
