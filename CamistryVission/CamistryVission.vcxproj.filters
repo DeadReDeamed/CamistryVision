@@ -82,6 +82,7 @@
     </None>
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
+    <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tigl.h">

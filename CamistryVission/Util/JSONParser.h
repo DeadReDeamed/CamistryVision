@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "../json.hpp"
+
+#include "../Data/Matter/Matter.h"
+
 namespace camvis
 {
 	class JsonParser
@@ -12,13 +16,13 @@ namespace camvis
 		JsonParser() {};
 
 		template<typename T>
-		T deserializeObject(const std::string& jsonString);
+		static T deserializeObject(const nlohmann::json& json);
 
 		template<typename T>
-		std::vector<T> deserializeList(const std::string& jsonString);
+		static std::vector <T> deserializeList(const nlohmann::json& json);
 
 		template<typename T>
-		std::string serializeObject(const T& object);
+		static std::string serializeObject(const T& object);
 	};
 }
 

@@ -162,6 +162,7 @@
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
     <None Include="Resources\cam_params.yml" />

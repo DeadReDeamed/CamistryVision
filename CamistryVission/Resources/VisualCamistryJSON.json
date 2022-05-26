@@ -28,7 +28,7 @@
       "name": "Stikstof",
       "symbol": "N",
       "protons": 7,
-      "netrons": 10,
+      "neutrons": 10,
       "elektrons": [
         5
       ],
@@ -40,7 +40,7 @@
       "name": "Zuurstof",
       "symbol": "O",
       "protons": 8,
-      "netrons": 12,
+      "neutrons": 12,
       "elektrons": [
         2,
         6
@@ -53,7 +53,7 @@
       "name": "Natrium",
       "symbol": "Na",
       "protons": 11,
-      "netrons": 18,
+      "neutrons": 18,
       "elektrons": [
         2,
         8,
@@ -67,7 +67,7 @@
       "name": "Chloor",
       "symbol": "Cl",
       "protons": 17,
-      "netrons": 28,
+      "neutrons": 28,
       "elektrons": [
         2,
         8,
@@ -81,7 +81,7 @@
       "name": "Uranium",
       "symbol": "U",
       "protons": 92,
-      "netrons": 217,
+      "neutrons": 217,
       "elektrons": [
         2,
         8,
