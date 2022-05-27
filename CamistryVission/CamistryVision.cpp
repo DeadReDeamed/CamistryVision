@@ -9,11 +9,18 @@
 #include "Components/ElectronComponent.h"
 
 
+#include "Util/FiloIO.h"
+#include "Util/JSONParser.h"
+#include "Data/Matter/Matter.h"
+#include "Data/Matter/Atom.h"
+
 double lastUpdateTime;
 void update();
 void draw();
 void init();
+
 #include "CardScanning/ArucoHandler.h"
+#include "Util/JSONParser.h"
 
 using namespace camvis;
 
@@ -44,6 +51,10 @@ int main()
 
 	tigl::init();
 	init();
+
+	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
+
+	camvis::JsonParser::deserializeList<data::Matter>(jsonObject);
 
 	while (!glfwWindowShouldClose(window))
 	{

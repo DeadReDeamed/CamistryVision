@@ -88,6 +88,7 @@
     </None>
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
+    <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\tigl\tigl.h">
@@ -178,6 +179,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\stb\stb_image.h">
