@@ -1,6 +1,7 @@
 #include <iostream>
 #include <opencv2/aruco.hpp>
-#include "tigl.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
 #include "GameObject.h"
@@ -40,7 +41,7 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	tigl::init();
-
+	tigl::shader->enableTexture(true);
 	init();
 
 	while (!glfwWindowShouldClose(window))
@@ -82,6 +83,8 @@ void update()
 	}
 
 }
+
+int rot = 0;
 
 void draw()
 {

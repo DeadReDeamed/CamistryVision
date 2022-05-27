@@ -2,6 +2,7 @@
 #define MODEL_HANDLER_H
 
 #include <string>
+#include "../Data/Model/Texture.h"
 
 namespace camvis {
 	namespace handlers {
@@ -9,8 +10,7 @@ namespace camvis {
 		class ModelHandler
 		{
 		public:
-			static void loadMaterialFile(const std::string& filename, const std::string& directory);
-
+			static camvis::data::Texture* loadMaterialFile(const std::string& filename, const std::string& directory);
 		};
 
 	}

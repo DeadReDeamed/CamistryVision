@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tigl.cpp">
+    <ClCompile Include="lib\tigl\tigl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\FiloIO.cpp">
@@ -72,6 +72,12 @@
     <ClCompile Include="Handlers\SceneHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Data\Model\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Model\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\VisualCamistryJSON.json">
@@ -84,7 +90,7 @@
     <None Include="OPENGL_DEBUG.props" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="tigl.h">
+    <ClInclude Include="lib\tigl\tigl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util\FiloIO.h">
@@ -172,6 +178,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\stb\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\stb\stb_image_resize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\stb\stb_image_write.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

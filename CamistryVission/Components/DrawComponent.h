@@ -11,8 +11,9 @@ namespace camvis
 		class DrawComponent : public Component
 		{
 		private:
-			//Model* model;
+			camvis::data::Model* model;
 		public:
+			DrawComponent(camvis::data::Model* model) : model(model) {};
 			void update(float deltaTime);
 			virtual void draw();
 		};
