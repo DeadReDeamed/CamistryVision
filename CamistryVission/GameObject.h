@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iterator>
 #include "glm/vec3.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 #include "Components/Component.h"
 #include "Components/DrawComponent.h"
 
@@ -13,7 +14,7 @@ namespace camvis
 	class GameObject
 	{
 	public:
-		glm::vec3 position, rotation, scale;
+		glm::mat4 transform = glm::mat4(1.0f);
 
 	private:
 	    std::list<component::DrawComponent*> drawComponents;

@@ -16,6 +16,7 @@ namespace camvis
 			DrawComponent(camvis::data::Model* model) : model(model) {};
 			void update(float deltaTime);
 			virtual void draw();
+			virtual void draw(glm::vec4 color);
 		};
 	}
 }

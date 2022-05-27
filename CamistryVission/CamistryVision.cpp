@@ -30,8 +30,8 @@ int main()
 
 	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
 	
-	a = Aruco::ArucoHandler();
-	a.start();
+	//a = Aruco::ArucoHandler();
+	//a.start();
 
 	if (!window)
 	{
@@ -41,7 +41,6 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	tigl::init();
-	tigl::shader->enableTexture(true);
 	init();
 
 	while (!glfwWindowShouldClose(window))
@@ -62,9 +61,9 @@ void init()
 
 	// Create first test gameobject
 	GameObject* testObject = new GameObject();
-	testObject->scale = glm::vec3(0.1, 0.1, 0.1);
-
-	component::AtomComponent* atomComponent = new component::AtomComponent(7);
+	testObject->transform = glm::scale(testObject->transform, glm::vec3(1.0f));
+	testObject->transform = glm::translate(testObject->transform, glm::vec3(0, -5, -50));
+	component::AtomComponent* atomComponent = new component::AtomComponent(25);
 	testObject->addComponent(atomComponent);
 
 	gameObjects.push_back(testObject);
@@ -91,10 +90,18 @@ void draw()
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
-	//tigl::shader->enableTexture(true);
-	tigl::shader->enableColor(true);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	tigl::shader->setProjectionMatrix(projection);
+	tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
 
 	for (auto gameobject : gameObjects)
 	{
