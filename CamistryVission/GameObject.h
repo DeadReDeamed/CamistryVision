@@ -61,6 +61,25 @@ namespace camvis
 			}
 			return NULL;
 		}
+
+
+		void translate(glm::vec3 trans) { transform = glm::translate(transform, trans); };
+
+		void rotate(glm::vec3 rot, bool reverse) {
+			if(!reverse){
+				transform = glm::rotate(transform, glm::radians(rot.x), glm::vec3(1, 0, 0));
+				transform = glm::rotate(transform, glm::radians(rot.y), glm::vec3(0, 1, 0));
+				transform = glm::rotate(transform, glm::radians(rot.z), glm::vec3(0, 0, 1));
+			}
+			else {
+				transform = glm::rotate(transform, glm::radians(rot.z), glm::vec3(0, 0, 1));
+				transform = glm::rotate(transform, glm::radians(rot.y), glm::vec3(0, 1, 0));
+				transform = glm::rotate(transform, glm::radians(rot.x), glm::vec3(1, 0, 0));
+			}
+		};
+
+		void scale(glm::vec3 scale) { transform = glm::scale(transform, scale); };
+
 	};
 }
 

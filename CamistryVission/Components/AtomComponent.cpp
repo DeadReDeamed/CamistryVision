@@ -34,9 +34,9 @@ namespace camvis {
 
             for (auto& coreAtom : core)
             {
-                gameObject->transform = glm::translate(gameObject->transform, coreAtom.first);
+                gameObject->translate(coreAtom.first);
                 DrawComponent::draw(coreAtom.second);
-                gameObject->transform = glm::translate(gameObject->transform, -coreAtom.first);
+                gameObject->translate(-coreAtom.first);
             }
 		}
 

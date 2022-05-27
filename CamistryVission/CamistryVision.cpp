@@ -6,6 +6,8 @@
 
 #include "GameObject.h"
 #include "Components/AtomComponent.h"
+#include "Components/ElectronComponent.h"
+
 
 double lastUpdateTime;
 void update();
@@ -21,15 +23,15 @@ Aruco::ArucoHandler a;
 std::vector<GameObject*> gameObjects;
 
 int main()
-{	
-	
+{
+
 	std::cout << "start camistry vision" << std::endl;
 
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
 	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
-	
+
 	//a = Aruco::ArucoHandler();
 	//a.start();
 
@@ -60,14 +62,39 @@ void init()
 	lastUpdateTime = glfwGetTime();
 
 	// Create first test gameobject
-	GameObject* testObject = new GameObject();
-	testObject->transform = glm::scale(testObject->transform, glm::vec3(1.0f));
-	testObject->transform = glm::translate(testObject->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(25);
-	testObject->addComponent(atomComponent);
+	GameObject* testCore = new GameObject();
+	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	component::AtomComponent* atomComponent = new component::AtomComponent(45);
+	testCore->addComponent(atomComponent);
 
-	gameObjects.push_back(testObject);
-	component::AtomComponent* comp = testObject->getComponent<component::AtomComponent>();
+	std::vector<component::Shell*> shells;
+
+	component::Shell* shell = new component::Shell();
+	shell->amount = 6;
+	shell->distance = 10;
+	shell->speed = glm::vec3(20.0f, 10.0f, 30.0f);
+	shells.push_back(shell);
+
+	component::Shell* shell2 = new component::Shell();
+	shell2->amount = 4;
+	shell2->distance = 13;
+	shell2->speed = glm::vec3(10.0f, 30.0f, 50.0f);
+	shells.push_back(shell2);
+
+	component::Shell* shell3 = new component::Shell();
+	shell3->amount = 12;
+	shell3->distance = 16;
+	shell3->speed = glm::vec3(40.0f, 60.0f, 40.0f);
+	shells.push_back(shell3);
+
+
+	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
+	testCore->addComponent(electronComponent);
+
+	gameObjects.push_back(testCore);
+	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+
+
 }
 
 void update()
