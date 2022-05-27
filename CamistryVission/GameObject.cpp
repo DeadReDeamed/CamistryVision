@@ -6,8 +6,10 @@ namespace camvis
 {
 	void GameObject::addComponent(component::Component* component)
 	{
+		// Set the gamobject of the component
 		component->setGameObject(this);
 
+		// Add the component
 		components.push_back(component);
 
 		// Checking if component is a drawComponent
@@ -40,6 +42,7 @@ namespace camvis
 	
 	void GameObject::removeComponent(component::Component* component)
 	{
+		// Remove the component from the component list
 		components.remove(component);
 
 		// Remove component if it is a drawcomponent

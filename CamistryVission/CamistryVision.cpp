@@ -59,15 +59,16 @@ void init()
 {
 	lastUpdateTime = glfwGetTime();
 
-	// Create first test gameobject
-	GameObject* testObject = new GameObject();
-	testObject->scale = glm::vec3(0.1, 0.1, 0.1);
+	// Testing for the first gameobject
+	//// Create first test gameobject
+	//GameObject* testObject = new GameObject();
+	//testObject->scale = glm::vec3(0.1, 0.1, 0.1);
 
-	component::AtomComponent* atomComponent = new component::AtomComponent(7);
-	testObject->addComponent(atomComponent);
+	//component::AtomComponent* atomComponent = new component::AtomComponent(7);
+	//testObject->addComponent(atomComponent);
 
-	gameObjects.push_back(testObject);
-	component::AtomComponent* comp = testObject->getComponent<component::AtomComponent>();
+	//gameObjects.push_back(testObject);
+	//component::AtomComponent* comp = testObject->getComponent<component::AtomComponent>();
 }
 
 void update()
