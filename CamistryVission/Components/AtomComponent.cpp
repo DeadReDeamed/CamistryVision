@@ -8,8 +8,8 @@
 
 using tigl::Vertex;
 
-#define COLOR_RED glm::vec4(1, 0, 0, 0)
-#define COLOR_YELLOW glm::vec4(1, 1, 0, 0)
+#define COLOR_1 glm::vec4(0.1568f, 0.3450f, 0.2823f, 1.0f)
+#define COLOR_2 glm::vec4(0.1882f, 0.75294f, 0.48235f, 1.0f)
 
 #define DISTANCE_SIZE 1.0f
 
@@ -17,8 +17,8 @@ namespace camvis {
 	namespace component
 	{
         std::vector<glm::vec4> colors = {
-             COLOR_RED,
-             COLOR_YELLOW,
+             COLOR_1,
+             COLOR_2,
         };
 
 

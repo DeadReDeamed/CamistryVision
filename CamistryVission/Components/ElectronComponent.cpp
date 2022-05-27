@@ -43,7 +43,7 @@ namespace camvis {
 
 					gameObject->rotate(rot, false);
 					gameObject->translate(glm::vec3(shell->distance, 0.0f, 0.0f));
-					DrawComponent::draw();
+					DrawComponent::draw(glm::vec4(0.24705f, 1.0f, 0.72549f, 1.0f));
 					gameObject->translate(glm::vec3(-shell->distance, 0.0f, 0.0f));
 					gameObject->rotate(-rot, true);
 				}
