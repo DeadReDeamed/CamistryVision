@@ -94,6 +94,33 @@
       "description": "Uranium is een atoom",
       "mass": 238.02891,
       "atomnumber": 92
+    },
+    {
+      "name": "Jasperium",
+      "symbol": "Ja",
+      "protons": 42,
+      "neutrons": 69,
+      "elektrons": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "description": "Jasper is een makker",
+      "mass": 69.420,
+      "atomnumber": 42
     }
   ],
   "substances": [
