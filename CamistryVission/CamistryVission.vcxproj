@@ -151,17 +151,28 @@
     <ClCompile Include="Components\RotationComponent.cpp" />
     <ClCompile Include="Components\SplitComponent.cpp" />
     <ClCompile Include="Components\SubstanceComponent.cpp" />
+    <ClCompile Include="Data\Model\Model.cpp" />
+    <ClCompile Include="Data\Model\Texture.cpp" />
+    <ClCompile Include="debuging\DebugWindow.cpp" />
+    <ClCompile Include="debuging\imgui\imgui.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_demo.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_draw.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_tables.cpp" />
+    <ClCompile Include="debuging\imgui\imgui_widgets.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="CardScanning\ArucoHandler.cpp" />
     <ClCompile Include="CardScanning\ArucoVision.cpp" />
     <ClCompile Include="Handlers\DataHandler.cpp" />
     <ClCompile Include="Handlers\ModelHandler.cpp" />
     <ClCompile Include="Handlers\SceneHandler.cpp" />
-    <ClCompile Include="tigl.cpp" />
+    <ClCompile Include="lib\tigl\tigl.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
     <None Include="Resources\cam_params.yml" />
@@ -188,6 +199,16 @@
     <ClInclude Include="Data\Model\Texture.h" />
     <ClInclude Include="Data\Model\Vertex.h" />
     <ClInclude Include="Data\Scene.h" />
+    <ClInclude Include="debuging\DebugWindow.h" />
+    <ClInclude Include="debuging\imgui\imconfig.h" />
+    <ClInclude Include="debuging\imgui\imgui.h" />
+    <ClInclude Include="debuging\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="debuging\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="debuging\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="debuging\imgui\imgui_internal.h" />
+    <ClInclude Include="debuging\imgui\imstb_rectpack.h" />
+    <ClInclude Include="debuging\imgui\imstb_textedit.h" />
+    <ClInclude Include="debuging\imgui\imstb_truetype.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="CardScanning\ArucoHandler.h" />
     <ClInclude Include="CardScanning\ArucoVision.h" />
@@ -195,7 +216,12 @@
     <ClInclude Include="Handlers\DataHandler.h" />
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="tigl.h" />
+    <ClInclude Include="lib\stb\stb_image.h" />
+    <ClInclude Include="lib\stb\stb_image_resize.h" />
+    <ClInclude Include="lib\stb\stb_image_write.h" />
+    <ClInclude Include="lib\tigl\tigl.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />
   </ItemGroup>

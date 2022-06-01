@@ -10,14 +10,15 @@ namespace camvis
 {
 	namespace data
 	{
-		class Molecule : Matter
+		class Molecule : public Matter
 		{
 		public:
-			std::vector<std::tuple<Atom, int>> atoms;
+			std::vector<data::Atom> atoms;
 
 		public:
-			inline Molecule(std::string name, std::string symbol, std::string description, std::vector<std::tuple<Atom, int>> atoms)
+			inline Molecule(std::string name, std::string symbol, std::string description, std::vector<data::Atom> atoms)
 				: Matter(name, symbol, description), atoms(atoms) {}
+
 		};
 	}
 }
