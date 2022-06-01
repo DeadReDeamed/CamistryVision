@@ -82,6 +82,7 @@ namespace camvis {
 			for (auto& corePair : drawList) {
 				glm::vec3 pos = corePair.first;
 				pos *= 3;
+
 				gameObject->translate(pos);
 
 				for (auto& coreAtom : corePair.second) {
@@ -94,15 +95,29 @@ namespace camvis {
 			}
 
 			//draw a line between the molecules.
+			if (drawList.size() <= 1) return;
+			//if (drawList.size() == 2) {
+			//	tigl::begin(GL_LINES);
+			//	for (int i = 0; i < drawList.size(); i++) {
+			//		glm::vec3 pos = drawList[i].first;
+			//		pos *= 3;
+			//		// some wacky magic to make the lines go inside the atoms.
+			//		//pos = glm::vec3(pos.x, pos.y + 3.0f, pos.z + 3.0f);
+			//		tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
+			//	}
+			//	tigl::end();
+			//}
+			//else {
 			tigl::begin(GL_LINE_STRIP);
 			for (int i = 0; i < drawList.size(); i++) {
 				glm::vec3 pos = drawList[i].first;
 				pos *= 3;
+				// some wacky magic to make the lines go inside the atoms.
+				pos = glm::vec3(pos.x - 3, pos.y - 3, pos.z);
 				tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
 			}
-
-
 			tigl::end();
+		//}
 		/*	for (auto& core : cores) {
 				gameObject->translate(glm::vec3(4, 0, 0));
 				for (auto& coreAtom : core)

@@ -85,7 +85,7 @@ void init()
 	int atomIndex = 1;
 
 	std::map<int, int> atomMap;
-	for (auto& a : molecules[2].atoms) {
+	for (auto& a : molecules[8].atoms) {
 		if (atomMap.count(a.atomNumber)) {
 			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
 		}
@@ -99,7 +99,7 @@ void init()
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
 	component::RotationComponent* rotate = new component::RotationComponent();
 	testCore->addComponent(rotate);
-	testCore->scale(glm::vec3(0.8, 0.8, 0.8));
+	testCore->scale(glm::vec3(1, 1, 1));
 	gameObjects.push_back(testCore);
 
 	//load and init atom from the json data
