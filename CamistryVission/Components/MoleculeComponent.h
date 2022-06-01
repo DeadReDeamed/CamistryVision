@@ -22,14 +22,14 @@ namespace camvis {
 			void update(float deltaTime);
 			void draw();
 
-			class AtomGrid {
+			class MoleculeGrid {
 			private:
 				int size;
 				std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> grid;
 
 
 			public:
-				AtomGrid(int _size) : size(_size) {
+				MoleculeGrid(int _size) : size(_size) {
 					if ((size % 2)) { 
 						std::cerr << "Error| MoleculeComponent.h: Grid size must be an even number" << std::endl;
 						throw "";

@@ -9,7 +9,7 @@ namespace camvis {
 		
 		MoleculeComponent::MoleculeComponent(std::map<int, int> _atomMap, const std::vector<data::Atom>& atoms) : atomMap(_atomMap), DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")) {
 			
-			AtomGrid d = AtomGrid(6);
+			MoleculeGrid d = MoleculeGrid(6);
 			d[glm::vec3(-3, -2, -3)];
 
 			//Create molecule model.
