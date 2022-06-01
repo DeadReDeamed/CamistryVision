@@ -4,18 +4,15 @@
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
+#include "Handlers/DataHandler.h"
+
 #include "debuging/imgui/imgui.h"
 #include "debuging/DebugWindow.h"
 
 #include "GameObject.h"
+
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
-
-
-#include "Util/FiloIO.h"
-#include "Util/JSONParser.h"
-#include "Data/Matter/Matter.h"
-#include "Data/Matter/Atom.h"
 
 #define DEBUG_ENABLED
 
@@ -33,8 +30,6 @@ GLFWwindow* window;
 Aruco::ArucoHandler a;
 
 std::vector<GameObject*> gameObjects;
-
-std::vector<data::Atom> atoms; //temporary varialbe for testing
 
 int main()
 {
@@ -55,12 +50,6 @@ int main()
 		throw "Could not initialize glwf";
 	}
 	glfwMakeContextCurrent(window);
-
-	//loads atom and molecule data
-	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
-
-	atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
-	std::vector<data::Molecule> molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
 
 	tigl::init();
 	init();
@@ -95,35 +84,8 @@ void init()
 	debugging::DebugWindow::init(window);
 #endif // DEBUG_ENABLED
 
-
-	// Create first test gameobject
-	GameObject* testCore = new GameObject();
-
+	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json");
 	
-	int atomIndex = 6;
-
-	//load and init atom from the json data
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
-	testCore->addComponent(atomComponent);
-
-	std::vector<component::Shell*> shells;
-
-	//load all electrons from the json data.
-	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
-	{
-		component::Shell* shell = new component::Shell();
-		shell->amount = atoms[atomIndex].electrons[i];
-		shell->distance = 10 + (2 * i);
-		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
-		shells.push_back(shell);
-	}
-
-	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
-	testCore->addComponent(electronComponent);
-
-	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 }
 
 bool showStatsWindow = true;

@@ -1,15 +1,28 @@
 #include "DataHandler.h"
 
+#include "../Util/FiloIO.h"
+#include "../Util/JSONParser.h"
+#include "../Data/Matter/Matter.h"
+#include "../Data/Matter/Atom.h"
+
 namespace camvis { namespace handlers {
 
-    DataHandler DataHandler::getInstance()
+    static DataHandler* instance;
+
+    DataHandler* DataHandler::getInstance()
     {
-        throw "Not implemented!";
+        if (instance == nullptr) instance = new DataHandler();
+
+        return instance;
     }
 
-    void DataHandler::loadData()
+    void DataHandler::loadData(std::string filename)
     {
-        throw "not implemented!";
+        //loads atom and molecule data
+        nlohmann::json jsonObject = FileIO::loadJsonFile(filename);
+
+        atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
+        std::vector<data::Molecule> molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
     }
 
 } }

@@ -1,15 +1,24 @@
 #ifndef SCENE_HANDLER_H
 #define SCENE_HANDLER_H
 
+#include "../Data/Scene.h"
+#include "../CardScanning/ArucoHandler.h"
+
+using namespace camvis;
+
 namespace camvis { namespace handlers {
 
 		class SceneHandler
 		{
 		private:
-			//Scene activeScene;
+			data::Scene* activeScene;
+
+			Aruco::ArucoHandler* cardHandler;
 
 
 		public:
+			SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr) {};
+
 			void update(float deltaTime);
 			void draw();
 
