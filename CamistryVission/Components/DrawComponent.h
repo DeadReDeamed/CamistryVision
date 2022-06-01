@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "../Data/Model/Model.h"
+#include "glm/glm.hpp"
 
 namespace camvis 
 {
