@@ -4,6 +4,9 @@
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
+#include "debuging/imgui/imgui.h"
+#include "debuging/DebugWindow.h"
+
 #include "GameObject.h"
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
@@ -13,6 +16,8 @@
 #include "Util/JSONParser.h"
 #include "Data/Matter/Matter.h"
 #include "Data/Matter/Atom.h"
+
+#define DEBUG_ENABLED
 
 double lastUpdateTime;
 void update();
@@ -62,8 +67,17 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::startFrame();
+#endif // DEBUG_ENABLED
+
 		update();
 		draw();
+
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::endFrame();
+#endif // DEBUG_ENABLED
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -76,11 +90,17 @@ void init()
 {
 	lastUpdateTime = glfwGetTime();
 
+	// Starting the debug gui
+#ifdef DEBUG_ENABLED
+	debugging::DebugWindow::init(window);
+#endif // DEBUG_ENABLED
+
+
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
 
 	
-	int atomIndex = 7;
+	int atomIndex = 6;
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
@@ -106,6 +126,7 @@ void init()
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 }
 
+bool showStatsWindow = true;
 void update()
 {
 	double timeNow = glfwGetTime();
@@ -117,6 +138,11 @@ void update()
 		gameObject->update(deltaTime);
 	}
 
+	// Show Frame statistics
+	ImGui::Begin("Stats", &showStatsWindow);
+	ImGui::Text("Frame time: %.2f", deltaTime);
+	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
+	ImGui::End();
 }
 
 int rot = 0;
