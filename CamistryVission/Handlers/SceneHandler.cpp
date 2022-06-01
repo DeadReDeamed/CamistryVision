@@ -19,7 +19,7 @@ namespace camvis {
 
 		void SceneHandler::changeScene(int index)
 		{
-			throw "not implemented!";
+			parseScene(index);
 		}
 
 		void SceneHandler::handleArucoUpdate()
@@ -29,12 +29,26 @@ namespace camvis {
 
 		void SceneHandler::parseScene(int index)
 		{
-			std::vector<std::unordered_map<int, data::Matter>>* scenes = &DataHandler::getInstance()->scenes;
+			// Clearing the current Scene
+			activeScene->gameObjects.clear();
+			activeScene->linkedGameObjects.clear();
 
-			if (scenes->size() >= index) throw "Index error";
+			// Loading the scene from data handler
+			std::vector<std::unordered_map<int, data::Matter*>>* scenes = &(DataHandler::getInstance()->scenes);
 
-			std::unordered_map<int, data::Matter>* sceneData = &scenes->at(index);
+			if (scenes->size() >= index) throw "Index out of bounds exception";
 
+			std::unordered_map<int, data::Matter*> sceneData = scenes->at(index);
+
+			// Going over the items in the scene
+			for (std::pair<int, data::Matter*> matterPair : sceneData)
+			{
+				data::Matter* test = matterPair.second;
+				if ((data::Atom*) test)
+				{
+
+				}
+			}
 
 			/*
 			// Create first test gameobject
