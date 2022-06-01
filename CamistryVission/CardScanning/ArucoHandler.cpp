@@ -25,6 +25,7 @@ namespace Aruco {
 			{
 				cv::imshow("ArucoDebug", img);
 				cv::waitKey(1);
+				DetectedMarkers.clear();
 				continue;
 			}
 
@@ -36,10 +37,11 @@ namespace Aruco {
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
 
-				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i]);
+				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData	);
 				markerList.push_back(md);
 
 			}
+
 			DetectedMarkers = markerList;
 
 			cv::imshow("ArucoDebug", img);
