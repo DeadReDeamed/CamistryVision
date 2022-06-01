@@ -3,6 +3,7 @@
 #include "AtomComponent.h"
 #include "../GameObject.h"
 #include "../lib/tigl/tigl.h"
+#include <time.h>
 
 namespace camvis {
 	namespace component
@@ -15,8 +16,11 @@ namespace camvis {
 			MoleculeComponent::MoleculeGrid grid = MoleculeComponent::MoleculeGrid(size);
 
 			for (int i = 0; i < cores.size(); i++) {
+				srand(time(NULL));
 				int x = (rand() % size) - size / 2;
+				srand(time(NULL));
 				int y = (rand() % size) - size / 2;
+				srand(time(NULL));
 				int z = (rand() % size) - size / 2;
 
 				if (grid[glm::vec3(x, y, z)].second.size() <= 0) {
@@ -113,7 +117,7 @@ namespace camvis {
 				glm::vec3 pos = drawList[i].first;
 				pos *= 3;
 				// some wacky magic to make the lines go inside the atoms.
-				pos = glm::vec3(pos.x - 3, pos.y - 3, pos.z);
+				//pos = glm::vec3(pos.x - 3, pos.y - 3, pos.z);
 				tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
 			}
 			tigl::end();
