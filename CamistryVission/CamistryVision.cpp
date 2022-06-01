@@ -8,6 +8,7 @@
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
 #include "Components/MoleculeComponent.h"
+#include "Components/RotationComponent.h"
 
 #include "Util/FiloIO.h"
 #include "Util/JSONParser.h"
@@ -96,6 +97,9 @@ void init()
 	component::MoleculeComponent* molecule = new component::MoleculeComponent(atomMap, atoms);
 	testCore->addComponent(molecule);
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	component::RotationComponent* rotate = new component::RotationComponent();
+	testCore->addComponent(rotate);
+	testCore->scale(glm::vec3(0.8, 0.8, 0.8));
 	gameObjects.push_back(testCore);
 
 	//load and init atom from the json data

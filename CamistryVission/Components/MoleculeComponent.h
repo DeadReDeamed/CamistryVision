@@ -17,6 +17,7 @@ namespace camvis {
 		private:
 			std::map<int,int> atomMap;
 			std::vector<std::vector<std::pair<glm::vec3, glm::vec4>>> cores;
+			std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> drawList;
 		public:
 			MoleculeComponent(std::map<int,int> _atomMap, const std::vector<data::Atom>& atoms);
 			void update(float deltaTime);
@@ -25,9 +26,8 @@ namespace camvis {
 			class MoleculeGrid {
 			private:
 				int size;
+			public:
 				std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> grid;
-
-
 			public:
 				MoleculeGrid(int _size) : size(_size) {
 					if ((size % 2)) { 
