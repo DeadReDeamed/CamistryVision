@@ -6,46 +6,56 @@
 #include "MarkerData.h"
 namespace Aruco {
 	void ArucoHandler::run() {
-		printf("Started marker detection");
+
 		while (camera.grab() && isRunning) {
 			cv::Mat img;
+
+			// Get latest image
 			camera.retrieve(img);
+
+			// Gray-scale image
 			cv::Mat grey;
 			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
-			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
-			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
-
 			
+			// Detect the markers
+			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
 
+			// Draw image and return if no code found
 			if (simpleData.ids.size() <= 0)
 			{
 				cv::imshow("ArucoDebug", img);
-				cv::waitKey(10);
+				cv::waitKey(1);
 				continue;
 			}
 
 			cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
 
+			// Calculate transform of markers
+			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
+
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
+
 				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i]);
 				markerList.push_back(md);
+
 			}
 			DetectedMarkers = markerList;
-			
-			//aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 
 			cv::imshow("ArucoDebug", img);
-			cv::waitKey(10);
+			cv::waitKey(1);
 		}
 		camera.release();
 	}
 
 	void ArucoHandler::start() {
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
+
+		// Starting the camera capture
 		camera = cv::VideoCapture();
 		camera.open(0);
 
+		// Starting OpenCV Thread
 		arucothread = (std::thread(&ArucoHandler::run, this));
 		isRunning = true;
 	}
@@ -58,9 +68,11 @@ namespace Aruco {
 	std::vector<MarkerData> ArucoHandler::getMarkers() {
 		return DetectedMarkers;
 	}
+
 	cv::Vec2d ArucoHandler::getCameraData() {
 		return cv::Vec2d(lastImage.rows, lastImage.cols);
 	}
+
 	cv::Mat ArucoHandler::getLastImage() {
 		return lastImage;
 	}
