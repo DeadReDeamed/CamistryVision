@@ -1,5 +1,4 @@
 #include <iostream>
-#include <opencv2/aruco.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
@@ -41,13 +40,15 @@ int main()
 
 	std::cout << "start camistry vision" << std::endl;
 
+	a = Aruco::ArucoHandler();
+	a.start();
+
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
 	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
 
-	//a = Aruco::ArucoHandler();
-	//a.start();
+	
 
 	if (!window)
 	{
@@ -100,7 +101,7 @@ void init()
 	GameObject* testCore = new GameObject();
 
 	
-	int atomIndex = 6;
+	int atomIndex = 1;
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));

@@ -15,7 +15,17 @@ namespace Aruco {
 			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
 
-			if (simpleData.ids.size() <= 0) continue;
+			
+
+			if (simpleData.ids.size() <= 0)
+			{
+				cv::imshow("ArucoDebug", img);
+				cv::waitKey(10);
+				continue;
+			}
+
+			cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
+
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
 				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i]);
@@ -23,7 +33,8 @@ namespace Aruco {
 			}
 			DetectedMarkers = markerList;
 			
-			aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
+			//aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
+
 			cv::imshow("ArucoDebug", img);
 			cv::waitKey(10);
 		}
@@ -34,6 +45,7 @@ namespace Aruco {
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
 		camera = cv::VideoCapture();
 		camera.open(0);
+
 		arucothread = (std::thread(&ArucoHandler::run, this));
 		isRunning = true;
 	}
