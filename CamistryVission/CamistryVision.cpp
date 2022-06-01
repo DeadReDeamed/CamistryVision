@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Handlers/DataHandler.h"
+#include "Handlers/SceneHandler.h"
 
 #include "debuging/imgui/imgui.h"
 #include "debuging/DebugWindow.h"
@@ -27,22 +28,21 @@ void init();
 using namespace camvis;
 
 GLFWwindow* window;
-Aruco::ArucoHandler a;
 
-std::vector<GameObject*> gameObjects;
+Aruco::ArucoHandler arucoHandler = Aruco::ArucoHandler();
+handlers::SceneHandler sceneHandler = handlers::SceneHandler(&arucoHandler);
 
 int main()
 {
 
 	std::cout << "start camistry vision" << std::endl;
 
+	arucoHandler.start();
+
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
 	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
-
-	//a = Aruco::ArucoHandler();
-	//a.start();
 
 	if (!window)
 	{
@@ -86,6 +86,7 @@ void init()
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json");
 	
+	sceneHandler.changeScene(0);
 }
 
 bool showStatsWindow = true;
@@ -95,10 +96,7 @@ void update()
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
 
-	for (auto gameObject : gameObjects)
-	{
-		gameObject->update(deltaTime);
-	}
+	sceneHandler.update(deltaTime);
 
 	// Show Frame statistics
 	ImGui::Begin("Stats", &showStatsWindow);
@@ -126,9 +124,5 @@ void draw()
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-
-	for (auto gameobject : gameObjects)
-	{
-		gameobject->draw();
-	}
+	sceneHandler.draw();
 }

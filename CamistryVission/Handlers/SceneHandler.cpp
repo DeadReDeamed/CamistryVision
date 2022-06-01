@@ -9,12 +9,18 @@ namespace camvis {
 		
 		void SceneHandler::update(float deltaTime)
 		{
-			throw "not implemented!";
+			for (auto gameObject : activeScene->gameObjects)
+			{
+				gameObject.update(deltaTime);
+			}
 		}
 
 		void SceneHandler::draw()
 		{
-			throw "not implemented!";
+			for (auto gameobject : activeScene->gameObjects)
+			{
+				gameobject.draw();
+			}
 		}
 
 		void SceneHandler::changeScene(int index)
