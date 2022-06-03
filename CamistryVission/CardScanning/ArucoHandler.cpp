@@ -5,6 +5,7 @@
 
 #include "MarkerData.h"
 namespace Aruco {
+
 	void ArucoHandler::run() {
 
 		while (camera.grab() && isRunning) {
@@ -12,6 +13,8 @@ namespace Aruco {
 
 			// Get latest image
 			camera.retrieve(img);
+
+			lastImage = img;
 
 			// Gray-scale image
 			cv::Mat grey;
@@ -75,7 +78,7 @@ namespace Aruco {
 		return cv::Vec2d(lastImage.rows, lastImage.cols);
 	}
 
-	cv::Mat ArucoHandler::getLastImage() {
+	cv::Mat ArucoHandler::getLastImage() {	
 		return lastImage;
 	}
 

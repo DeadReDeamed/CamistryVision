@@ -32,6 +32,8 @@ using namespace camvis;
 GLFWwindow* window;
 Aruco::ArucoHandler a;
 
+unsigned int cameraTexture;
+
 std::vector<GameObject*> gameObjects;
 
 std::vector<data::Atom> atoms; //temporary varialbe for testing
@@ -88,9 +90,10 @@ int main()
 	return 0;
 }
 
+
 void init()
 {
-	lastUpdateTime = glfwGetTime();
+	lastUpdateTime = glfwGetTime();	
 
 	// Starting the debug gui
 #ifdef DEBUG_ENABLED
@@ -134,6 +137,32 @@ void update()
 	double timeNow = glfwGetTime();
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
+
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+	glGenTextures(1, &cameraTexture);
+	glBindTexture(GL_TEXTURE_2D, cameraTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Set texture clamping method
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	// Update the image
+	cv::Mat image = cv::Mat();
+	a.getLastImage().copyTo(image);
+
+	glTexImage2D(GL_TEXTURE_2D,         // Type of texture
+		0,                   // Pyramid level (for mip-mapping) - 0 is the top level
+		GL_RGB,              // Internal colour format to convert to
+		image.cols,          // Image width  i.e. 640 for Kinect in standard mode
+		image.rows,          // Image height i.e. 480 for Kinect in standard mode
+		0,                   // Border width in pixels (can either be 1 or 0)
+		GL_RGB,              // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+		GL_UNSIGNED_BYTE,    // Image data type
+		image.ptr());        // The actual image data itself
 
 	for (auto gameObject : gameObjects)
 	{
@@ -207,9 +236,35 @@ void draw()
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	/*glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
+	tigl::shader->setModelMatrix(glm::mat4(1.0f));*/
+
+	tigl::shader->setProjectionMatrix(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 200.0f));
+	tigl::shader->setViewMatrix(glm::lookAt(
+		glm::vec3(0.0f, 0, 5),
+		glm::vec3(0.0f, 0, 0),
+		glm::vec3(0.0f, 1, 0)
+	));
+
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
+
+	// Drawing the background image
+	float rectangleSize = 1;
+
+	// Update the texture from the camera
+	tigl::shader->enableTexture(true);
+
+	glBindTexture(GL_TEXTURE_2D, cameraTexture);
+
+	tigl::begin(GL_QUADS);
+
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, -rectangleSize, 0), glm::vec2(0, 1), glm::vec4(1,0,1,1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, -rectangleSize, 0), glm::vec2(1, 1), glm::vec4(1, 0, 1, 1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, rectangleSize, 0), glm::vec2(1, 0), glm::vec4(1, 0, 1, 1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, rectangleSize, 0), glm::vec2(0, 0), glm::vec4(1, 0, 1, 1)));
+
+	tigl::end();
 
 	for (auto gameobject : gameObjects)
 	{
@@ -221,6 +276,6 @@ void draw()
 
 		gameobject->transform = modelMatrix;
 
-		gameobject->draw();
+		//gameobject->draw();
 	}
 }

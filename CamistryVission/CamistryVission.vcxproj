@@ -145,7 +145,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CamistryVision.cpp" />
     <ClCompile Include="Components\AtomComponent.cpp" />
     <ClCompile Include="Components\CardComponent.cpp" />
     <ClCompile Include="Components\DrawComponent.cpp" />
@@ -172,6 +171,8 @@
     <ClCompile Include="Handlers\ModelHandler.cpp" />
     <ClCompile Include="Handlers\SceneHandler.cpp" />
     <ClCompile Include="lib\tigl\tigl.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="textfile.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
@@ -221,6 +222,7 @@
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="textfile.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="lib\stb\stb_image.h" />
     <ClInclude Include="lib\stb\stb_image_resize.h" />
