@@ -14,6 +14,13 @@
 
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
+#include "Components/MoleculeComponent.h"
+#include "Components/RotationComponent.h"
+
+#include "Util/FiloIO.h"
+#include "Util/JSONParser.h"
+#include "Data/Matter/Matter.h"
+#include "Data/Matter/Atom.h"
 
 #define DEBUG_ENABLED
 
@@ -31,6 +38,9 @@ GLFWwindow* window;
 
 Aruco::ArucoHandler arucoHandler = Aruco::ArucoHandler();
 handlers::SceneHandler sceneHandler = handlers::SceneHandler(&arucoHandler);
+
+std::vector<data::Atom> atoms; //temporary varialbe for testing
+std::vector<data::Molecule> molecules; // same here
 
 int main()
 {
@@ -50,6 +60,12 @@ int main()
 		throw "Could not initialize glwf";
 	}
 	glfwMakeContextCurrent(window);
+
+	//loads atom and molecule data
+	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
+
+	atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
+	molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
 
 	tigl::init();
 	init();
@@ -86,6 +102,48 @@ void init()
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json");
 	
+	int atomIndex = 1;
+
+	std::map<int, int> atomMap;
+	for (auto& a : molecules[1].atoms) {
+		if (atomMap.count(a.atomNumber)) {
+			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
+		}
+		else {
+			atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
+		}
+	}
+	
+	component::MoleculeComponent* molecule = new component::MoleculeComponent(atomMap, atoms);
+	testCore->addComponent(molecule);
+	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	component::RotationComponent* rotate = new component::RotationComponent();
+	testCore->addComponent(rotate);
+	testCore->scale(glm::vec3(1, 1, 1));
+	gameObjects.push_back(testCore);
+
+	//load and init atom from the json data
+	//testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	//component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
+	//testCore->addComponent(atomComponent);
+
+	//std::vector<component::Shell*> shells;
+
+	////load all electrons from the json data.
+	//for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
+	//{
+	//	component::Shell* shell = new component::Shell();
+	//	shell->amount = atoms[atomIndex].electrons[i];
+	//	shell->distance = 10 + (2 * i);
+	//	shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
+	//	shells.push_back(shell);
+	//}
+	//
+	//component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
+	//testCore->addComponent(electronComponent);
+
+	//gameObjects.push_back(testCore);
+	//component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 	sceneHandler.changeScene(0);
 }
 
