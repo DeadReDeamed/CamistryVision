@@ -34,15 +34,18 @@ namespace Aruco {
 	}
 
 	void ArucoHandler::start() {
-		//aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
-		cv::VideoCapture camera(0);
+		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
+		cv::VideoCapture camera(1);
 		cv::Mat img;
 		camera.retrieve(img);
+		if (img.empty()) {
+			return;
+		}
 		cv::imshow("ArucoDebug", img);
 		cv::waitKey(0);
 
 
-		//arucothread = (std::thread(&ArucoHandler::run, this));
+		arucothread = (std::thread(&ArucoHandler::run, this));
 		isRunning = true;
 	}
 
