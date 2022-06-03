@@ -1,6 +1,8 @@
 #include "SceneHandler.h"
 
 #include "DataHandler.h"
+#include "../Components/AtomComponent.h"
+#include "../Components/MoleculeComponent.h"
 
 using namespace camvis;
 
@@ -40,20 +42,30 @@ namespace camvis {
 			activeScene->linkedGameObjects.clear();
 
 			// Loading the scene from data handler
-			std::vector<std::unordered_map<int, data::Matter*>>* scenes = &(DataHandler::getInstance()->scenes);
+			std::vector<std::unordered_map<int, data::Atom*>>* scenesA = &(DataHandler::getInstance()->scenesA);
+			std::vector<std::unordered_map<int, data::Molecule*>>* scenesM = &(DataHandler::getInstance()->scenesM);
 
-			if (scenes->size() >= index) throw "Index out of bounds exception";
+			if (scenesA->size() >= index) throw "Index out of bounds exception";
 
-			std::unordered_map<int, data::Matter*> sceneData = scenes->at(index);
+			std::unordered_map<int, data::Atom*> sceneDataA = scenesA->at(index);
+			std::unordered_map<int, data::Molecule*> sceneDataM = scenesM->at(index);
 
 			// Going over the items in the scene
-			for (std::pair<int, data::Matter*> matterPair : sceneData)
+			for (std::pair<int, data::Atom*> matterPair : sceneDataA)
 			{
-				data::Matter* test = matterPair.second;
-				if ((data::Atom*) test)
-				{
+				data::Atom* atom = matterPair.second;
+				//Initializing game object from atoms
+				GameObject* object = new GameObject();
+				object->addComponent(new component::AtomComponent(atom->atomNumber));
+				activeScene->gameObjects.push_back(*object);
+				activeScene->linkedGameObjects.insert({ matterPair.first, object });
+			}
 
-				}
+			for (std::pair<int, data::Molecule*> matterPair : sceneDataM) {
+				data::Molecule* molecule = matterPair.second;
+				GameObject* object = new GameObject();
+				component::MoleculeComponent m(matterPair.second->);
+				object->addComponent(m);
 			}
 
 			/*
