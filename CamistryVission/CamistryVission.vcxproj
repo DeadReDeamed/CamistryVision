@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -80,6 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -145,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CamistryVision.cpp" />
     <ClCompile Include="Components\AtomComponent.cpp" />
     <ClCompile Include="Components\CardComponent.cpp" />
     <ClCompile Include="Components\DrawComponent.cpp" />
@@ -171,7 +173,6 @@
     <ClCompile Include="Handlers\ModelHandler.cpp" />
     <ClCompile Include="Handlers\SceneHandler.cpp" />
     <ClCompile Include="lib\tigl\tigl.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="textfile.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />

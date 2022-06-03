@@ -99,10 +99,10 @@
     <ClCompile Include="debuging\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="textfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="textfile.cpp">
+    <ClCompile Include="CamistryVision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
