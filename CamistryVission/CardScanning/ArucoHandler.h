@@ -17,17 +17,16 @@ namespace Aruco {
 		cv::Mat lastImage;
 		std::thread arucothread;
 
-		cv::VideoCapture camera;
 		bool isRunning;
 	private:
-		void run();
+		void run(cv::Mat** imgp, cv::Mat** imgFinal);
 	public:
 		ArucoHandler() { isRunning = false; }
 
 		/**
 		* Used to start marker detection.
 		*/
-		void start();
+		void start(cv::Mat** imgp, cv::Mat** imgFinal);
 		/**
 		* Used to stop marker detection.
 		*/

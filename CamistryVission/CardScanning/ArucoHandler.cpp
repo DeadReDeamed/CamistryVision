@@ -5,17 +5,16 @@
 
 #include "MarkerData.h"
 namespace Aruco {
-	void ArucoHandler::run() {
+	void ArucoHandler::run(cv::Mat** imgp, cv::Mat** imgFinal) {
 
-		while (camera.grab() && isRunning) {
-			cv::Mat img;
+		while (isRunning && *imgp != NULL) {
+			cv::Mat* img = *imgp;
 
 			// Get latest image
-			camera.retrieve(img);
 
 			// Gray-scale image
 			cv::Mat grey;
-			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
+			cv::cvtColor(*img, grey, cv::COLOR_BGR2GRAY);
 			
 			// Detect the markers
 			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
@@ -23,13 +22,13 @@ namespace Aruco {
 			// Draw image and return if no code found
 			if (simpleData.ids.size() <= 0)
 			{
-				cv::imshow("ArucoDebug", img);
-				cv::waitKey(1);
+				//cv::imshow("ArucoDebug", img);
+				//cv::waitKey(1);
 				DetectedMarkers.clear();
 				continue;
 			}
 
-			cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
+			cv::aruco::drawDetectedMarkers(*img, simpleData.corners, simpleData.ids);
 
 			// Calculate transform of markers
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
@@ -44,21 +43,20 @@ namespace Aruco {
 
 			DetectedMarkers = markerList;
 
-			cv::imshow("ArucoDebug", img);
-			cv::waitKey(1);
+			img->copyTo(*(*imgFinal));
+			//cv::imshow("ArucoDebug", img);
+			//cv::waitKey(1);
 		}
-		camera.release();
 	}
 
-	void ArucoHandler::start() {
+	void ArucoHandler::start(cv::Mat** imgp, cv::Mat** imgFinal) {
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
 
 		// Starting the camera capture
-		camera = cv::VideoCapture();
-		camera.open(0);
+		
 
 		// Starting OpenCV Thread
-		arucothread = (std::thread(&ArucoHandler::run, this));
+		arucothread = (std::thread(&ArucoHandler::run, this, imgp, imgFinal));
 		isRunning = true;
 	}
 
