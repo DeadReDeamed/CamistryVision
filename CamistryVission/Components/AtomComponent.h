@@ -9,19 +9,18 @@ namespace camvis {
 		class AtomComponent : public DrawComponent
 		{
 		private:
-			// Atom structure
-			std::vector<std::pair<glm::vec3, glm::vec4>> core;
-
 			// Number of parts in the atom
 			int bolAmount;
 
 		public:
 
+			// Atom structure
+			std::vector<std::pair<glm::vec3, glm::vec4>> core;
 			/// <summary>
 			/// Constructs the atom component with the given amound of size
 			/// </summary>
 			/// <param name="bolAmount">The number of parts in the core</param>
-			AtomComponent(int bolAmount) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount) {};
+			AtomComponent(int bolAmount) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount) { generateCore(bolAmount, glm::mat4(1.0f)); };
 
 			/// <summary>
 			/// Updates the component
@@ -34,8 +33,8 @@ namespace camvis {
 			/// </summary>
 			void draw();
 
-		private:
 			void generateCore(int size, glm::mat4 model);
+		private:
 			glm::vec4 selectCoreColor();
 
 		};
