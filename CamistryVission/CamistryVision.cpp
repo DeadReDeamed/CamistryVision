@@ -145,7 +145,33 @@ void update()
 
 	std::vector<Aruco::MarkerData> detectedMarkers = a.getMarkers();
 
+	for (int i = 0; i < detectedMarkers.size(); i++)
+	{
+		// Calculate rodrigues transform 
+		cv::Mat rodrigues;
+		cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
 
+		// Building the viewMatrix for this model
+		glm::mat4 viewMatrix = {
+			{(float)rodrigues.at<double>(0,0), (float)rodrigues.at<double>(0,1), (float)rodrigues.at<double>(0,2),(float)(detectedMarkers[i].tvec[0] * 0.1f)},
+			{(float)rodrigues.at<double>(1,0), (float)rodrigues.at<double>(1,1), (float)rodrigues.at<double>(1,2),(float)(detectedMarkers[i].tvec[1] * 0.1f)},
+			{(float)rodrigues.at<double>(2,0), (float)rodrigues.at<double>(2,1), (float)rodrigues.at<double>(2,2),(float)(detectedMarkers[i].tvec[2] * 0.1f)},
+			{0.0f, 0.0f, 0.0f, 1.0f}
+		};
+
+		glm::mat4 cvToOpenGL = glm::mat4(0.0f);
+		cvToOpenGL[0][0] = 1.0f;
+		cvToOpenGL[1][1] = -1.0f;
+		cvToOpenGL[2][2] = -1.0f;
+		cvToOpenGL[3][3] = 1.0f;
+
+		viewMatrix = cvToOpenGL * viewMatrix;
+		viewMatrix = glm::transpose(viewMatrix);
+
+		gameObjects[0]->cameraTransform = viewMatrix;
+
+
+	}
 
 	ImGui::Begin("Cards", &showCardsDebug);
 	sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
@@ -175,21 +201,26 @@ void draw()
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_CULL_FACE);
-
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-
 	for (auto gameobject : gameObjects)
 	{
+		tigl::shader->setViewMatrix(gameobject->cameraTransform);
+
+		glm::mat4 modelMatrix = glm::mat4(1.0f);
+		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.01f, 0.01f, 0.01f));
+		modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		gameobject->transform = modelMatrix;
+
 		gameobject->draw();
 	}
 }

@@ -37,7 +37,7 @@ namespace Aruco {
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
 
-				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData	);
+				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData.rvecs[i], advancedData.tvecs[i]);
 				markerList.push_back(md);
 
 			}

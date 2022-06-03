@@ -9,10 +9,11 @@ namespace Aruco {
 		cv::Vec3d transform; // Is a 3d vector that represents a transform.
 		cv::Vec3d rotation; // Is a 3d vector that represents a rotation.
 
-		AdvancedMarkerData advancedData;
+		cv::Vec3d rvec;
+		cv::Vec3d tvec;
 
 	public:
-		MarkerData(int id, std::vector<cv::Point2f> corners, cv::Vec3d transform, cv::Vec3d rotation, AdvancedMarkerData advancedData)
-			: id(id), corners(corners), transform(transform), rotation(rotation), advancedData(advancedData) {};
+		MarkerData(int id, std::vector<cv::Point2f> corners, cv::Vec3d transform, cv::Vec3d rotation, cv::Vec3d rvec, cv::Vec3d tvec)
+			: id(id), corners(corners), transform(transform), rotation(rotation), rvec(rvec), tvec(tvec) {};
 	};
 }
