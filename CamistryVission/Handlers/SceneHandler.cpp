@@ -3,6 +3,10 @@
 #include "DataHandler.h"
 #include "../Components/AtomComponent.h"
 #include "../Components/MoleculeComponent.h"
+#include "../Components/ElectronComponent.h"
+#include "../Components/RotationComponent.h"
+#include <vector>
+
 
 using namespace camvis;
 
@@ -57,6 +61,16 @@ namespace camvis {
 				//Initializing game object from atoms
 				GameObject* object = new GameObject();
 				object->addComponent(new component::AtomComponent(atom->atomNumber));
+				std::vector<component::Shell*> shells;
+				for (size_t i = 0; i < atom->electrons.size(); i++)
+					{
+						component::Shell* shell = new component::Shell();
+						shell->amount = atom->electrons[i];
+						shell->distance = 10 + (2 * i);
+						shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
+						shells.push_back(shell);
+					}
+				object->addComponent(new component::ElectronComponent(shells));
 				activeScene->gameObjects.push_back(*object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
@@ -64,8 +78,12 @@ namespace camvis {
 			for (std::pair<int, data::Molecule*> matterPair : sceneDataM) {
 				data::Molecule* molecule = matterPair.second;
 				GameObject* object = new GameObject();
-				component::MoleculeComponent m(matterPair.second->);
+				component::MoleculeComponent* m = new component::MoleculeComponent(molecule->atomMap, molecule->atoms);
+				component::RotationComponent* rotate = new component::RotationComponent();
+				object->addComponent(rotate);
 				object->addComponent(m);
+				activeScene->gameObjects.push_back(*object);
+				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
 
 			/*
