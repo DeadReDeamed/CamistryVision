@@ -1,0 +1,1 @@
+del/spider.obj 0

@@ -107,7 +107,7 @@ namespace Aruco {
     }
     Aruco::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
         Aruco::AdvancedMarkerData markerdata;
-        cv::aruco::estimatePoseSingleMarkers(corners, 0.05, cameraMatrix, distCoeffs,
+        cv::aruco::estimatePoseSingleMarkers(corners, 1.75f, cameraMatrix, distCoeffs,
             markerdata.rvecs, markerdata.tvecs);
         return markerdata;
     }

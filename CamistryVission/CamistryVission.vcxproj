@@ -221,6 +221,7 @@
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="shit.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="lib\stb\stb_image.h" />
     <ClInclude Include="lib\stb\stb_image_resize.h" />

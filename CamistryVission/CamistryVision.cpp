@@ -36,6 +36,7 @@ std::vector<GameObject*> gameObjects;
 
 std::vector<data::Atom> atoms; //temporary varialbe for testing
 
+#include "shit.h"
 int main()
 {
 
@@ -73,8 +74,9 @@ int main()
 		debugging::DebugWindow::startFrame();
 #endif // DEBUG_ENABLED
 
-		update();
-		draw();
+		shit::loop();
+		//update();
+		//draw();
 
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::endFrame();
@@ -91,6 +93,11 @@ int main()
 void init()
 {
 	lastUpdateTime = glfwGetTime();
+
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	tigl::shader->setProjectionMatrix(projection);
 
 	// Starting the debug gui
 #ifdef DEBUG_ENABLED
@@ -126,6 +133,9 @@ void init()
 
 	gameObjects.push_back(testCore);
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+
+	shit::loadModelFile("del/modelToMarker.txt");
+	shit::loadModels();
 }
 
 bool showStatsWindow = true;
@@ -205,10 +215,6 @@ void draw()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 
-	int viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
-	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
 	for (auto gameobject : gameObjects)
