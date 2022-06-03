@@ -36,6 +36,8 @@ std::vector<GameObject*> gameObjects;
 
 std::vector<data::Atom> atoms; //temporary varialbe for testing
 
+unsigned int cameraTexture;
+
 int main()
 {
 
@@ -46,8 +48,8 @@ int main()
 
 	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
 
-	//a = Aruco::ArucoHandler();
-	//a.start();
+	a = Aruco::ArucoHandler();
+	a.start();
 
 	if (!window)
 	{
@@ -99,31 +101,37 @@ void init()
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
 
+
+	glm::mat4 Projection = glm::perspective(90.0f, 1.0f, 0.1f, 100.0f);     
+	glm::mat4 View = glm::lookAt(glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));     
+	tigl::shader->setProjectionMatrix(Projection);     
+	tigl::shader->setViewMatrix(View);
+
 	
-	int atomIndex = 6;
-
-	//load and init atom from the json data
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
-	testCore->addComponent(atomComponent);
-
-	std::vector<component::Shell*> shells;
-
-	//load all electrons from the json data.
-	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
-	{
-		component::Shell* shell = new component::Shell();
-		shell->amount = atoms[atomIndex].electrons[i];
-		shell->distance = 10 + (2 * i);
-		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
-		shells.push_back(shell);
-	}
-
-	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
-	testCore->addComponent(electronComponent);
-
-	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+//	int atomIndex = 6;
+//
+//	//load and init atom from the json data
+//	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+//	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
+//	testCore->addComponent(atomComponent);
+//
+//	std::vector<component::Shell*> shells;
+//
+//	//load all electrons from the json data.
+//	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
+//	{
+//		component::Shell* shell = new component::Shell();
+//		shell->amount = atoms[atomIndex].electrons[i];
+//		shell->distance = 10 + (2 * i);
+//		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
+//		shells.push_back(shell);
+//	}
+//
+//	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
+//	testCore->addComponent(electronComponent);
+//
+//	gameObjects.push_back(testCore);
+//	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 }
 
 bool showStatsWindow = true;
@@ -143,6 +151,31 @@ void update()
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+	glGenTextures(1, &cameraTexture);
+	glBindTexture(GL_TEXTURE_2D, cameraTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Set texture clamping method
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	// Update the image
+	cv::Mat image = cv::Mat();
+	a.getLastImage().copyTo(image);
+
+	glTexImage2D(GL_TEXTURE_2D,         // Type of texture
+		0,                   // Pyramid level (for mip-mapping) - 0 is the top level
+		GL_RGB,              // Internal colour format to convert to
+		image.cols,          // Image width  i.e. 640 for Kinect in standard mode
+		image.rows,          // Image height i.e. 480 for Kinect in standard mode
+		0,                   // Border width in pixels (can either be 1 or 0)
+		GL_RGB,              // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+		GL_UNSIGNED_BYTE,    // Image data type
+		image.ptr());        // The actual image data itself
 }
 
 int rot = 0;
@@ -169,4 +202,24 @@ void draw()
 	{
 		gameobject->draw();
 	}
+
+	// Drawing the background image
+	float rectangleSize = 1;
+
+	// Update the texture from the camera
+	tigl::shader->enableTexture(true);
+
+	glBindTexture(GL_TEXTURE_2D, cameraTexture);
+	glm::mat4 mat(1.0f);
+
+	tigl::begin(GL_QUADS);
+
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, -rectangleSize, 0), glm::vec2(0, 1), glm::vec4(1, 0, 1, 1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, -rectangleSize, 0), glm::vec2(1, 1), glm::vec4(1, 0, 1, 1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, rectangleSize, 0), glm::vec2(1, 0), glm::vec4(1, 0, 1, 1)));
+	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, rectangleSize, 0), glm::vec2(0, 0), glm::vec4(1, 0, 1, 1)));
+
+	tigl::end();
 }
+
+
