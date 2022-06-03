@@ -85,7 +85,7 @@ void init()
 	int atomIndex = 1;
 
 	std::map<int, int> atomMap;
-	for (auto& a : molecules[1].atoms) {
+	for (auto& a : molecules[8].atoms) {
 		if (atomMap.count(a.atomNumber)) {
 			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
 		}
