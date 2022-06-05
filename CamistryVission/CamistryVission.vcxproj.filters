@@ -99,9 +99,6 @@
     <ClCompile Include="debuging\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="textfile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CamistryVision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -116,6 +113,7 @@
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
     <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
+    <None Include="imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\tigl\tigl.h">
@@ -251,9 +249,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="debuging\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="textfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

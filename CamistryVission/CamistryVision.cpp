@@ -90,7 +90,7 @@ int main()
 	return 0;
 }
 
-
+#include "Components/DrawComponent.h"
 void init()
 {
 	lastUpdateTime = glfwGetTime();	
@@ -103,8 +103,11 @@ void init()
 
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
-
-	
+	testCore->addComponent(new component::DrawComponent(new camvis::data::Model("Resources\\models\\spider.obj")));
+	gameObjects.push_back(testCore);
+	testCore->translate(glm::vec3(0, 0, -1));
+	testCore->scale(glm::vec3(0.005f, 0.005f, 0.005f));
+	/*
 	int atomIndex = 1;
 
 	//load and init atom from the json data
@@ -128,7 +131,7 @@ void init()
 	testCore->addComponent(electronComponent);
 
 	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();*/
 }
 
 bool showStatsWindow = true;
@@ -137,32 +140,6 @@ void update()
 	double timeNow = glfwGetTime();
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
-
-
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-	glGenTextures(1, &cameraTexture);
-	glBindTexture(GL_TEXTURE_2D, cameraTexture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	// Set texture clamping method
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	// Update the image
-	cv::Mat image = cv::Mat();
-	a.getLastImage().copyTo(image);
-
-	glTexImage2D(GL_TEXTURE_2D,         // Type of texture
-		0,                   // Pyramid level (for mip-mapping) - 0 is the top level
-		GL_RGB,              // Internal colour format to convert to
-		image.cols,          // Image width  i.e. 640 for Kinect in standard mode
-		image.rows,          // Image height i.e. 480 for Kinect in standard mode
-		0,                   // Border width in pixels (can either be 1 or 0)
-		GL_RGB,              // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
-		GL_UNSIGNED_BYTE,    // Image data type
-		image.ptr());        // The actual image data itself
 
 	for (auto gameObject : gameObjects)
 	{
@@ -177,11 +154,12 @@ void update()
 	for (int i = 0; i < detectedMarkers.size(); i++)
 	{
 		// Calculate rodrigues transform 
+		cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
 		cv::Mat rodrigues;
 		cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
 
 		// Building the viewMatrix for this model
-		glm::mat4 viewMatrix = {
+		/*glm::mat4 viewMatrix = {
 			{(float)rodrigues.at<double>(0,0), (float)rodrigues.at<double>(0,1), (float)rodrigues.at<double>(0,2),(float)(detectedMarkers[i].tvec[0] * 0.1f)},
 			{(float)rodrigues.at<double>(1,0), (float)rodrigues.at<double>(1,1), (float)rodrigues.at<double>(1,2),(float)(detectedMarkers[i].tvec[1] * 0.1f)},
 			{(float)rodrigues.at<double>(2,0), (float)rodrigues.at<double>(2,1), (float)rodrigues.at<double>(2,2),(float)(detectedMarkers[i].tvec[2] * 0.1f)},
@@ -194,10 +172,37 @@ void update()
 		cvToOpenGL[2][2] = -1.0f;
 		cvToOpenGL[3][3] = 1.0f;
 
-		viewMatrix = cvToOpenGL * viewMatrix;
-		viewMatrix = glm::transpose(viewMatrix);
+		//viewMatrix = cvToOpenGL * viewMatrix;
+		viewMatrix = glm::matrixCompMult(cvToOpenGL, viewMatrix);
+		viewMatrix = glm::transpose(viewMatrix);*/
 
-		gameObjects[0]->cameraTransform = viewMatrix;
+		for (unsigned int row = 0; row < 3; ++row)
+		{
+			for (unsigned int col = 0; col < 3; ++col)
+			{
+				viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
+			}
+			viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
+		}
+		viewMatrix.at<float>(3, 3) = 1.0f;
+
+		cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
+		cvToGl.at<float>(0, 0) = 1.0f;
+		cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
+		cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
+		cvToGl.at<float>(3, 3) = 1.0f;
+		viewMatrix = cvToGl * viewMatrix;
+		cv::transpose(viewMatrix, viewMatrix);
+
+		glm::mat4 glmMatrix = {
+			{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
+			{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
+			{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
+			{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
+		};
+
+
+		gameObjects[0]->cameraTransform = glmMatrix;
 
 
 	}
@@ -225,6 +230,46 @@ void update()
 
 int rot = 0;
 
+// testcube
+std::vector<tigl::Vertex> cube{
+
+	// Front face   
+	tigl::Vertex::PC(glm::vec3(0, 0, 0), glm::vec4(1, 0, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(1, 0, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(1, 0, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 0, 0, 1)),
+
+	// Back face
+	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(0, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(0, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(0, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(0, 1, 0, 1)),
+
+	// Right face
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(0, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(0, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(0, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(0, 0, 1, 1)),
+
+	// Left Face
+	tigl::Vertex::PC(glm::vec3(0, 0, 0), glm::vec4(0, 1, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(0, 1, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(0, 1, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(0, 1, 1, 1)),
+
+	// Top Face
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(1, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(1, 1, 0, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(1, 1, 0, 1)),
+
+	// Down Face
+	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(1, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(1, 0, 1, 1)),
+	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(1, 0, 1, 1)),
+};
+
 void draw()
 {
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
@@ -235,46 +280,27 @@ void draw()
 	glDepthFunc(GL_LEQUAL);
 
 	int viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	/*glm::mat4 projection = glm::perspective(glm::radians(53.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	glGetIntegerv(GL_VIEWPORT, viewport);	
+	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
-	tigl::shader->setModelMatrix(glm::mat4(1.0f));*/
-
-	tigl::shader->setProjectionMatrix(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 200.0f));
-	tigl::shader->setViewMatrix(glm::lookAt(
-		glm::vec3(0.0f, 0, 5),
-		glm::vec3(0.0f, 0, 0),
-		glm::vec3(0.0f, 1, 0)
-	));
-
+	tigl::shader->setViewMatrix(glm::mat4(1.0f));
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
 
-	// Drawing the background image
-	float rectangleSize = 1;
+	tigl::shader->enableColor(true);
 
-	// Update the texture from the camera
-	tigl::shader->enableTexture(true);
-
-	glBindTexture(GL_TEXTURE_2D, cameraTexture);
-
-	tigl::begin(GL_QUADS);
-
-	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, -rectangleSize, 0), glm::vec2(0, 1), glm::vec4(1,0,1,1)));
-	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, -rectangleSize, 0), glm::vec2(1, 1), glm::vec4(1, 0, 1, 1)));
-	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(rectangleSize, rectangleSize, 0), glm::vec2(1, 0), glm::vec4(1, 0, 1, 1)));
-	tigl::addVertex(tigl::Vertex::PTC(glm::vec3(-rectangleSize, rectangleSize, 0), glm::vec2(0, 0), glm::vec4(1, 0, 1, 1)));
-
-	tigl::end();
-
-	for (auto gameobject : gameObjects)
+	for (auto& gameobject : gameObjects)
 	{
 		tigl::shader->setViewMatrix(gameobject->cameraTransform);
 
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::scale(modelMatrix, glm::vec3(0.01f, 0.01f, 0.01f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-		gameobject->transform = modelMatrix;
+		//modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
+
+		//gameobject->transform = modelMatrix;
+
+		tigl::shader->setModelMatrix(modelMatrix);
+		tigl::drawVertices(GL_QUADS ,cube);
 
 		//gameobject->draw();
 	}

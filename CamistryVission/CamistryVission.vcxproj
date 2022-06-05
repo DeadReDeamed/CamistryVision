@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -173,12 +173,12 @@
     <ClCompile Include="Handlers\ModelHandler.cpp" />
     <ClCompile Include="Handlers\SceneHandler.cpp" />
     <ClCompile Include="lib\tigl\tigl.cpp" />
-    <ClCompile Include="textfile.cpp" />
     <ClCompile Include="Util\FiloIO.cpp" />
     <ClCompile Include="Util\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
+    <None Include="imgui.ini" />
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
     <None Include="Resources\cam_params.yml" />
@@ -223,7 +223,6 @@
     <ClInclude Include="Handlers\ModelHandler.h" />
     <ClInclude Include="Handlers\SceneHandler.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="textfile.h" />
     <ClInclude Include="tigl.h" />
     <ClInclude Include="lib\stb\stb_image.h" />
     <ClInclude Include="lib\stb\stb_image_resize.h" />
