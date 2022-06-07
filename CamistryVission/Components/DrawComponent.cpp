@@ -7,7 +7,7 @@ namespace camvis {
 	{
 		void DrawComponent::update(float deltaTime)
 		{
-			throw "Function not implemented!";
+			
 		}
 
 		void DrawComponent::draw()
