@@ -79,7 +79,9 @@ namespace Aruco {
 	}
 
 	cv::Mat ArucoHandler::getLastImage() {	
-		return lastImage;
+		cv::Mat convertedImage;
+		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		return convertedImage;
 	}
 
 	void CalibrateCamera() {

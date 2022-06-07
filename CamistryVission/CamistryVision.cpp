@@ -10,11 +10,12 @@
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
 
-
 #include "Util/FiloIO.h"
 #include "Util/JSONParser.h"
 #include "Data/Matter/Matter.h"
 #include "Data/Matter/Atom.h"
+#include "Data/Model/CameraTexture.h"
+
 
 #define DEBUG_ENABLED
 
@@ -32,7 +33,7 @@ using namespace camvis;
 GLFWwindow* window;
 Aruco::ArucoHandler a;
 
-unsigned int cameraTexture;
+data::CameraTexture camTex;
 
 std::vector<GameObject*> gameObjects;
 
@@ -49,7 +50,9 @@ int main()
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
-	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
+	//480 height
+	//640 width
+	window = glfwCreateWindow(640, 480, "CamistryVision", NULL, NULL);
 
 	
 
@@ -208,10 +211,40 @@ void update()
 
 int rot = 0;
 
+void drawBackground() {
+
+	glDisable(GL_DEPTH_TEST);
+
+	cv::Mat image = a.getLastImage();
+	
+	camTex.UpdateTexture(image.data, image.rows, image.cols, image.channels() == 3 ? GL_RGB : GL_RGBA);
+	camTex.bind();
+
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	tigl::shader->setProjectionMatrix(projection);
+	tigl::shader->setViewMatrix(glm::mat4(1.0f));
+	tigl::shader->setModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
+	tigl::shader->enableTexture(true);
+
+	tigl::begin(GL_QUADS);
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( 0.640, -0.480, -1.2),  glm::vec2(1, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-0.640, -0.480, -1.2),  glm::vec2(0, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-0.640,  0.480, -1.2),  glm::vec2(0, 0)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( 0.640,  0.480, -1.2),  glm::vec2(1, 0)));
+	tigl::end();
+
+	tigl::shader->enableTexture(false);
+
+}
+
 void draw()
 {
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawBackground();
 
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -219,6 +252,7 @@ void draw()
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);	
+
 	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setViewMatrix(glm::mat4(1.0f));
@@ -231,8 +265,6 @@ void draw()
 		tigl::shader->setViewMatrix(gameobject->cameraTransform);
 
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
-
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 
 		gameobject->transform = modelMatrix;
 		gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
