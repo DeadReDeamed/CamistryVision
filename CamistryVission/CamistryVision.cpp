@@ -15,11 +15,14 @@ void init();
 #include "CardScanning/ArucoHandler.h"
 #include "CardScanning/MarkerData.h"
 #include "Util/JSONParser.h"
+#include "debuging/DebugWindow.h"
+#include "debuging/imgui/imgui.h"
 
 using namespace camvis;
 
 GLFWwindow* window;
 Aruco::ArucoHandler a;
+bool showStatsWindow = true;
 
 unsigned int cameraTexture;
 
@@ -44,7 +47,7 @@ int main()
 	Aruco::ArucoHandler a = Aruco::ArucoHandler();
 	a.start();
 	
-	handlers::DataHandler::getInstance()->scenesA.push_back({0, });
+	handlers::DataHandler::getInstance()->scenesA.push_back({0, 0});
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
 	if (!window)
@@ -199,9 +202,8 @@ void update()
 	ImGui::End();
 
 	// END
-
 	// Show Frame statistics
-	ImGui::Begin("Stats", &showStatsWindow);
+	ImGui::Begin("Stats", &showCardsDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
