@@ -4,6 +4,9 @@
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
+#include "../Components/AtomComponent.h"
+#include "../Components/ElectronComponent.h"
+
 //Delete for test
 #include "handlers/SceneHandler.h"
 #include "handlers/DataHandler.h"
@@ -12,6 +15,9 @@ double lastUpdateTime;
 void update();
 void draw();
 void init();
+
+#define DEBUG_ENABLED
+
 #include "CardScanning/ArucoHandler.h"
 #include "CardScanning/MarkerData.h"
 #include "Util/JSONParser.h"
@@ -28,7 +34,6 @@ unsigned int cameraTexture;
 
 std::vector<GameObject*> gameObjects;
 
-std::vector<data::Atom> atoms; //temporary varialbe for testing
 
 handlers::SceneHandler* sceneHandler;
 int main()
@@ -46,10 +51,7 @@ int main()
 
 	Aruco::ArucoHandler a = Aruco::ArucoHandler();
 	a.start();
-	
-	handlers::DataHandler::getInstance()->scenesA.push_back({0, 0});
-	sceneHandler = new handlers::SceneHandler(&a);
-	sceneHandler->changeScene(0);
+
 	if (!window)
 	{
 		glfwTerminate();
@@ -57,14 +59,27 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
+	// Starting the debug gui
+#ifdef DEBUG_ENABLED
+	debugging::DebugWindow::init(window);
+#endif // DEBUG_ENABLED
+
 	tigl::init();
 
 	init();
 
 	while (!glfwWindowShouldClose(window))
 	{
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::startFrame();
+#endif
+
 		update();
 		draw();
+
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::endFrame();
+#endif
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -73,44 +88,14 @@ int main()
 	return 0;
 }
 
-#include "Components/DrawComponent.h"
 void init()
 {
 	lastUpdateTime = glfwGetTime();	
 
-	// Starting the debug gui
-#ifdef DEBUG_ENABLED
-	debugging::DebugWindow::init(window);
-#endif // DEBUG_ENABLED
+	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json");
 
-
-	// Create first test gameobject
-	GameObject* testCore = new GameObject();
-	
-	int atomIndex = 1;
-
-	//load and init atom from the json data
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
-	testCore->addComponent(atomComponent);
-
-	std::vector<component::Shell*> shells;
-
-	//load all electrons from the json data.
-	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
-	{
-		component::Shell* shell = new component::Shell();
-		shell->amount = atoms[atomIndex].electrons[i];
-		shell->distance = 10 + (2 * i);
-		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
-		shells.push_back(shell);
-	}
-
-	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
-	testCore->addComponent(electronComponent);
-
-	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+	sceneHandler = new handlers::SceneHandler(&a);
+	sceneHandler->changeScene(0);
 }
 
 void update()
@@ -119,10 +104,8 @@ void update()
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
 
-	for (auto gameObject : gameObjects)
-	{
-		gameObject->update(deltaTime);
-	}
+	// Updating the scene
+	sceneHandler->update(deltaTime);
 
 	// PLEASE FOR THE LOVE OF GOD, REMOVE
 	bool showCardsDebug = true;
@@ -180,6 +163,7 @@ void update()
 	ImGui::End();
 
 	// END
+	
 	// Show Frame statistics
 	ImGui::Begin("Stats", &showCardsDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
@@ -207,17 +191,6 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	for (auto& gameobject : gameObjects)
-	{
-		tigl::shader->setViewMatrix(gameobject->cameraTransform);
-
-		glm::mat4 modelMatrix = glm::mat4(1.0f);
-
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-
-		gameobject->transform = modelMatrix;
-		gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
-
-		gameobject->draw();
-	}
+	// Draw the scene
+	sceneHandler->draw();
 }

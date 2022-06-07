@@ -20,8 +20,8 @@ namespace camvis { namespace handlers {
 		std::vector<data::Atom> atoms;
 		std::vector<data::Molecule> molecules;
 
-		std::vector<std::unordered_map<int, data::Molecule*>> scenesM;
-		std::vector<std::unordered_map<int, data::Atom*>> scenesA;
+		std::vector<std::unordered_map<int, data::Molecule*>> scenesMolecules;
+		std::vector<std::unordered_map<int, data::Atom*>> scenesAtoms;
 	public:
 		static DataHandler* getInstance();
 

@@ -11,7 +11,7 @@ namespace camvis { namespace handlers {
 		class SceneHandler
 		{
 		private:
-			data::Scene* activeScene;
+			data::Scene* activeScene = nullptr;
 
 			Aruco::ArucoHandler* cardHandler;
 

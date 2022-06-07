@@ -25,13 +25,13 @@ namespace camvis { namespace handlers {
         molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
         
         // TODO LOAD FROM JSON
-        std::unordered_map<int, data::Atom*> testSceneA;
-        std::unordered_map<int, data::Molecule*> testSceneB;
+        std::unordered_map<int, data::Atom*> test1;
+        std::unordered_map<int, data::Molecule*> test2;
 
-        testSceneA.insert(std::make_pair<int, data::Atom*>(0, &atoms[1]));
-        testSceneB.insert(std::make_pair<int, data::Molecule*>(0, &molecules[1]));
-        scenesA.push_back(testSceneA);
-        scenesM.push_back(testSceneB);
+        test1.insert(std::make_pair<int, data::Atom*>(0, &atoms[0]));
+        test2.insert(std::make_pair<int, data::Molecule*>(1, &molecules[0]));
+        scenesAtoms.push_back(test1);
+        scenesMolecules.push_back(test2);
 
     }
 

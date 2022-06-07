@@ -7,7 +7,6 @@
 #include "../Components/RotationComponent.h"
 #include <vector>
 
-
 using namespace camvis;
 
 namespace camvis { 
@@ -17,15 +16,24 @@ namespace camvis {
 		{
 			for (auto gameObject : activeScene->gameObjects)
 			{
-				gameObject.update(deltaTime);
+				gameObject->update(deltaTime);
 			}
 		}
 
 		void SceneHandler::draw()
 		{
-			for (auto gameobject : activeScene->gameObjects)
+			for (auto& gameobject : activeScene->gameObjects)
 			{
-				gameobject.draw();
+				tigl::shader->setViewMatrix(gameobject->cameraTransform);
+
+				glm::mat4 modelMatrix = glm::mat4(1.0f);
+
+				modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
+
+				gameobject->transform = modelMatrix;
+				gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
+
+				gameobject->draw();
 			}
 		}
 
@@ -41,15 +49,18 @@ namespace camvis {
 
 		void SceneHandler::parseScene(int index)
 		{
+			if (activeScene == nullptr) activeScene = new data::Scene();
+
+
 			// Clearing the current Scene
 			activeScene->gameObjects.clear();
 			activeScene->linkedGameObjects.clear();
 
 			// Loading the scene from data handler
-			std::vector<std::unordered_map<int, data::Atom*>>* scenesA = &(DataHandler::getInstance()->scenesA);
-			std::vector<std::unordered_map<int, data::Molecule*>>* scenesM = &(DataHandler::getInstance()->scenesM);
+			std::vector<std::unordered_map<int, data::Atom*>>* scenesA = &(DataHandler::getInstance()->scenesAtoms);
+			std::vector<std::unordered_map<int, data::Molecule*>>* scenesM = &(DataHandler::getInstance()->scenesMolecules);
 
-			if (scenesA->size() >= index) throw "Index out of bounds exception";
+			if (scenesA->size() < index) throw "Index out of bounds exception";
 
 			std::unordered_map<int, data::Atom*> sceneDataA = scenesA->at(index);
 			std::unordered_map<int, data::Molecule*> sceneDataM = scenesM->at(index);
@@ -71,7 +82,7 @@ namespace camvis {
 						shells.push_back(shell);
 					}
 				object->addComponent(new component::ElectronComponent(shells));
-				activeScene->gameObjects.push_back(*object);
+				activeScene->gameObjects.push_back(object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
 
@@ -82,7 +93,7 @@ namespace camvis {
 				component::RotationComponent* rotate = new component::RotationComponent();
 				object->addComponent(rotate);
 				object->addComponent(m);
-				activeScene->gameObjects.push_back(*object);
+				activeScene->gameObjects.push_back(object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
 		}

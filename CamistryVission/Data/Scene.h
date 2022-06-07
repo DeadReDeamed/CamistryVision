@@ -12,12 +12,13 @@ namespace camvis
 		class Scene
 		{
 		public:
-			std::list<GameObject> gameObjects;
+			std::list<GameObject*> gameObjects;
 			std::unordered_map<int, GameObject*> linkedGameObjects;
 
 		public:
-			inline Scene(std::list<GameObject> gameObjects, std::unordered_map<int, GameObject*> linkedGameObjects)
+			inline Scene(std::list<GameObject*> gameObjects, std::unordered_map<int, GameObject*> linkedGameObjects)
 				: gameObjects(gameObjects), linkedGameObjects(linkedGameObjects) {}
+			inline Scene() {};
 		};
 	}
 }
