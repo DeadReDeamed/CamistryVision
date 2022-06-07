@@ -103,12 +103,8 @@ void init()
 
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
-	testCore->addComponent(new component::DrawComponent(new camvis::data::Model("Resources\\models\\spider.obj")));
-	gameObjects.push_back(testCore);
-	testCore->translate(glm::vec3(0, 0, -1));
-	testCore->scale(glm::vec3(0.005f, 0.005f, 0.005f));
-	/*
-	int atomIndex = 1;
+	
+	int atomIndex = 7;
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
@@ -131,7 +127,7 @@ void init()
 	testCore->addComponent(electronComponent);
 
 	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();*/
+	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 }
 
 bool showStatsWindow = true;
@@ -230,46 +226,6 @@ void update()
 
 int rot = 0;
 
-// testcube
-std::vector<tigl::Vertex> cube{
-
-	// Front face   
-	tigl::Vertex::PC(glm::vec3(0, 0, 0), glm::vec4(1, 0, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(1, 0, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(1, 0, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 0, 0, 1)),
-
-	// Back face
-	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(0, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(0, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(0, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(0, 1, 0, 1)),
-
-	// Right face
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(0, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(0, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(0, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(0, 0, 1, 1)),
-
-	// Left Face
-	tigl::Vertex::PC(glm::vec3(0, 0, 0), glm::vec4(0, 1, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(0, 1, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(0, 1, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(0, 1, 1, 1)),
-
-	// Top Face
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0), glm::vec4(1, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0.1, 0.1), glm::vec4(1, 1, 0, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0.1), glm::vec4(1, 1, 0, 1)),
-
-	// Down Face
-	tigl::Vertex::PC(glm::vec3(0, 0.1, 0), glm::vec4(1, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0), glm::vec4(1, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0.1, 0, 0.1), glm::vec4(1, 0, 1, 1)),
-	tigl::Vertex::PC(glm::vec3(0, 0, 0.1), glm::vec4(1, 0, 1, 1)),
-};
-
 void draw()
 {
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
@@ -294,14 +250,11 @@ void draw()
 
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 
-		//modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 
-		//gameobject->transform = modelMatrix;
+		gameobject->transform = modelMatrix;
+		gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
 
-		tigl::shader->setModelMatrix(modelMatrix);
-		tigl::drawVertices(GL_QUADS ,cube);
-
-		//gameobject->draw();
+		gameobject->draw();
 	}
 }
