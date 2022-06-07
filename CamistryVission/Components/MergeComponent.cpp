@@ -7,6 +7,17 @@
 namespace camvis {
 	namespace component
 	{
+		void MergeComponent::realiseCombination(std::map<int, int> atomMap) {
+			component::MoleculeComponent* moleculeComponent = new component::MoleculeComponent(atomMap, existingAtoms);
+			gameObject->addComponent(moleculeComponent);
+			gameObject->transform = glm::translate(gameObject->transform, glm::vec3(0, -5, -50));
+			component::RotationComponent* rotate = new component::RotationComponent();
+			gameObject->addComponent(rotate);
+			gameObject->scale(glm::vec3(1, 1, 1));
+
+			gameObject->removeComponent(this);
+		}
+
 		void MergeComponent::Combine(std::vector<camvis::data::Atom> atoms, std::vector<camvis::data::Molecule> molecules) {
 			std::map<int, int> atomMap;
 
@@ -30,12 +41,7 @@ namespace camvis {
 				}
 			}
 
-			component::MoleculeComponent* moleculeComponent = new component::MoleculeComponent(atomMap, atoms);
-			gameObject->addComponent(moleculeComponent);
-			gameObject->transform = glm::translate(gameObject->transform, glm::vec3(0, -5, -50));
-			component::RotationComponent* rotate = new component::RotationComponent();
-			gameObject->addComponent(rotate);
-			gameObject->scale(glm::vec3(1, 1, 1));
+			realiseCombination(atomMap);
 		}
 
 		void MergeComponent::Combine(std::vector<camvis::data::Atom> atoms) {
@@ -49,12 +55,7 @@ namespace camvis {
 				}
 			}
 
-			component::MoleculeComponent* moleculeComponent = new component::MoleculeComponent(atomMap, atoms);
-			gameObject->addComponent(moleculeComponent);
-			gameObject->transform = glm::translate(gameObject->transform, glm::vec3(0, -5, -50));
-			component::RotationComponent* rotate = new component::RotationComponent();
-			gameObject->addComponent(rotate);
-			gameObject->scale(glm::vec3(1, 1, 1));
+			realiseCombination(atomMap);
 
 		}
 
@@ -73,13 +74,7 @@ namespace camvis {
 			}
 
 
-			component::MoleculeComponent* moleculeComponent = new component::MoleculeComponent(atomMap, atoms);
-			gameObject->addComponent(moleculeComponent);
-			gameObject->transform = glm::translate(gameObject->transform, glm::vec3(0, -5, -50));
-			component::RotationComponent* rotate = new component::RotationComponent();
-			gameObject->addComponent(rotate);
-			gameObject->scale(glm::vec3(1, 1, 1));
-
+			realiseCombination(atomMap);
 		}
 
 		void MergeComponent::update(float deltaTime)

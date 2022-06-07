@@ -154,7 +154,7 @@ void init()
 	gameObjects.push_back(testCore);
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 	
-	component::MergeComponent* mergeComponent = new component::MergeComponent();
+	component::MergeComponent* mergeComponent = new component::MergeComponent(atoms);
 	testCore->addComponent(mergeComponent);
 	mergeComponent->Combine({ atoms[0], atoms[0] });
 
