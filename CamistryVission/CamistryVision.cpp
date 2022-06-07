@@ -149,7 +149,7 @@ void update()
 
 
 	}
-
+#ifdef DEBUG_ENABLED
 	ImGui::Begin("Cards", &showCardsDebug);
 	sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
 	for (int i = 0; i < detectedMarkers.size(); i++)
@@ -161,14 +161,17 @@ void update()
 		ImGui::EndChild();
 	}
 	ImGui::End();
+#endif
 
 	// END
 	
+#ifdef DEBUG_ENABLED
 	// Show Frame statistics
 	ImGui::Begin("Stats", &showCardsDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
+#endif
 }
 
 int rot = 0;
