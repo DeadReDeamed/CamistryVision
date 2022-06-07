@@ -12,8 +12,14 @@ using namespace camvis;
 namespace camvis { 
 	namespace handlers {
 		
+
+		bool showCardsDebug = true;
 		void SceneHandler::update(float deltaTime)
 		{
+			// Update Aruco data
+			updateAruco();
+
+			// Update the gameobjects
 			for (auto gameObject : activeScene->gameObjects)
 			{
 				gameObject->update(deltaTime);
@@ -22,12 +28,15 @@ namespace camvis {
 
 		void SceneHandler::draw()
 		{
+			// Draw all gameobjects
 			for (auto& gameobject : activeScene->gameObjects)
 			{
+				// Setting the "camera" perspective to the gameobject
 				tigl::shader->setViewMatrix(gameobject->cameraTransform);
 
 				glm::mat4 modelMatrix = glm::mat4(1.0f);
 
+				// TODO fix
 				modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 
 				gameobject->transform = modelMatrix;
@@ -42,9 +51,58 @@ namespace camvis {
 			parseScene(index);
 		}
 
-		void SceneHandler::handleArucoUpdate()
+		void SceneHandler::updateAruco()
 		{
-			throw "not implemented!";
+			//std::vector<Aruco::MarkerData> detectedMarkers = a.getMarkers();
+
+			//for (int i = 0; i < detectedMarkers.size(); i++)
+			//{
+			//	// Calculate rodrigues transform 
+			//	cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
+			//	cv::Mat rodrigues;
+			//	cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
+
+			//	for (unsigned int row = 0; row < 3; ++row)
+			//	{
+			//		for (unsigned int col = 0; col < 3; ++col)
+			//		{
+			//			viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
+			//		}
+			//		viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
+			//	}
+			//	viewMatrix.at<float>(3, 3) = 1.0f;
+
+			//	cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
+			//	cvToGl.at<float>(0, 0) = 1.0f;
+			//	cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
+			//	cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
+			//	cvToGl.at<float>(3, 3) = 1.0f;
+			//	viewMatrix = cvToGl * viewMatrix;
+			//	cv::transpose(viewMatrix, viewMatrix);
+
+			//	glm::mat4 glmMatrix = {
+			//		{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
+			//		{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
+			//		{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
+			//		{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
+			//	};
+
+
+			//	//gameObjects[0]->cameraTransform = glmMatrix;
+
+#ifdef DEBUG_ENABLED
+			ImGui::Begin("Cards", &showCardsDebug);
+			sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
+			for (int i = 0; i < detectedMarkers.size(); i++)
+			{
+				ImGui::BeginChild("Marker");
+				ImGui::Text("ID: %d", detectedMarkers[i].id);
+				ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
+				ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
+				ImGui::EndChild();
+			}
+			ImGui::End();
+#endif
 		}
 
 		void SceneHandler::parseScene(int index)

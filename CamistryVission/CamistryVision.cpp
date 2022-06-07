@@ -7,22 +7,20 @@
 #include "../Components/AtomComponent.h"
 #include "../Components/ElectronComponent.h"
 
-//Delete for test
+#define DEBUG_ENABLED
 #include "handlers/SceneHandler.h"
 #include "handlers/DataHandler.h"
-
-double lastUpdateTime;
-void update();
-void draw();
-void init();
-
-#define DEBUG_ENABLED
 
 #include "CardScanning/ArucoHandler.h"
 #include "CardScanning/MarkerData.h"
 #include "Util/JSONParser.h"
 #include "debuging/DebugWindow.h"
 #include "debuging/imgui/imgui.h"
+
+double lastUpdateTime;
+void update();
+void draw();
+void init();
 
 using namespace camvis;
 
@@ -31,9 +29,6 @@ Aruco::ArucoHandler a;
 bool showStatsWindow = true;
 
 unsigned int cameraTexture;
-
-std::vector<GameObject*> gameObjects;
-
 
 handlers::SceneHandler* sceneHandler;
 int main()
@@ -98,6 +93,7 @@ void init()
 	sceneHandler->changeScene(0);
 }
 
+bool showGeneralDebug = true;
 void update()
 {
 	double timeNow = glfwGetTime();
@@ -108,66 +104,14 @@ void update()
 	sceneHandler->update(deltaTime);
 
 	// PLEASE FOR THE LOVE OF GOD, REMOVE
-	bool showCardsDebug = true;
-
-	std::vector<Aruco::MarkerData> detectedMarkers = a.getMarkers();
-
-	for (int i = 0; i < detectedMarkers.size(); i++)
-	{
-		// Calculate rodrigues transform 
-		cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
-		cv::Mat rodrigues;
-		cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
-
-		for (unsigned int row = 0; row < 3; ++row)
-		{
-			for (unsigned int col = 0; col < 3; ++col)
-			{
-				viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
-			}
-			viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
-		}
-		viewMatrix.at<float>(3, 3) = 1.0f;
-
-		cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
-		cvToGl.at<float>(0, 0) = 1.0f;
-		cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
-		cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
-		cvToGl.at<float>(3, 3) = 1.0f;
-		viewMatrix = cvToGl * viewMatrix;
-		cv::transpose(viewMatrix, viewMatrix);
-
-		glm::mat4 glmMatrix = {
-			{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
-			{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
-			{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
-			{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
-		};
-
-
-		gameObjects[0]->cameraTransform = glmMatrix;
-
-
-	}
-#ifdef DEBUG_ENABLED
-	ImGui::Begin("Cards", &showCardsDebug);
-	sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
-	for (int i = 0; i < detectedMarkers.size(); i++)
-	{
-		ImGui::BeginChild("Marker");
-		ImGui::Text("ID: %d", detectedMarkers[i].id);
-		ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
-		ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
-		ImGui::EndChild();
-	}
-	ImGui::End();
-#endif
+	
+	
 
 	// END
 	
 #ifdef DEBUG_ENABLED
 	// Show Frame statistics
-	ImGui::Begin("Stats", &showCardsDebug);
+	ImGui::Begin("Stats", &showGeneralDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();

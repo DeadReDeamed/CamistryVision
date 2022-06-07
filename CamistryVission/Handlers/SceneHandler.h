@@ -25,7 +25,7 @@ namespace camvis { namespace handlers {
 			void changeScene(int index);
 
 		private:
-			void handleArucoUpdate();
+			void updateAruco();
 			void parseScene(int index);
 
 		};
