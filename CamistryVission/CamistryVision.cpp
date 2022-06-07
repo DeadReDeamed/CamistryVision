@@ -104,7 +104,7 @@ void init()
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
 	
-	int atomIndex = 7;
+	int atomIndex = 1;
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
@@ -153,24 +153,6 @@ void update()
 		cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
 		cv::Mat rodrigues;
 		cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
-
-		// Building the viewMatrix for this model
-		/*glm::mat4 viewMatrix = {
-			{(float)rodrigues.at<double>(0,0), (float)rodrigues.at<double>(0,1), (float)rodrigues.at<double>(0,2),(float)(detectedMarkers[i].tvec[0] * 0.1f)},
-			{(float)rodrigues.at<double>(1,0), (float)rodrigues.at<double>(1,1), (float)rodrigues.at<double>(1,2),(float)(detectedMarkers[i].tvec[1] * 0.1f)},
-			{(float)rodrigues.at<double>(2,0), (float)rodrigues.at<double>(2,1), (float)rodrigues.at<double>(2,2),(float)(detectedMarkers[i].tvec[2] * 0.1f)},
-			{0.0f, 0.0f, 0.0f, 1.0f}
-		};
-
-		glm::mat4 cvToOpenGL = glm::mat4(0.0f);
-		cvToOpenGL[0][0] = 1.0f;
-		cvToOpenGL[1][1] = -1.0f;
-		cvToOpenGL[2][2] = -1.0f;
-		cvToOpenGL[3][3] = 1.0f;
-
-		//viewMatrix = cvToOpenGL * viewMatrix;
-		viewMatrix = glm::matrixCompMult(cvToOpenGL, viewMatrix);
-		viewMatrix = glm::transpose(viewMatrix);*/
 
 		for (unsigned int row = 0; row < 3; ++row)
 		{
