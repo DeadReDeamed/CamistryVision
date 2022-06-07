@@ -14,6 +14,7 @@ namespace camvis
 	class GameObject
 	{
 	public:
+		glm::mat4 cameraTransform = glm::mat4(1.0f);
 		glm::mat4 transform = glm::mat4(1.0f);
 
 	private:

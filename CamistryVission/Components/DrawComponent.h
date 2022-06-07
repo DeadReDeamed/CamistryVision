@@ -2,8 +2,10 @@
 #define DRAW_COMP_H
 
 #include "Component.h"
+
 #include "../Data/Model/Model.h"
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace camvis 
 {
