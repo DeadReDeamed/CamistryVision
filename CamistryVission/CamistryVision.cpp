@@ -11,6 +11,7 @@
 #include "Components/ElectronComponent.h"
 #include "Components/MoleculeComponent.h"
 #include "Components/RotationComponent.h"
+#include "Components/MergeComponent.h"
 
 #include "Util/FiloIO.h"
 #include "Util/JSONParser.h"
@@ -153,6 +154,10 @@ void init()
 	gameObjects.push_back(testCore);
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 	
+	component::MergeComponent* mergeComponent = new component::MergeComponent();
+	testCore->addComponent(mergeComponent);
+	mergeComponent->Combine({ atoms[0], atoms[0] });
+
 }
 
 bool showStatsWindow = true;
