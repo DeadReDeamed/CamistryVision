@@ -2,8 +2,10 @@
 #define DRAW_COMP_H
 
 #include "Component.h"
+
 #include "../Data/Model/Model.h"
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace camvis 
 {
@@ -13,8 +15,10 @@ namespace camvis
 		{
 		private:
 			camvis::data::Model* model;
+
 		public:
 			DrawComponent(camvis::data::Model* model) : model(model) {};
+
 			void update(float deltaTime);
 			virtual void draw();
 			virtual void draw(glm::vec4 color);

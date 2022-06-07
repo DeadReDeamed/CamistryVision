@@ -7,7 +7,7 @@ namespace camvis {
 	{
 		void DrawComponent::update(float deltaTime)
 		{
-			throw "Function not implemented!";
+			
 		}
 
 		void DrawComponent::draw()
@@ -21,13 +21,9 @@ namespace camvis {
 					object->texture->bind();
 				}
 
-				//TODO: set material color
 				tigl::begin(GL_TRIANGLES);
 				for (const camvis::data::Face& face : object->faces) {
 					for (const camvis::data::Vertex& vertex : face.vertices) {
-						/*tigl::Vertex vertexI = tigl::Vertex::PTN(model->vertexPositions.at(vertex.positionIndex) * glm::vec3(scale, scale, scale),
-							model->texCoords.at(vertex.texCoordIndex),
-							model->normals.at(vertex.normalIndex))*/
 						tigl::Vertex vertexI;
 						if (model->texCoords.size() <= 0) {
 							vertexI = tigl::Vertex::P(model->vertexPositions.at(vertex.positionIndex));
@@ -35,6 +31,7 @@ namespace camvis {
 						else
 							vertexI = tigl::Vertex::PT(model->vertexPositions.at(vertex.positionIndex),
 								model->texCoords.at(vertex.texCoordIndex));
+						
 						tigl::addVertex(vertexI);
 					}
 				}
@@ -47,7 +44,7 @@ namespace camvis {
 			tigl::shader->setColorMult(color);
 			DrawComponent::draw();
 			tigl::shader->enableColorMult(false);
-
 		}
+		
 	}
 }
