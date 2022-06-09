@@ -16,14 +16,14 @@ namespace camvis {
 		bool showCardsDebug = true;
 		void SceneHandler::update(float deltaTime)
 		{
-			// Update Aruco data
-			updateAruco();
-
 			// Update the gameobjects
 			for (auto gameObject : activeScene->gameObjects)
 			{
 				gameObject->update(deltaTime);
 			}
+
+			// Update Aruco data
+			updateAruco();
 		}
 
 		void SceneHandler::draw()
@@ -53,42 +53,54 @@ namespace camvis {
 
 		void SceneHandler::updateAruco()
 		{
-			//std::vector<Aruco::MarkerData> detectedMarkers = a.getMarkers();
+			// Get the detected markers from Aruco
+			std::vector<Aruco::MarkerData> detectedMarkers = cardHandler->getMarkers();
 
-			//for (int i = 0; i < detectedMarkers.size(); i++)
-			//{
-			//	// Calculate rodrigues transform 
-			//	cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
-			//	cv::Mat rodrigues;
-			//	cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
+			for (int i = 0; i < detectedMarkers.size(); i++)
+			{
+				//Calculate rodrigues transform 
+				cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
+				cv::Mat rodrigues;
+				cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
 
-			//	for (unsigned int row = 0; row < 3; ++row)
-			//	{
-			//		for (unsigned int col = 0; col < 3; ++col)
-			//		{
-			//			viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
-			//		}
-			//		viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
-			//	}
-			//	viewMatrix.at<float>(3, 3) = 1.0f;
+				for (unsigned int row = 0; row < 3; ++row)
+				{
+					for (unsigned int col = 0; col < 3; ++col)
+					{
+						viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
+					}
+					viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
+				}
+				viewMatrix.at<float>(3, 3) = 1.0f;
 
-			//	cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
-			//	cvToGl.at<float>(0, 0) = 1.0f;
-			//	cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
-			//	cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
-			//	cvToGl.at<float>(3, 3) = 1.0f;
-			//	viewMatrix = cvToGl * viewMatrix;
-			//	cv::transpose(viewMatrix, viewMatrix);
+				cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
+				cvToGl.at<float>(0, 0) = 1.0f;
+				cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
+				cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
+				cvToGl.at<float>(3, 3) = 1.0f;
+				viewMatrix = cvToGl * viewMatrix;
+				cv::transpose(viewMatrix, viewMatrix);
 
-			//	glm::mat4 glmMatrix = {
-			//		{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
-			//		{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
-			//		{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
-			//		{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
-			//	};
+				// Update the cv matrix to a glm matrix 
+				glm::mat4 glmMatrix = {
+					{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
+					{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
+					{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
+					{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
+				};
 
+				// Updating the camera
+				auto gameObject = activeScene->linkedGameObjects.find(detectedMarkers[i].id)->second;
 
-			//	//gameObjects[0]->cameraTransform = glmMatrix;
+				if (gameObject == nullptr) continue;
+
+				// Updating the position of the model
+				gameObject->cameraTransform = glmMatrix;
+
+				// Enable showing the gameobject
+				gameObject->shouldShow = true;
+
+			}
 
 #ifdef DEBUG_ENABLED
 			ImGui::Begin("Cards", &showCardsDebug);

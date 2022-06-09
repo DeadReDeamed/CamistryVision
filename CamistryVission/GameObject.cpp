@@ -17,6 +17,8 @@ namespace camvis
 
 	void GameObject::update(float deltaTime)
 	{
+		if (!shouldShow) return;
+
 		// Update all components
 		for (auto* component : components)
 			component->update(deltaTime);
@@ -29,6 +31,8 @@ namespace camvis
 	
 	void GameObject::draw()
 	{
+		if (!shouldShow) return;
+
 		// Drawing all drawcomponents
 		for (auto* drawComponent : drawComponents)
 			drawComponent->draw();

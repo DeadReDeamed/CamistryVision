@@ -102,12 +102,6 @@ void update()
 
 	// Updating the scene
 	sceneHandler->update(deltaTime);
-
-	// PLEASE FOR THE LOVE OF GOD, REMOVE
-	
-	
-
-	// END
 	
 #ifdef DEBUG_ENABLED
 	// Show Frame statistics
