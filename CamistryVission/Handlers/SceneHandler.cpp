@@ -145,7 +145,7 @@ namespace camvis {
 				data::Atom* atom = matterPair.second;
 				//Initializing game object from atoms
 				GameObject* object = new GameObject();
-				object->addComponent(new component::AtomComponent(atom->atomNumber));
+				object->addComponent(new component::AtomComponent(atom->atomNumber + atom->neutrons));
 				std::vector<component::Shell*> shells;
 				for (size_t i = 0; i < atom->electrons.size(); i++)
 					{
