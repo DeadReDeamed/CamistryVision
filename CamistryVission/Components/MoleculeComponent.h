@@ -15,6 +15,7 @@ namespace camvis {
 		class MoleculeComponent : public DrawComponent
 		{
 		private:
+			const int grid_offset = 5;
 			std::map<int,int> atomMap;
 			std::vector<std::vector<std::pair<glm::vec3, glm::vec4>>> cores;
 			std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> drawList;
