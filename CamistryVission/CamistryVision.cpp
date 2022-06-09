@@ -92,6 +92,18 @@ void init()
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
 
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(2);
+	tigl::shader->setLightDirectional(0, false);
+	tigl::shader->setLightPosition(0, glm::vec3(0, 20, 0));
+	tigl::shader->setLightPosition(1, glm::vec3(0, -20, 0));
+	tigl::shader->setLightAmbient(0, glm::vec3(0.2f, 0.2f, 0.3f));
+	tigl::shader->setLightAmbient(1, glm::vec3(0.05f, 0.05f, 0.075f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
+	tigl::shader->setLightDiffuse(1, glm::vec3(0.5f, 0.5f, 0.5f));
+	tigl::shader->setLightSpecular(0, glm::vec3(0, 0, 0));
+	tigl::shader->setLightSpecular(1, glm::vec3(0, 0, 0));
+	tigl::shader->setShinyness(30);
 }
 
 bool showGeneralDebug = true;
