@@ -7,8 +7,6 @@
 #include "../Components/RotationComponent.h"
 #include <vector>
 
-using namespace camvis;
-
 namespace camvis { 
 	namespace handlers {
 		

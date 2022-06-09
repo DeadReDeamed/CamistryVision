@@ -352,3 +352,5 @@ MigrationBackup/
 .ionide/
 
 !CamistryVission/lib/glew-2.1./*
+
+x64/

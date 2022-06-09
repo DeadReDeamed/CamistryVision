@@ -39,6 +39,14 @@ bool showStatsWindow = true;
 unsigned int cameraTexture;
 
 handlers::SceneHandler* sceneHandler;
+
+//Temporary
+std::vector<GameObject*> gameObjects;
+
+std::vector<data::Atom> atoms; //temporary varialbe for testing
+std::vector<data::Molecule> molecules; // same here
+
+
 int main()
 {
 
@@ -96,6 +104,9 @@ void init()
 	lastUpdateTime = glfwGetTime();	
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
+	//loads atom and molecule data
+	atoms = handlers::DataHandler::getInstance()->atoms;
+	molecules = handlers::DataHandler::getInstance()->molecules;
 
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
@@ -105,8 +116,8 @@ void init()
 	
 	
 	int atomIndex = 1;
-
-	std::map<int, int> atomMap;
+	//REMOVE
+	/*std::map<int, int> atomMap;
 	for (auto& a : molecules[8].atoms) {
 		if (atomMap.count(a.atomNumber)) {
 			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
@@ -114,7 +125,7 @@ void init()
 		else {
 			atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
 		}
-	}
+	}*/
 	
 	/*
 	component::MoleculeComponent* molecule = new component::MoleculeComponent(atomMap, atoms);
@@ -261,12 +272,7 @@ void update()
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
 #endif
-    // Show Frame statistics
-	ImGui::Begin("Stats", &showGeneralDebug);
-	ImGui::Text("Frame time: %.2f", deltaTime);
-	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
-	ImGui::End();
-#endif
+   
 }
 
 int rot = 0;
