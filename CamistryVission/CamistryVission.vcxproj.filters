@@ -114,6 +114,7 @@
     <None Include="OPENGL_DEBUG.props" />
     <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
     <None Include="imgui.ini" />
+    <None Include="Resources\scenes.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\tigl\tigl.h">

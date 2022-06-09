@@ -16,6 +16,7 @@ namespace camvis
 	public:
 		glm::mat4 cameraTransform = glm::mat4(1.0f);
 		glm::mat4 transform = glm::mat4(1.0f);
+		bool shouldShow = false;
 
 	private:
 	    std::list<component::DrawComponent*> drawComponents;

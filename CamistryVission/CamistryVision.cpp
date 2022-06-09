@@ -1,4 +1,5 @@
 #include <iostream>
+#include <opencv2/aruco.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
@@ -11,35 +12,33 @@
 #include "Components/MoleculeComponent.h"
 #include "Components/RotationComponent.h"
 #include "Components/MergeComponent.h"
-
-#include "Util/FiloIO.h"
-#include "Util/JSONParser.h"
-#include "Data/Matter/Matter.h"
-#include "Data/Matter/Atom.h"
+#include "../Components/AtomComponent.h"
+#include "../Components/ElectronComponent.h"
 
 #define DEBUG_ENABLED
+#include "handlers/SceneHandler.h"
+#include "handlers/DataHandler.h"
+
+#include "CardScanning/ArucoHandler.h"
+#include "CardScanning/MarkerData.h"
+#include "Util/JSONParser.h"
+#include "debuging/DebugWindow.h"
+#include "debuging/imgui/imgui.h"
 
 double lastUpdateTime;
 void update();
 void draw();
 void init();
 
-#include "CardScanning/ArucoHandler.h"
-#include "CardScanning/MarkerData.h"
-#include "Util/JSONParser.h"
-
 using namespace camvis;
 
 GLFWwindow* window;
 Aruco::ArucoHandler a;
+bool showStatsWindow = true;
 
 unsigned int cameraTexture;
 
-std::vector<GameObject*> gameObjects;
-
-std::vector<data::Atom> atoms; //temporary varialbe for testing
-std::vector<data::Molecule> molecules; // same here
-
+handlers::SceneHandler* sceneHandler;
 int main()
 {
 
@@ -51,9 +50,10 @@ int main()
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
-	window = glfwCreateWindow(800, 800, "CamistryVision", NULL, NULL);
+	auto window = glfwCreateWindow(1000, 800, "CamistryVision", NULL, NULL);
 
-	
+	Aruco::ArucoHandler a = Aruco::ArucoHandler();
+	a.start();
 
 	if (!window)
 	{
@@ -62,28 +62,27 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
-	//loads atom and molecule data
-	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
-
-	atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
-	molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
+	// Starting the debug gui
+#ifdef DEBUG_ENABLED
+	debugging::DebugWindow::init(window);
+#endif // DEBUG_ENABLED
 
 	tigl::init();
+
 	init();
 
 	while (!glfwWindowShouldClose(window))
 	{
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::startFrame();
-#endif // DEBUG_ENABLED
+#endif
 
 		update();
 		draw();
 
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::endFrame();
-#endif // DEBUG_ENABLED
-
+#endif
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -92,16 +91,14 @@ int main()
 	return 0;
 }
 
-#include "Components/DrawComponent.h"
 void init()
 {
 	lastUpdateTime = glfwGetTime();	
 
-	// Starting the debug gui
-#ifdef DEBUG_ENABLED
-	debugging::DebugWindow::init(window);
-#endif // DEBUG_ENABLED
+	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
 
+	sceneHandler = new handlers::SceneHandler(&a);
+	sceneHandler->changeScene(0);
 
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
@@ -171,12 +168,14 @@ void init()
 	delete mergeComponent;
 }
 
-bool showStatsWindow = true;
+bool showGeneralDebug = true;
 void update()
 {
 	double timeNow = glfwGetTime();
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
+
+    sceneHandler->update(deltaTime);
 
 	for (auto gameObject : gameObjects)
 	{
@@ -255,11 +254,19 @@ void update()
 
 	// END
 
-	// Show Frame statistics
-	ImGui::Begin("Stats", &showStatsWindow);
+#ifdef DEBUG_ENABLED
+    // Show Frame statistics
+	ImGui::Begin("Stats", &showGeneralDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
+#endif
+    // Show Frame statistics
+	ImGui::Begin("Stats", &showGeneralDebug);
+	ImGui::Text("Frame time: %.2f", deltaTime);
+	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
+	ImGui::End();
+#endif
 }
 
 int rot = 0;
@@ -282,17 +289,6 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	for (auto& gameobject : gameObjects)
-	{
-		tigl::shader->setViewMatrix(gameobject->cameraTransform);
-
-		glm::mat4 modelMatrix = glm::mat4(1.0f);
-
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-
-		gameobject->transform = modelMatrix;
-		gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
-
-		gameobject->draw();
-	}
+	// Draw the scene
+	sceneHandler->draw();
 }
