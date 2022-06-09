@@ -17,11 +17,7 @@ namespace camvis
 		private:
 			camvis::data::Model* model;
 			std::vector<tigl::VBO*> VBOPerGroup;
-			~DrawComponent() {
-				for (tigl::VBO* vbo : VBOPerGroup) {
-					free(vbo);
-				}
-			}
+			
 		public:
 			DrawComponent(camvis::data::Model* model) : model(model) {
 				for (int i = 0; i < model->groups.size(); i++) {
@@ -49,6 +45,11 @@ namespace camvis
 			void update(float deltaTime);
 			virtual void draw();
 			virtual void draw(glm::vec4 color);
+			~DrawComponent() {
+				for (tigl::VBO* vbo : VBOPerGroup) {
+					free(vbo);
+				}
+			}
 		};
 	}
 }
