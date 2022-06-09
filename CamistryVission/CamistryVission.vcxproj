@@ -182,6 +182,7 @@
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
     <None Include="Resources\cam_params.yml" />
+    <None Include="Resources\scenes.json" />
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
