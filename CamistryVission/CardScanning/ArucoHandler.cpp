@@ -38,8 +38,7 @@ namespace Aruco {
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
 
 			if (simpleData.ids.size() <= 0) continue;
-
-			aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
+			if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 
 			std::vector<MarkerData> markerList;
 			for (int i = 0; i < simpleData.ids.size(); i++) {
@@ -51,7 +50,6 @@ namespace Aruco {
 
 			DetectedMarkers = markerList;
 			
-			aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 			cv::imshow("ArucoDebug", img);
 			cv::waitKey(1);
 		}
