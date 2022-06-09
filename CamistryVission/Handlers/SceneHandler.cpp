@@ -109,7 +109,11 @@ namespace camvis {
 				// Updating the camera
 				auto gameObjectIt = activeScene->linkedGameObjects.find(detectedMarkers[i].id);
 
-				if (gameObjectIt == activeScene->linkedGameObjects.end()) handleEmptyCard(detectedMarkers[i]);
+				if (gameObjectIt == activeScene->linkedGameObjects.end())
+				{
+					handleEmptyCard(detectedMarkers[i]);
+					continue;
+				}
 
 				// Updating the position of the model
 				gameObjectIt->second->cameraTransform = glmMatrix;
@@ -193,7 +197,7 @@ namespace camvis {
 		/// <param name="detectedMarker">The empty marker</param>
 		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker)
 		{
-			
+			emptyGameObject->shouldShow = true;
 		}
 
 
