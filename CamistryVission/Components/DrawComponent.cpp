@@ -26,11 +26,12 @@ namespace camvis {
 					for (const camvis::data::Vertex& vertex : face.vertices) {
 						tigl::Vertex vertexI;
 						if (model->texCoords.size() <= 0) {
-							vertexI = tigl::Vertex::P(model->vertexPositions.at(vertex.positionIndex));
+							vertexI = tigl::Vertex::PN(model->vertexPositions.at(vertex.positionIndex), model->normals.at(vertex.normalIndex));
 						}
 						else
-							vertexI = tigl::Vertex::PT(model->vertexPositions.at(vertex.positionIndex),
-								model->texCoords.at(vertex.texCoordIndex));
+							vertexI = tigl::Vertex::PTN(model->vertexPositions.at(vertex.positionIndex),
+								model->texCoords.at(vertex.texCoordIndex),
+								model->normals.at(vertex.normalIndex));
 						
 						tigl::addVertex(vertexI);
 					}
