@@ -53,6 +53,10 @@ namespace camvis {
 
 		void SceneHandler::updateAruco()
 		{
+			// Disable all should show of gameobject
+			for (auto& gameobject : activeScene->gameObjects)
+				gameobject->shouldShow = false;
+
 			// Get the detected markers from Aruco
 			std::vector<Aruco::MarkerData> detectedMarkers = cardHandler->getMarkers();
 
