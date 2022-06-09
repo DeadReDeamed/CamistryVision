@@ -9,7 +9,9 @@
 #include "GameObject.h"
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
-
+#include "Components/MoleculeComponent.h"
+#include "Components/RotationComponent.h"
+#include "Components/MergeComponent.h"
 
 #include "Util/FiloIO.h"
 #include "Util/JSONParser.h"
@@ -37,6 +39,7 @@ unsigned int cameraTexture;
 std::vector<GameObject*> gameObjects;
 
 std::vector<data::Atom> atoms; //temporary varialbe for testing
+std::vector<data::Molecule> molecules; // same here
 
 int main()
 {
@@ -64,7 +67,7 @@ int main()
 	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
 
 	atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
-	std::vector<data::Molecule> molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
+	molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
 
 	tigl::init();
 	init();
@@ -104,12 +107,34 @@ void init()
 	// Create first test gameobject
 	GameObject* testCore = new GameObject();
 	
+	
 	int atomIndex = 1;
+
+	std::map<int, int> atomMap;
+	for (auto& a : molecules[8].atoms) {
+		if (atomMap.count(a.atomNumber)) {
+			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
+		}
+		else {
+			atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
+		}
+	}
+	
+	/*
+	component::MoleculeComponent* molecule = new component::MoleculeComponent(atomMap, atoms);
+	testCore->addComponent(molecule);
+	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	component::RotationComponent* rotate = new component::RotationComponent();
+	testCore->addComponent(rotate);
+	testCore->scale(glm::vec3(1, 1, 1));
+	gameObjects.push_back(testCore);
+	*/
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
 	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
 	testCore->addComponent(atomComponent);
+	
 
 	std::vector<component::Shell*> shells;
 
@@ -122,12 +147,17 @@ void init()
 		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
 		shells.push_back(shell);
 	}
-
+	
 	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
 	testCore->addComponent(electronComponent);
-
+	
 	gameObjects.push_back(testCore);
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+	
+	component::MergeComponent* mergeComponent = new component::MergeComponent(atoms);
+	testCore->addComponent(mergeComponent);
+	mergeComponent->Combine({ atoms[0], atoms[0] });
+
 }
 
 bool showStatsWindow = true;
