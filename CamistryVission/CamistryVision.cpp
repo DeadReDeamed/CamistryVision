@@ -152,12 +152,17 @@ void init()
 	testCore->addComponent(electronComponent);
 	
 	gameObjects.push_back(testCore);
+	
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 	
-	component::MergeComponent* mergeComponent = new component::MergeComponent(atoms);
-	testCore->addComponent(mergeComponent);
+	GameObject* test = new GameObject();
+	// Give the gameobject to which the merged result will be put upon.
+	// MergeComponent does not delete the atoms/molecules on the cards previous to the combine. This should be done outside of the mergecomponent.
+	// To go from atomcomponent to data we will need a list a data::Atom. Find a way to do this since we cannot retrieve which atom is in an AtomComponent.
+	component::MergeComponent* mergeComponent = new component::MergeComponent(test,atoms);
 	mergeComponent->Combine({ atoms[0], atoms[0] });
 
+	delete mergeComponent;
 }
 
 bool showStatsWindow = true;
