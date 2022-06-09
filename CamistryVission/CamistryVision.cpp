@@ -87,7 +87,7 @@ void init()
 {
 	lastUpdateTime = glfwGetTime();	
 
-	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json");
+	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
 
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);

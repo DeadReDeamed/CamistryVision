@@ -25,7 +25,7 @@ namespace camvis { namespace handlers {
 	public:
 		static DataHandler* getInstance();
 
-		void loadData(std::string filename);
+		void loadData(std::string Datafilename, std::string scenesFilename);
 
 	};
 
