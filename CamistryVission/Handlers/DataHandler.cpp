@@ -16,24 +16,34 @@ namespace camvis { namespace handlers {
         return instance;
     }
 
-    void DataHandler::loadData(std::string filename)
+    void DataHandler::loadData(std::string Datafilename, std::string scenesFilename)
     {
         //loads atom and molecule data
-        nlohmann::json jsonObject = FileIO::loadJsonFile(filename);
+        nlohmann::json jsonObject = FileIO::loadJsonFile(Datafilename);
 
         atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
         molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
         
+        // Load the scenes
+        nlohmann::json scenesJson = FileIO::loadJsonFile(scenesFilename);
 
+        for (auto& sceneJson : scenesJson["Scenes"].items())
+        {
+            nlohmann::json scene = sceneJson.value();
 
-        // TODO LOAD FROM JSON
-        std::unordered_map<int, data::Atom*> test1;
-        std::unordered_map<int, data::Molecule*> test2;
+            // Create the list with atoms
+            std::unordered_map<int, data::Atom*> sceneAtoms;
+            for (auto& atomData : scene["atoms"].items())
+               sceneAtoms.insert(std::make_pair<int, data::Atom*>(atomData.value()["code"], &atoms[atomData.value()["index"]]));
 
-        test1.insert(std::make_pair<int, data::Atom*>(0, &atoms[6]));
-        test2.insert(std::make_pair<int, data::Molecule*>(1, &molecules[0]));
-        scenesAtoms.push_back(test1);
-        scenesMolecules.push_back(test2);
+            std::unordered_map<int, data::Molecule*> scenesMolecule;
+            for (auto& atomData : scene["molecules"].items())
+                scenesMolecule.insert(std::make_pair<int, data::Molecule*>(atomData.value()["code"], &molecules[atomData.value()["index"]]));
+
+            // Push the scene to the scenes
+            scenesAtoms.push_back(sceneAtoms);
+            scenesMolecules.push_back(scenesMolecule);
+        }
 
     }
 
