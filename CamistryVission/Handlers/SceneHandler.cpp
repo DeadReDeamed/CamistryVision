@@ -14,6 +14,12 @@ namespace camvis {
 		
 
 		bool showCardsDebug = true;
+
+		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
+		{
+			emptyGameObject = new GameObject();
+		}
+
 		void SceneHandler::update(float deltaTime)
 		{
 			// Update the gameobjects
@@ -49,6 +55,13 @@ namespace camvis {
 		void SceneHandler::changeScene(int index)
 		{
 			parseScene(index);
+			activeScene->gameObjects.push_back(emptyGameObject);
+		}
+
+		SceneHandler::~SceneHandler()
+		{
+			activeScene->gameObjects.remove(emptyGameObject);
+			delete emptyGameObject;
 		}
 
 		void SceneHandler::updateAruco()
@@ -96,7 +109,7 @@ namespace camvis {
 				// Updating the camera
 				auto gameObjectIt = activeScene->linkedGameObjects.find(detectedMarkers[i].id);
 
-				if (gameObjectIt == activeScene->linkedGameObjects.end()) continue;
+				if (gameObjectIt == activeScene->linkedGameObjects.end()) handleEmptyCard(detectedMarkers[i]);
 
 				// Updating the position of the model
 				gameObjectIt->second->cameraTransform = glmMatrix;
@@ -170,6 +183,17 @@ namespace camvis {
 				activeScene->gameObjects.push_back(object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
+		}
+
+		/// <summary>
+		/// When a card is detected with a code that does not exits the following needs to happen:
+		///  - create a empty gameobject and set it's should show to true
+		/// a Maximum of one empty card will be detected in frame at a time
+		/// </summary>
+		/// <param name="detectedMarker">The empty marker</param>
+		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker)
+		{
+			
 		}
 
 
