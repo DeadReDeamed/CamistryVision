@@ -94,15 +94,15 @@ namespace camvis {
 				};
 
 				// Updating the camera
-				auto gameObject = activeScene->linkedGameObjects.find(detectedMarkers[i].id)->second;
+				auto gameObjectIt = activeScene->linkedGameObjects.find(detectedMarkers[i].id);
 
-				if (gameObject == nullptr) continue;
+				if (gameObjectIt == activeScene->linkedGameObjects.end()) continue;
 
 				// Updating the position of the model
-				gameObject->cameraTransform = glmMatrix;
+				gameObjectIt->second->cameraTransform = glmMatrix;
 
 				// Enable showing the gameobject
-				gameObject->shouldShow = true;
+				gameObjectIt->second->shouldShow = true;
 
 			}
 
