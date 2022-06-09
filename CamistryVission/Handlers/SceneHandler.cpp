@@ -151,7 +151,7 @@ namespace camvis {
 			std::vector<std::unordered_map<int, data::Atom*>>* scenesA = &(DataHandler::getInstance()->scenesAtoms);
 			std::vector<std::unordered_map<int, data::Molecule*>>* scenesM = &(DataHandler::getInstance()->scenesMolecules);
 
-			if (scenesA->size() < index) throw "Index out of bounds exception";
+			if (scenesA->size() < index) return;
 
 			std::unordered_map<int, data::Atom*> sceneDataA = scenesA->at(index);
 			std::unordered_map<int, data::Molecule*> sceneDataM = scenesM->at(index);
