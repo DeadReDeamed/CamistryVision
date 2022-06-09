@@ -20,7 +20,9 @@ namespace camvis {
 			std::vector<std::vector<std::pair<glm::vec3, glm::vec4>>> cores;
 			std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> drawList;
 		public:
-			MoleculeComponent(std::map<int,int> _atomMap, const std::vector<data::Atom>& atoms);
+			std::vector<data::Atom>& atoms;
+		public:
+			MoleculeComponent(std::map<int,int> _atomMap, std::vector<data::Atom>& _atoms);
 			void update(float deltaTime);
 			void draw();
 

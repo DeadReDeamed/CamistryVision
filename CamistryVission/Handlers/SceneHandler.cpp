@@ -5,7 +5,9 @@
 #include "../Components/MoleculeComponent.h"
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
+#include "../Components/MergeComponent.h"
 #include <vector>
+#include <random>
 
 namespace camvis { 
 	namespace handlers {
@@ -22,6 +24,7 @@ namespace camvis {
 
 			// Update Aruco data
 			updateAruco();
+			checkCollision();
 		}
 
 		void SceneHandler::draw()
@@ -104,6 +107,11 @@ namespace camvis {
 
 			}
 
+			activeScene->gameObjects[0]->shouldShow = true;
+			activeScene->gameObjects[1]->shouldShow = true;
+			activeScene->gameObjects[0]->transform = glm::mat4(1.0f);
+			activeScene->gameObjects[1]->transform = glm::mat4(1.0f);
+
 #ifdef DEBUG_ENABLED
 			ImGui::Begin("Cards", &showCardsDebug);
 			sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
@@ -119,10 +127,64 @@ namespace camvis {
 #endif
 		}
 
+		void SceneHandler::checkCollision() {
+			std::vector<camvis::GameObject*> gameObjects = activeScene->gameObjects;
+
+			for (int i = 0; i < gameObjects.size() - 1; i++) {
+				GameObject* object = gameObjects[i];
+				if (!object->shouldShow) continue;
+				for (int j = i + 1; j < gameObjects.size(); j++) {
+					GameObject* object2 = gameObjects[j];
+					if (!object2->shouldShow) continue;
+					float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
+					length = 0.5f;
+					if (length < 1 && length != 0) {
+						std::cout << "Collision" << std::endl;
+						bool leftOrRight = rand() % 2;
+						GameObject* objects[2] = { object, object2 };
+
+						GameObject* mergeTo = objects[leftOrRight];
+						// if leftOrRight is 1 then result is 0. If it is 0 then it would be -1 which would be converted back to 1.
+						GameObject* other = objects[-(leftOrRight - 1)];
+						std::vector<data::Atom> atoms;
+						
+						for (int k = 0; k < 2; k++) {
+							GameObject* object = objects[k];
+							component::AtomComponent* atom = object->getComponent<component::AtomComponent>();
+							if (atom) {
+								if (atom->atomData) {
+									atoms.push_back(*atom->atomData);
+								}
+								object->removeComponent(atom);
+								object->removeComponent(object->getComponent<component::ElectronComponent>());
+							}
+							else {
+								component::MoleculeComponent* molecule = object->getComponent<component::MoleculeComponent>();
+								if (molecule) {
+									atoms.insert(atoms.end(), molecule->atoms.begin(), molecule->atoms.end());
+									object->removeComponent(molecule);
+								}
+								else {
+									// is a blank card and we only check collision between two cards that have an atom or a molecule on them.
+									break;
+								}
+							}
+						}
+						if (atoms.size() <= 0) continue;
+						//atoms here must be the atom database
+						component::MergeComponent* mergeComponent = new component::MergeComponent(mergeTo, existingAtoms);
+						mergeComponent->Combine(atoms);
+						
+						delete mergeComponent;
+					}
+				}
+			}
+		}
+
 		void SceneHandler::parseScene(int index)
 		{
 			if (activeScene == nullptr) activeScene = new data::Scene();
-
+			
 
 			// Clearing the current Scene
 			activeScene->gameObjects.clear();
@@ -143,7 +205,7 @@ namespace camvis {
 				data::Atom* atom = matterPair.second;
 				//Initializing game object from atoms
 				GameObject* object = new GameObject();
-				object->addComponent(new component::AtomComponent(atom->atomNumber + atom->neutrons));
+				object->addComponent(new component::AtomComponent(atom->atomNumber + atom->neutrons, atom));
 				std::vector<component::Shell*> shells;
 				for (size_t i = 0; i < atom->electrons.size(); i++)
 					{
@@ -168,9 +230,8 @@ namespace camvis {
 				activeScene->gameObjects.push_back(object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
+			
 		}
-
-
 
 	} 
 }

@@ -139,7 +139,7 @@ void init()
 
 	//load and init atom from the json data
 	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
+	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons, &atoms[atomIndex]);
 	testCore->addComponent(atomComponent);
 	
 
@@ -235,20 +235,7 @@ void update()
 
 
 	}
-	int it = 1;
-	for (int i = 0; i < gameObjects.size() - 1; i++) {
-		GameObject* object  = gameObjects[i];
-		for (int j = it; j < gameObjects.size(); j++) {
-			GameObject* object2 = gameObjects[j];
-			float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
-			if (length < 1 && length != 0) {
-				std::cout << "Collision" << std::endl;
-				//component::MergeComponent merge(object, atoms);
-			}
-		}
-
-		it++;
-	}
+	
 	//float length = glm::length(testCore->transform[3] - test->transform[3]);
 
 	ImGui::Begin("Cards", &showCardsDebug);
