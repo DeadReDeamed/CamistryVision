@@ -5,7 +5,6 @@
 
 #include "debuging/imgui/imgui.h"
 #include "debuging/DebugWindow.h"
-
 #include "GameObject.h"
 #include "Components/AtomComponent.h"
 #include "Components/ElectronComponent.h"
@@ -156,9 +155,16 @@ void init()
 	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
 	
 	GameObject* test = new GameObject();
+	test->translate({ 100,10,10 });
+	gameObjects.push_back(test);
+	/*GameObject* test2 = new GameObject();
+	gameObjects.push_back(test2);
+	GameObject* test3 = new GameObject();
+	gameObjects.push_back(test3);*/
 	// Give the gameobject to which the merged result will be put upon.
 	// MergeComponent does not delete the atoms/molecules on the cards previous to the combine. This should be done outside of the mergecomponent.
 	// To go from atomcomponent to data we will need a list a data::Atom. Find a way to do this since we cannot retrieve which atom is in an AtomComponent.
+
 	component::MergeComponent* mergeComponent = new component::MergeComponent(test,atoms);
 	mergeComponent->Combine({ atoms[0], atoms[0] });
 
@@ -215,10 +221,25 @@ void update()
 		};
 
 
-		gameObjects[0]->cameraTransform = glmMatrix;
+		gameObjects[i]->cameraTransform = glmMatrix;
 
 
 	}
+	int it = 1;
+	for (int i = 0; i < gameObjects.size() - 1; i++) {
+		GameObject* object  = gameObjects[i];
+		for (int j = it; j < gameObjects.size(); j++) {
+			GameObject* object2 = gameObjects[j];
+			float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
+			if (length < 1 && length != 0) {
+				std::cout << "Collision" << std::endl;
+				//component::MergeComponent merge(object, atoms);
+			}
+		}
+
+		it++;
+	}
+	//float length = glm::length(testCore->transform[3] - test->transform[3]);
 
 	ImGui::Begin("Cards", &showCardsDebug);
 	sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
