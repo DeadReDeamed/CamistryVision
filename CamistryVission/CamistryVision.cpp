@@ -92,7 +92,6 @@ void init()
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
 
-
 }
 
 bool showGeneralDebug = true;

@@ -85,7 +85,7 @@ namespace camvis {
 			// save the positions of the molecules in an 3d array that will be used to draw
 			for (auto& corePair : drawList) {
 				glm::vec3 pos = corePair.first;
-				pos *= 3;
+				pos *= grid_offset;
 
 				gameObject->translate(pos);
 
@@ -100,40 +100,32 @@ namespace camvis {
 
 			//draw a line between the molecules.
 			if (drawList.size() <= 1) return;
-			//if (drawList.size() == 2) {
-			//	tigl::begin(GL_LINES);
-			//	for (int i = 0; i < drawList.size(); i++) {
-			//		glm::vec3 pos = drawList[i].first;
-			//		pos *= 3;
-			//		// some wacky magic to make the lines go inside the atoms.
-			//		//pos = glm::vec3(pos.x, pos.y + 3.0f, pos.z + 3.0f);
-			//		tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
-			//	}
-			//	tigl::end();
-			//}
-			//else {
-			tigl::begin(GL_LINE_STRIP);
-			for (int i = 0; i < drawList.size(); i++) {
-				glm::vec3 pos = drawList[i].first;
-				pos *= 3;
-				// some wacky magic to make the lines go inside the atoms.
-				//pos = glm::vec3(pos.x - 3, pos.y - 3, pos.z);
-				tigl::addVertex(tigl::Vertex::PC(pos, glm::vec4(1, 1, 1, 1)));
-			}
-			tigl::end();
-		//}
-		/*	for (auto& core : cores) {
-				gameObject->translate(glm::vec3(4, 0, 0));
-				for (auto& coreAtom : core)
-				{
+
+			if (drawList.size() > 2) {
+				glm::vec3 firstPos;
+				glm::vec3 prevPos = drawList[0].first;
+				prevPos *= grid_offset;
+				firstPos = prevPos;
+				gameObject->translate(firstPos);
+				tigl::shader->setModelMatrix(gameObject->transform);
+				tigl::begin(GL_LINE_STRIP);
+				tigl::addVertex(tigl::Vertex::P(glm::vec3(0, 0, 0)));
+
+				for (int i = 1; i < drawList.size(); i++) {
+					gameObject->translate(prevPos);
 					
-					gameObject->translate(coreAtom.first);
-					DrawComponent::draw(coreAtom.second);
-					gameObject->translate(-coreAtom.first);
+					glm::vec3 nextPos = drawList[i].first;
+					nextPos *= grid_offset;
+					nextPos -= firstPos;
+					tigl::addVertex(tigl::Vertex::P(nextPos));
+					gameObject->translate(-prevPos);
+					prevPos = nextPos;
 				}
+
+				tigl::end();
+				gameObject->translate(-firstPos);
 			}
-			int i = -4 * cores.size();
-			gameObject->translate(glm::vec3(i, 0, 0));*/
+		
 		}
 	}
 }
