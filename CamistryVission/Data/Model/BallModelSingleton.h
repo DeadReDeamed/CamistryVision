@@ -10,6 +10,7 @@ namespace camvis {
 			BallModelSingleton() {
 				ballModel = new Model("Resources\\models\\ball.obj");
 			}
+			~BallModelSingleton() { delete ballModel; }
 		public:
 			static BallModelSingleton& getInstance() {
 				static BallModelSingleton instance = BallModelSingleton();
