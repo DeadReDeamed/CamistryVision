@@ -1,20 +1,25 @@
 #include <iostream>
+#include <opencv2/aruco.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
-#include "debuging/imgui/imgui.h"
-#include "debuging/DebugWindow.h"
+#include "../Components/AtomComponent.h"
+#include "../Components/ElectronComponent.h"
 
-#include "GameObject.h"
-#include "Components/AtomComponent.h"
-#include "Components/ElectronComponent.h"
+#define DEBUG_ENABLED
+#include "handlers/SceneHandler.h"
+#include "handlers/DataHandler.h"
 
 #include "Util/FiloIO.h"
+#include "CardScanning/ArucoHandler.h"
+#include "CardScanning/MarkerData.h"
 #include "Util/JSONParser.h"
 #include "Data/Matter/Matter.h"
 #include "Data/Matter/Atom.h"
 #include "Data/Model/CameraTexture.h"
+#include "debuging/DebugWindow.h"
+#include "debuging/imgui/imgui.h"
 
 
 #define DEBUG_ENABLED
@@ -24,22 +29,16 @@ void update();
 void draw();
 void init();
 
-#include "CardScanning/ArucoHandler.h"
-#include "CardScanning/MarkerData.h"
-#include "Util/JSONParser.h"
-
 using namespace camvis;
 
 GLFWwindow* window;
 Aruco::ArucoHandler a;
+bool showStatsWindow = true;
 
 data::CameraTexture camTex;
 float fov = 30.2f;
 
-std::vector<GameObject*> gameObjects;
-
-std::vector<data::Atom> atoms; //temporary varialbe for testing
-
+handlers::SceneHandler* sceneHandler;
 int main()
 {
 
@@ -55,7 +54,8 @@ int main()
 	//640 width
 	window = glfwCreateWindow(1920, 1080, "CamistryVision", NULL, NULL);
 
-	
+	Aruco::ArucoHandler a = Aruco::ArucoHandler();
+	a.start();
 
 	if (!window)
 	{
@@ -64,28 +64,27 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
-	//loads atom and molecule data
-	nlohmann::json jsonObject = FileIO::loadJsonFile("Resources/VisualCamistryJSON.json");
-
-	atoms = camvis::JsonParser::deserializeAtoms(jsonObject);
-	std::vector<data::Molecule> molecules = camvis::JsonParser::deserializeMolecules(jsonObject, atoms);
+	// Starting the debug gui
+#ifdef DEBUG_ENABLED
+	debugging::DebugWindow::init(window);
+#endif // DEBUG_ENABLED
 
 	tigl::init();
+
 	init();
 
 	while (!glfwWindowShouldClose(window))
 	{
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::startFrame();
-#endif // DEBUG_ENABLED
+#endif
 
 		update();
 		draw();
 
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::endFrame();
-#endif // DEBUG_ENABLED
-
+#endif
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -94,125 +93,46 @@ int main()
 	return 0;
 }
 
-#include "Components/DrawComponent.h"
 void init()
 {
 	lastUpdateTime = glfwGetTime();	
 
-	// Starting the debug gui
-#ifdef DEBUG_ENABLED
-	debugging::DebugWindow::init(window);
-#endif // DEBUG_ENABLED
+	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
 
+	sceneHandler = new handlers::SceneHandler(&a);
+	sceneHandler->changeScene(0);
 
-	// Create first test gameobject
-	GameObject* testCore = new GameObject();
-	
-	int atomIndex = 1;
-
-	//load and init atom from the json data
-	
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
-	testCore->addComponent(atomComponent);
-
-	std::vector<component::Shell*> shells;
-
-	//load all electrons from the json data.
-	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
-	{
-		component::Shell* shell = new component::Shell();
-		shell->amount = atoms[atomIndex].electrons[i];
-		shell->distance = 10 + (2 * i);
-		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
-		shells.push_back(shell);
-	}
-
-	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
-	testCore->addComponent(electronComponent);
-
-	gameObjects.push_back(testCore);
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(2);
+	tigl::shader->setLightDirectional(0, false);
+	tigl::shader->setLightPosition(0, glm::vec3(0, 20, 0));
+	tigl::shader->setLightPosition(1, glm::vec3(0, -20, 0));
+	tigl::shader->setLightAmbient(0, glm::vec3(0.2f, 0.2f, 0.3f));
+	tigl::shader->setLightAmbient(1, glm::vec3(0.05f, 0.05f, 0.075f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
+	tigl::shader->setLightDiffuse(1, glm::vec3(0.5f, 0.5f, 0.5f));
+	tigl::shader->setLightSpecular(0, glm::vec3(0, 0, 0));
+	tigl::shader->setLightSpecular(1, glm::vec3(0, 0, 0));
+	tigl::shader->setShinyness(30);
 }
 
-bool showStatsWindow = true;
-
+bool showGeneralDebug = true;
 void update()
 {
 	double timeNow = glfwGetTime();
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
 
-	for (auto gameObject : gameObjects)
-	{
-		gameObject->update(deltaTime);
-	}
-
-	// PLEASE FOR THE LOVE OF GOD, REMOVE
-	bool showCardsDebug = true;
-
-	std::vector<Aruco::MarkerData> detectedMarkers = a.getMarkers();
-
-	for (int i = 0; i < detectedMarkers.size(); i++)
-	{
-		// Calculate rodrigues transform 
-		cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
-		cv::Mat rodrigues;
-		cv::Rodrigues(detectedMarkers[i].rvec, rodrigues);
-
-		for (unsigned int row = 0; row < 3; ++row)
-		{
-			for (unsigned int col = 0; col < 3; ++col)
-			{
-				viewMatrix.at<float>(row, col) = (float)rodrigues.at<double>(row, col);
-			}
-			viewMatrix.at<float>(row, 3) = (float)detectedMarkers[i].tvec[row] * 0.1f;
-		}
-		viewMatrix.at<float>(3, 3) = 1.0f;
-
-		cv::Mat cvToGl = cv::Mat::zeros(4, 4, 5);
-		cvToGl.at<float>(0, 0) = 1.0f;
-		cvToGl.at<float>(1, 1) = -1.0f; // Invert the y axis 
-		cvToGl.at<float>(2, 2) = -1.0f; // invert the z axis 
-		cvToGl.at<float>(3, 3) = 1.0f;
-		viewMatrix = cvToGl * viewMatrix;
-		cv::transpose(viewMatrix, viewMatrix);
-
-		glm::mat4 glmMatrix = {
-			{(float)viewMatrix.at<float>(0,0), (float)viewMatrix.at<float>(0,1), (float)viewMatrix.at<float>(0,2), (float)viewMatrix.at<float>(0,3)},
-			{(float)viewMatrix.at<float>(1,0), (float)viewMatrix.at<float>(1,1), (float)viewMatrix.at<float>(1,2), (float)viewMatrix.at<float>(1,3)},
-			{(float)viewMatrix.at<float>(2,0), (float)viewMatrix.at<float>(2,1), (float)viewMatrix.at<float>(2,2), (float)viewMatrix.at<float>(2,3)},
-			{(float)viewMatrix.at<float>(3,0), (float)viewMatrix.at<float>(3,1), (float)viewMatrix.at<float>(3,2), (float)viewMatrix.at<float>(3,3)},
-		};
-
-
-		gameObjects[0]->cameraTransform = glmMatrix;
-
-
-	}
-
-	ImGui::Begin("Cards", &showCardsDebug);
-	sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
-	for (int i = 0; i < detectedMarkers.size(); i++)
-	{
-		ImGui::BeginChild("Marker");
-		ImGui::Text("ID: %d", detectedMarkers[i].id);
-		ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
-		ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
-		ImGui::EndChild();
-	}
-	ImGui::End();
-
-	// END
-
-	ImGui::Begin("gamer slider");
-	ImGui::SliderFloat("FOV", &fov, 0.f, 240.f);
-	ImGui::End();
-
+	// Updating the scene
+	sceneHandler->update(deltaTime);
+	
+#ifdef DEBUG_ENABLED
 	// Show Frame statistics
-	ImGui::Begin("Stats", &showStatsWindow);
+	ImGui::Begin("Stats", &showGeneralDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
+#endif
 }
 
 int rot = 0;
@@ -268,17 +188,6 @@ void draw()
 
 	tigl::shader->enableColor(true);
 
-	for (auto& gameobject : gameObjects)
-	{
-		tigl::shader->setViewMatrix(gameobject->cameraTransform);
-
-		glm::mat4 modelMatrix = glm::mat4(1.0f);
-
-		gameobject->transform = modelMatrix;
-		gameobject->scale(glm::vec3(0.02f, 0.02f, 0.02f));
-
-		gameobject->draw();
-	}
-
-
+	// Draw the scene
+	sceneHandler->draw();
 }
