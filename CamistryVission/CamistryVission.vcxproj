@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Data\Model\CameraTexture.cpp" />
     <ClCompile Include="CamistryVision.cpp" />
     <ClCompile Include="Components\AtomComponent.cpp" />
     <ClCompile Include="Components\CardComponent.cpp" />
@@ -193,6 +194,7 @@
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Model\CameraTexture.h" />
     <ClInclude Include="Components\AtomComponent.h" />
     <ClInclude Include="Components\CardComponent.h" />
     <ClInclude Include="Components\Component.h" />
