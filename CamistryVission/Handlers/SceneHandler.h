@@ -12,7 +12,7 @@ namespace camvis { namespace handlers {
 		{
 		private:
 			data::Scene* activeScene = nullptr;
-			GameObject* emptyGameObject;
+			std::unordered_map<int, GameObject*> emptyGameObjects;
 
 			Aruco::ArucoHandler* cardHandler;
 
@@ -27,9 +27,9 @@ namespace camvis { namespace handlers {
 			void changeScene(int index);
 
 		private:
-			void updateAruco();
+			void updateAruco(float deltaTime);
 			void parseScene(int index);
-			void handleEmptyCard(Aruco::MarkerData detectedMarker);
+			void handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty);
 
 		};
 } }

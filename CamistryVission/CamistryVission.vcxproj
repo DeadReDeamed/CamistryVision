@@ -231,6 +231,7 @@
     <ClInclude Include="lib\stb\stb_image_resize.h" />
     <ClInclude Include="lib\stb\stb_image_write.h" />
     <ClInclude Include="lib\tigl\tigl.h" />
+    <ClInclude Include="Util\CamMath.h" />
     <ClInclude Include="Util\FiloIO.h" />
     <ClInclude Include="Util\JSONParser.h" />
   </ItemGroup>
