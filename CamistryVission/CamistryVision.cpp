@@ -34,6 +34,7 @@ GLFWwindow* window;
 Aruco::ArucoHandler a;
 
 data::CameraTexture camTex;
+float fov = 30.2f;
 
 std::vector<GameObject*> gameObjects;
 
@@ -134,7 +135,6 @@ void init()
 }
 
 bool showStatsWindow = true;
-float fov = 25.f;
 
 void update()
 {

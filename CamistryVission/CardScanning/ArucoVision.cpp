@@ -122,9 +122,6 @@ namespace Aruco {
         return markerdata;
     }
     void ArucoVision::drawFrameAxes(cv::InputOutputArray image, int markerAmount, Aruco::AdvancedMarkerData markerdata) {
-       
-        cv::aruco::drawAxis(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
-        
-        
+        //cv::aruco::drawAxis(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1); 
     }
 }

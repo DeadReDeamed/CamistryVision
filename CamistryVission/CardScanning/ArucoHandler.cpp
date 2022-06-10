@@ -34,7 +34,7 @@ namespace Aruco {
 				continue;
 			}
 
-			cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
+			//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
 
 			// Calculate transform of markers
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
@@ -85,10 +85,10 @@ namespace Aruco {
 		if (lastImage.empty())
 			return lastImage;
 
-		return lastImage;
-		//cv::Mat convertedImage = cv::Mat();
-		//cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
-		//return convertedImage;
+		//return lastImage;
+		cv::Mat convertedImage = cv::Mat();
+		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		return convertedImage;
 	}
 
 	void CalibrateCamera() {
