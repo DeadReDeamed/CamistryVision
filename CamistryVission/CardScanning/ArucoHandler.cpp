@@ -14,10 +14,13 @@ namespace Aruco {
 			// Get latest image
 			camera.retrieve(img);
 
+			if (img.empty())
+				continue;
+
 			lastImage = img;
 
 			// Gray-scale image
-			cv::Mat grey;
+			cv::Mat grey = cv::Mat();
 			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
 			
 			// Detect the markers
@@ -32,7 +35,7 @@ namespace Aruco {
 				continue;
 			}
 
-			cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
+			//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
 
 			// Calculate transform of markers
 			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
@@ -82,7 +85,17 @@ namespace Aruco {
 	}
 
 	cv::Mat ArucoHandler::getLastImage() {	
-		return lastImage;
+
+		//if (!lastImage.empty())
+		//	return lastImage;
+
+		if (lastImage.empty()) {
+			std::cout << "bruh";
+		}
+		//return lastImage;
+		cv::Mat convertedImage = cv::Mat();
+		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		return convertedImage;
 	}
 
 	void CalibrateCamera() {

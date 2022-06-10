@@ -11,11 +11,18 @@
 #include "handlers/SceneHandler.h"
 #include "handlers/DataHandler.h"
 
+#include "Util/FiloIO.h"
 #include "CardScanning/ArucoHandler.h"
 #include "CardScanning/MarkerData.h"
 #include "Util/JSONParser.h"
+#include "Data/Matter/Matter.h"
+#include "Data/Matter/Atom.h"
+#include "Data/Model/CameraTexture.h"
 #include "debuging/DebugWindow.h"
 #include "debuging/imgui/imgui.h"
+
+
+#define DEBUG_ENABLED
 
 double lastUpdateTime;
 void update();
@@ -28,7 +35,8 @@ GLFWwindow* window;
 Aruco::ArucoHandler a;
 bool showStatsWindow = true;
 
-unsigned int cameraTexture;
+data::CameraTexture camTex;
+float fov = 30.2f;
 
 handlers::SceneHandler* sceneHandler;
 int main()
@@ -42,7 +50,9 @@ int main()
 	if (!glfwInit())
 		throw "Could not initialize glwf";
 
-	auto window = glfwCreateWindow(1000, 800, "CamistryVision", NULL, NULL);
+	//480 height
+	//640 width
+	window = glfwCreateWindow(1920, 1080, "CamistryVision", NULL, NULL);
 
 	Aruco::ArucoHandler a = Aruco::ArucoHandler();
 	a.start();
@@ -127,10 +137,42 @@ void update()
 
 int rot = 0;
 
+void drawBackground() {
+
+	glDisable(GL_DEPTH_TEST);
+
+	cv::Mat image = a.getLastImage();
+	
+	camTex.UpdateTexture(image.data, image.rows, image.cols, image.channels() == 3 ? GL_RGB : GL_RGBA);
+	camTex.bind();
+
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	float widthX = (viewport[2] / 100.f);
+	float widthY = (viewport[3] / 100.f);
+	glm::mat4 projection = glm::ortho(-widthX, widthX, -widthY, widthY, 0.01f, 100.0f);
+	tigl::shader->setProjectionMatrix(projection);
+	tigl::shader->setViewMatrix(glm::mat4(1.0f));
+	tigl::shader->setModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.00f, 1.00f)));
+	tigl::shader->enableTexture(true);
+
+	tigl::begin(GL_QUADS);
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( widthX, -widthY, -0.1f),  glm::vec2(1, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-widthX, -widthY, -0.1f),  glm::vec2(0, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-widthX,  widthY, -0.1f),  glm::vec2(0, 0)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( widthX,  widthY, -0.1f),  glm::vec2(1, 0)));
+	tigl::end();																
+
+	tigl::shader->enableTexture(false);
+
+}
+
 void draw()
 {
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawBackground();
 
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -138,7 +180,8 @@ void draw()
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);	
-	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+
+	glm::mat4 projection = glm::perspective(glm::radians(fov), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setViewMatrix(glm::mat4(1.0f));
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));

@@ -10,10 +10,11 @@ namespace camvis
 	{
 		class Texture
 		{
-		private:
+		protected:
 			GLuint id;
 
 		public:
+			Texture() {};
 			Texture(const std::string& fileName);
 			void bind();
 		};
