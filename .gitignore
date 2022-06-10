@@ -353,4 +353,4 @@ MigrationBackup/
 
 !CamistryVission/lib/glew-2.1./*
 
-x64/
+x64/Debug/CamistryVission.*
