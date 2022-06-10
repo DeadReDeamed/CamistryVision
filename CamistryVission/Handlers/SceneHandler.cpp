@@ -17,7 +17,7 @@ namespace camvis {
 
 		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
 		{
-			emptyGameObject = new GameObject();
+			//emptyGameObject = new GameObject();
 		}
 
 		void SceneHandler::update(float deltaTime)
@@ -56,12 +56,12 @@ namespace camvis {
 		void SceneHandler::changeScene(int index)
 		{
 			parseScene(index);
-			activeScene->gameObjects.push_back(emptyGameObject);
+			//activeScene->gameObjects.push_back(emptyGameObject);
 		}
 
 		SceneHandler::~SceneHandler()
 		{
-			activeScene->gameObjects.remove(emptyGameObject);
+			//activeScene->gameObjects.remove(emptyGameObject);
 			delete emptyGameObject;
 		}
 
@@ -123,11 +123,6 @@ namespace camvis {
 				gameObjectIt->second->shouldShow = true;
 
 			}
-
-			activeScene->gameObjects[0]->shouldShow = true;
-			activeScene->gameObjects[1]->shouldShow = true;
-			activeScene->gameObjects[0]->transform = glm::mat4(1.0f);
-			activeScene->gameObjects[1]->transform = glm::mat4(1.0f);
 
 #ifdef DEBUG_ENABLED
 			ImGui::Begin("Cards", &showCardsDebug);
@@ -257,7 +252,7 @@ namespace camvis {
 		/// <param name="detectedMarker">The empty marker</param>
 		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker)
 		{
-			emptyGameObject->shouldShow = true;
+			//emptyGameObject->shouldShow = true;
 		}
 
 
