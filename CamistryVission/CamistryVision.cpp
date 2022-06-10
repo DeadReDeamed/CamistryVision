@@ -52,7 +52,7 @@ int main()
 
 	//480 height
 	//640 width
-	window = glfwCreateWindow(640, 480, "CamistryVision", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "CamistryVision", NULL, NULL);
 
 	
 
@@ -110,7 +110,7 @@ void init()
 	int atomIndex = 1;
 
 	//load and init atom from the json data
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
+	
 	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons);
 	testCore->addComponent(atomComponent);
 
@@ -134,6 +134,8 @@ void init()
 }
 
 bool showStatsWindow = true;
+float fov = 25.f;
+
 void update()
 {
 	double timeNow = glfwGetTime();
@@ -202,6 +204,10 @@ void update()
 
 	// END
 
+	ImGui::Begin("gamer slider");
+	ImGui::SliderFloat("FOV", &fov, 0.f, 240.f);
+	ImGui::End();
+
 	// Show Frame statistics
 	ImGui::Begin("Stats", &showStatsWindow);
 	ImGui::Text("Frame time: %.2f", deltaTime);
@@ -222,18 +228,20 @@ void drawBackground() {
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	float widthX = (viewport[2] / 100.f);
+	float widthY = (viewport[3] / 100.f);
+	glm::mat4 projection = glm::ortho(-widthX, widthX, -widthY, widthY, 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setViewMatrix(glm::mat4(1.0f));
-	tigl::shader->setModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
+	tigl::shader->setModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.00f, 1.00f)));
 	tigl::shader->enableTexture(true);
 
 	tigl::begin(GL_QUADS);
-	tigl::addVertex(tigl::Vertex::PT(glm::vec3( 0.640, -0.480, -1.2),  glm::vec2(1, 1)));
-	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-0.640, -0.480, -1.2),  glm::vec2(0, 1)));
-	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-0.640,  0.480, -1.2),  glm::vec2(0, 0)));
-	tigl::addVertex(tigl::Vertex::PT(glm::vec3( 0.640,  0.480, -1.2),  glm::vec2(1, 0)));
-	tigl::end();
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( widthX, -widthY, -0.1f),  glm::vec2(1, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-widthX, -widthY, -0.1f),  glm::vec2(0, 1)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3(-widthX,  widthY, -0.1f),  glm::vec2(0, 0)));
+	tigl::addVertex(tigl::Vertex::PT(glm::vec3( widthX,  widthY, -0.1f),  glm::vec2(1, 0)));
+	tigl::end();																
 
 	tigl::shader->enableTexture(false);
 
@@ -253,7 +261,7 @@ void draw()
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);	
 
-	glm::mat4 projection = glm::perspective(glm::radians(75.0f), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(fov), viewport[2] / (float)viewport[3], 0.01f, 100.0f);
 	tigl::shader->setProjectionMatrix(projection);
 	tigl::shader->setViewMatrix(glm::mat4(1.0f));
 	tigl::shader->setModelMatrix(glm::mat4(1.0f));
@@ -267,8 +275,10 @@ void draw()
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 
 		gameobject->transform = modelMatrix;
-		gameobject->scale(glm::vec3(0.05f, 0.05f, 0.05f));
+		gameobject->scale(glm::vec3(0.02f, 0.02f, 0.02f));
 
 		gameobject->draw();
 	}
+
+
 }

@@ -13,11 +13,13 @@ namespace Aruco {
 
 			// Get latest image
 			camera.retrieve(img);
+			if (img.empty())
+				return;
 
 			lastImage = img;
 
 			// Gray-scale image
-			cv::Mat grey;
+			cv::Mat grey = cv::Mat();
 			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
 			
 			// Detect the markers
@@ -79,9 +81,14 @@ namespace Aruco {
 	}
 
 	cv::Mat ArucoHandler::getLastImage() {	
-		cv::Mat convertedImage;
-		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
-		return convertedImage;
+
+		if (lastImage.empty())
+			return lastImage;
+
+		return lastImage;
+		//cv::Mat convertedImage = cv::Mat();
+		//cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		//return convertedImage;
 	}
 
 	void CalibrateCamera() {
