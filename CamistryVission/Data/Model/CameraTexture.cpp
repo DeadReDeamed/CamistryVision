@@ -11,6 +11,7 @@ namespace camvis
 
 		void CameraTexture::UpdateTexture(unsigned char* imgData, int height, int width, GLint channels)
 		{
+
 			glBindTexture(GL_TEXTURE_2D, id);
 
 			glTexImage2D(GL_TEXTURE_2D,

@@ -13,8 +13,9 @@ namespace Aruco {
 
 			// Get latest image
 			camera.retrieve(img);
+
 			if (img.empty())
-				return;
+				continue;
 
 			lastImage = img;
 
@@ -85,9 +86,12 @@ namespace Aruco {
 
 	cv::Mat ArucoHandler::getLastImage() {	
 
-		if (lastImage.empty())
-			return lastImage;
+		//if (!lastImage.empty())
+		//	return lastImage;
 
+		if (lastImage.empty()) {
+			std::cout << "bruh";
+		}
 		//return lastImage;
 		cv::Mat convertedImage = cv::Mat();
 		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
