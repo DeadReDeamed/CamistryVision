@@ -10,15 +10,17 @@
 #include "../Components/MoleculeComponent.h"
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
+#include "../Util/CamMath.h"
 #include <vector>
 #include <xhash>
 
-using namespace camvis;
+#define lerpScale 5.f
 
-namespace camvis { 
-	namespace handlers {
+namespace camvis 
+{ 
+	namespace handlers 
+	{
 		
-
 		bool showCardsDebug = true;
 
 		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
@@ -35,7 +37,7 @@ namespace camvis {
 			}
 
 			// Update Aruco data
-			updateAruco();
+			updateAruco(deltaTime);
 		}
 
 		void SceneHandler::draw()
@@ -67,7 +69,7 @@ namespace camvis {
 			
 		}
 
-		void SceneHandler::updateAruco()
+		void SceneHandler::updateAruco(float deltaTime)
 		{
 			// Disable all should show of gameobject
 			for (auto& gameobject : activeScene->gameObjects)
@@ -114,15 +116,41 @@ namespace camvis {
 				bool empty = gameObjectIt == activeScene->linkedGameObjects.end();
 
 				handleEmptyCard(detectedMarkers[i], empty);
+				if (gameObjectIt == activeScene->linkedGameObjects.end())
+				{
+					handleEmptyCard(detectedMarkers[i]);
+					continue;
+				}
+				
+				GameObject* gameObject = gameObjectIt->second;
 
 				if (empty) continue;
 				
 
+				if (gameObject->firstPos)
+				{
+					gameObject->currentPos = glmMatrix;
+					gameObject->firstPos = false;
+				}
+
+#define posMatrix gameObject->currentPos
+
+				float adjLerp = deltaTime * lerpScale;
+
+				posMatrix = {
+					{CamMath::lerp(posMatrix[0][0], glmMatrix[0][0], adjLerp), CamMath::lerp(posMatrix[0][1], glmMatrix[0][1], adjLerp), CamMath::lerp(posMatrix[0][2], glmMatrix[0][2], adjLerp), CamMath::lerp(posMatrix[0][3], glmMatrix[0][3], adjLerp)},
+					{CamMath::lerp(posMatrix[1][0], glmMatrix[1][0], adjLerp), CamMath::lerp(posMatrix[1][1], glmMatrix[1][1], adjLerp), CamMath::lerp(posMatrix[1][2], glmMatrix[1][2], adjLerp), CamMath::lerp(posMatrix[1][3], glmMatrix[1][3], adjLerp)},
+					{CamMath::lerp(posMatrix[2][0], glmMatrix[2][0], adjLerp), CamMath::lerp(posMatrix[2][1], glmMatrix[2][1], adjLerp), CamMath::lerp(posMatrix[2][2], glmMatrix[2][2], adjLerp), CamMath::lerp(posMatrix[2][3], glmMatrix[2][3], adjLerp)},
+					{CamMath::lerp(posMatrix[3][0], glmMatrix[3][0], adjLerp), CamMath::lerp(posMatrix[3][1], glmMatrix[3][1], adjLerp), CamMath::lerp(posMatrix[3][2], glmMatrix[3][2], adjLerp), glmMatrix[3][3]}
+				};
+
+#undef posMatrix
+
 				// Updating the position of the model
-				gameObjectIt->second->cameraTransform = glmMatrix;
+				gameObject->cameraTransform = gameObject->currentPos;
 
 				// Enable showing the gameobject
-				gameObjectIt->second->shouldShow = true;
+				gameObject->shouldShow = true;
 
 			}
 
@@ -172,7 +200,7 @@ namespace camvis {
 						component::Shell* shell = new component::Shell();
 						shell->amount = atom->electrons[i];
 						shell->distance = 10 + (2 * i);
-						shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
+						shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 0);
 						shells.push_back(shell);
 					}
 				object->addComponent(new component::ElectronComponent(shells));
