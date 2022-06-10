@@ -15,6 +15,7 @@ namespace camvis {
 		{
 		private:
 			std::vector<camvis::data::Atom> existingAtoms;
+			GameObject* mergeTo;
 
 			void realiseCombination(std::map<int, int> atomMap);
 		public:
@@ -22,8 +23,8 @@ namespace camvis {
 			void Combine(std::vector<camvis::data::Atom> atoms);
 			void Combine(std::vector<camvis::data::Molecule> molecules);
 
-			MergeComponent(std::vector<data::Atom> _existingAtoms) :
-				existingAtoms(_existingAtoms) {};
+			MergeComponent(GameObject* _mergeTo, std::vector<data::Atom> _existingAtoms) :
+				existingAtoms(_existingAtoms), mergeTo(_mergeTo) {};
 
 			void update(float deltaTime);
 		};

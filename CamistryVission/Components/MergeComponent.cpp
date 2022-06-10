@@ -9,13 +9,13 @@ namespace camvis {
 	{
 		void MergeComponent::realiseCombination(std::map<int, int> atomMap) {
 			component::MoleculeComponent* moleculeComponent = new component::MoleculeComponent(atomMap, existingAtoms);
-			gameObject->addComponent(moleculeComponent);
-			gameObject->transform = glm::translate(gameObject->transform, glm::vec3(0, -5, -50));
+			mergeTo->addComponent(moleculeComponent);
+			mergeTo->transform = glm::translate(mergeTo->transform, glm::vec3(0, -5, -50));
 			component::RotationComponent* rotate = new component::RotationComponent();
-			gameObject->addComponent(rotate);
-			gameObject->scale(glm::vec3(1, 1, 1));
+			mergeTo->addComponent(rotate);
+			mergeTo->scale(glm::vec3(1, 1, 1));
 
-			gameObject->removeComponent(this);
+			mergeTo->removeComponent(this);
 		}
 
 		void MergeComponent::Combine(std::vector<camvis::data::Atom> atoms, std::vector<camvis::data::Molecule> molecules) {
@@ -40,18 +40,24 @@ namespace camvis {
 					}
 				}
 			}
-
+			
 			realiseCombination(atomMap);
 		}
 
 		void MergeComponent::Combine(std::vector<camvis::data::Atom> atoms) {
 			std::map<int, int> atomMap;
 			for (auto& a : atoms) {
-				if (atomMap.count(a.atomNumber)) {
-					atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
-				}
-				else {
-					atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
+				for (int i = 0; i < existingAtoms.size(); i++) {
+					data::Atom atom = existingAtoms[i];
+					if (a.atomNumber == atom.atomNumber) {
+						if (atomMap.count(a.atomNumber)) {
+							atomMap[a.atomNumber] = atomMap[i] + 1;
+						}
+						else {
+							atomMap.insert(std::pair<int, int>(i, 1));
+						}
+						break;
+					}
 				}
 			}
 

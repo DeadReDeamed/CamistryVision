@@ -2,6 +2,7 @@
 #define ATOM_COMP_H
 
 #include "DrawComponent.h"
+#include "../Data/Matter/Atom.h"
 
 namespace camvis {
 	namespace component
@@ -14,13 +15,15 @@ namespace camvis {
 
 		public:
 
+			data::Atom* atomData;
+
 			// Atom structure
 			std::vector<std::pair<glm::vec3, glm::vec4>> core;
 			/// <summary>
 			/// Constructs the atom component with the given amound of size
 			/// </summary>
 			/// <param name="bolAmount">The number of parts in the core</param>
-			AtomComponent(int bolAmount) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount) { generateCore(bolAmount, glm::mat4(1.0f)); };
+			AtomComponent(int bolAmount, data::Atom* _atomData = nullptr) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount), atomData(_atomData) { generateCore(bolAmount, glm::mat4(1.0f)); };
 
 			/// <summary>
 			/// Updates the component

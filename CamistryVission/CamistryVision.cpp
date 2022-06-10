@@ -4,6 +4,14 @@
 #include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
+#include "debuging/imgui/imgui.h"
+#include "debuging/DebugWindow.h"
+#include "GameObject.h"
+#include "Components/AtomComponent.h"
+#include "Components/ElectronComponent.h"
+#include "Components/MoleculeComponent.h"
+#include "Components/RotationComponent.h"
+#include "Components/MergeComponent.h"
 #include "../Components/AtomComponent.h"
 #include "../Components/ElectronComponent.h"
 
@@ -39,6 +47,14 @@ data::CameraTexture camTex;
 float fov = 30.2f;
 
 handlers::SceneHandler* sceneHandler;
+
+//Temporary
+std::vector<GameObject*> gameObjects;
+
+std::vector<data::Atom> atoms; //temporary varialbe for testing
+std::vector<data::Molecule> molecules; // same here
+
+
 int main()
 {
 
@@ -98,6 +114,9 @@ void init()
 	lastUpdateTime = glfwGetTime();	
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
+	//loads atom and molecule data
+	atoms = handlers::DataHandler::getInstance()->atoms;
+	molecules = handlers::DataHandler::getInstance()->molecules;
 
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
@@ -123,16 +142,16 @@ void update()
 	float deltaTime = timeNow - lastUpdateTime;
 	lastUpdateTime = timeNow;
 
-	// Updating the scene
-	sceneHandler->update(deltaTime);
-	
+    sceneHandler->update(deltaTime);
+
 #ifdef DEBUG_ENABLED
-	// Show Frame statistics
+    // Show Frame statistics
 	ImGui::Begin("Stats", &showGeneralDebug);
 	ImGui::Text("Frame time: %.2f", deltaTime);
 	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
 	ImGui::End();
 #endif
+   
 }
 
 int rot = 0;

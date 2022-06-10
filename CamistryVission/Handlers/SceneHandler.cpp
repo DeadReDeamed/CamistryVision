@@ -10,8 +10,10 @@
 #include "../Components/MoleculeComponent.h"
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
+#include "../Components/MergeComponent.h"
 #include "../Util/CamMath.h"
 #include <vector>
+#include <random>
 #include <xhash>
 
 #define lerpScale 5.f
@@ -38,6 +40,7 @@ namespace camvis
 
 			// Update Aruco data
 			updateAruco(deltaTime);
+			checkCollision();
 		}
 
 		void SceneHandler::draw()
@@ -164,10 +167,85 @@ namespace camvis
 #endif
 		}
 
+		void SceneHandler::checkCollision() {
+			std::vector<camvis::GameObject*> gameObjects = activeScene->gameObjects;
+
+			for (int i = 0; i < gameObjects.size() - 1; i++) {
+				GameObject* object = gameObjects[i];
+				if (!object->shouldShow) continue;
+				for (int j = i + 1; j < gameObjects.size(); j++) {
+					GameObject* object2 = gameObjects[j];
+					if (!object2->shouldShow) continue;
+					float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
+				
+					if (length < 0.3f && length != 0) {
+						bool leftOrRight = rand() % 2;
+						GameObject* objects[2] = { object, object2 };
+
+						GameObject* mergeTo = objects[leftOrRight];
+						// if leftOrRight is 1 then result is 0. If it is 0 then it would be -1 which would be converted back to 1.
+						GameObject* other = objects[-(leftOrRight - 1)];
+						std::vector<data::Atom> atomsToMerge;
+						
+						//Check if the object has atleast an atom or a molecole in it's components. Otherwise it is an empty card.
+						bool twoHaveElements = true;
+						for (int k = 0; k < 2; k++) {
+							component::AtomComponent* a = objects[k]->getComponent<component::AtomComponent>();
+							component::MoleculeComponent* m = objects[k]->getComponent<component::MoleculeComponent>();
+							twoHaveElements = twoHaveElements && (a || m);
+						}
+						if (!twoHaveElements) break;
+
+						// Copy the data of the cards into a vector of data::Atom. This will be used to create a new molecule.
+						for (int k = 0; k < 2; k++) {
+							GameObject* object = objects[k];
+							component::AtomComponent* atom = object->getComponent<component::AtomComponent>();
+							if (atom) {
+								if (object->shouldShow) {
+									if (atom->atomData) {
+										atomsToMerge.push_back(*atom->atomData);
+									}
+									// Remove the atom and electrons from the card after copying the data.
+									object->removeComponent(atom);
+									object->removeComponent(object->getComponent<component::ElectronComponent>());
+								}
+								else {
+									break;
+								}
+							}
+							else {
+								component::MoleculeComponent* molecule = object->getComponent<component::MoleculeComponent>();
+
+								if (object->shouldShow) {
+									if (molecule) {
+										atomsToMerge.insert(atomsToMerge.end(), molecule->atoms.begin(), molecule->atoms.end());
+										// Remove the molecule from the card after copying the data.
+										object->removeComponent(molecule);
+									}
+									else {
+										// is a blank card and we only check collision between two cards that have an atom or a molecule on them.
+										break;
+									}
+								}
+								else {
+									break;
+								}
+							}
+						}
+						if (atomsToMerge.size() <= 1) continue;
+						//atoms here must be the atom database
+						component::MergeComponent* mergeComponent = new component::MergeComponent(mergeTo, existingAtoms);
+						mergeComponent->Combine(atomsToMerge);
+					
+					}
+				}
+			}
+		}
+
 		void SceneHandler::parseScene(int index)
 		{
 			if (activeScene == nullptr) activeScene = new data::Scene();
-
+			
 
 			// Clearing the current Scene
 			activeScene->gameObjects.clear();
@@ -188,7 +266,7 @@ namespace camvis
 				data::Atom* atom = matterPair.second;
 				//Initializing game object from atoms
 				GameObject* object = new GameObject();
-				object->addComponent(new component::AtomComponent(atom->atomNumber + atom->neutrons));
+				object->addComponent(new component::AtomComponent(atom->atomNumber + atom->neutrons, atom));
 				std::vector<component::Shell*> shells;
 				for (size_t i = 0; i < atom->electrons.size(); i++)
 					{
@@ -213,6 +291,7 @@ namespace camvis
 				activeScene->gameObjects.push_back(object);
 				activeScene->linkedGameObjects.insert({ matterPair.first, object });
 			}
+			
 		}
 
 		/// <summary>

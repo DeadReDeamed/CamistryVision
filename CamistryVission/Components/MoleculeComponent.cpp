@@ -46,30 +46,23 @@ namespace camvis {
 			return list;
 		}
 
-		MoleculeComponent::MoleculeComponent(std::map<int, int> _atomMap, const std::vector<data::Atom>& atoms) : atomMap(_atomMap), DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")) {
-
+		MoleculeComponent::MoleculeComponent(std::map<int, int> _atomMap, std::vector<data::Atom>& _atoms) : atomMap(_atomMap), existingAtomsMolecule(_atoms), DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")) {
+			std::vector<data::Atom> atomArray;
 			//Create molecule model.
 			for (auto& pair : atomMap) {
-				data::Atom atom = atoms[0];
-
-				for (data::Atom a : atoms) {
-					if (pair.first == a.atomNumber) {
-						atom = a;
-						break;
-					}
-				}
-
+				
+				data::Atom atom = existingAtomsMolecule[pair.first];
+				atomArray.push_back(atom);
 				for (int i = 0; i < pair.second; i++) {
-					AtomComponent* atomComponent = new AtomComponent(atom.neutrons + atom.atomNumber);
-					printf("hello");
+					AtomComponent* atomComponent = new AtomComponent(atom.neutrons + atom.atomNumber, &atom);
 
 					cores.push_back(atomComponent->core);
 					delete atomComponent;
 				}
 			}
-			printf("test");
+		
 			MoleculeGrid grid = createMoleculeGrid(4, cores);
-
+			atoms = atomArray;
 			drawList = createDrawList(grid);
 		}
 

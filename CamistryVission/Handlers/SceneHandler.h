@@ -3,8 +3,7 @@
 
 #include "../Data/Scene.h"
 #include "../CardScanning/ArucoHandler.h"
-
-using namespace camvis;
+#include "../Handlers/DataHandler.h"
 
 namespace camvis { namespace handlers {
 
@@ -13,9 +12,11 @@ namespace camvis { namespace handlers {
 		private:
 			data::Scene* activeScene = nullptr;
 			std::unordered_map<int, GameObject*> emptyGameObjects;
+			std::vector<data::Atom> existingAtoms = handlers::DataHandler::getInstance()->atoms;
+			std::vector<data::Molecule> existingMolecules = handlers::DataHandler::getInstance()->molecules;
+
 
 			Aruco::ArucoHandler* cardHandler;
-
 
 		public:
 			SceneHandler(Aruco::ArucoHandler* cardHandler);
@@ -28,8 +29,10 @@ namespace camvis { namespace handlers {
 
 		private:
 			void updateAruco(float deltaTime);
+			void checkCollision();
 			void parseScene(int index);
 			void handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty);
+
 
 		};
 } }
