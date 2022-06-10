@@ -1,11 +1,7 @@
 #pragma once
 #include "ArucoVision.h"
 
-#include <thread>
-
-#include <opencv2/opencv.hpp>
-#include <opencv2/aruco.hpp>
-#include <opencv2/core/opengl.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "MarkerData.h"
 namespace Aruco {

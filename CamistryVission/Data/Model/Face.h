@@ -12,6 +12,10 @@ namespace camvis
 		{
 		public:
 			std::list<Vertex> vertices;
+
+		public:
+			Face(std::list<Vertex> vertices)
+				: vertices(vertices) {}
 		};
 	}
 }
