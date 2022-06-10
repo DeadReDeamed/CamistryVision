@@ -61,7 +61,7 @@ namespace Aruco {
 
 		// Starting the camera capture
 		camera = cv::VideoCapture();
-		camera.open(1);
+		camera.open(0);
 
 		// Starting OpenCV Thread
 		arucothread = (std::thread(&ArucoHandler::run, this));
