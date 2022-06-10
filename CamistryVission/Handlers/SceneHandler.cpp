@@ -116,11 +116,6 @@ namespace camvis
 				bool empty = gameObjectIt == activeScene->linkedGameObjects.end();
 
 				handleEmptyCard(detectedMarkers[i], empty);
-				if (gameObjectIt == activeScene->linkedGameObjects.end())
-				{
-					handleEmptyCard(detectedMarkers[i]);
-					continue;
-				}
 				
 				GameObject* gameObject = gameObjectIt->second;
 
