@@ -4,28 +4,20 @@
 #include <vector>
 #include <unordered_map>
 
-#include <string>
-
-#include "../Data/Matter/Matter.h"
-#include "../Data/Matter/Molecule.h"
-#include "../Data/Matter/Atom.h"
-
-using namespace camvis;
-
 namespace camvis { namespace handlers {
 
 	class DataHandler
 	{
-	public:
-		std::vector<data::Atom> atoms;
-		std::vector<data::Molecule> molecules;
+	private:
+		static DataHandler instance;
 
-		std::vector<std::unordered_map<int, data::Molecule*>> scenesMolecules;
-		std::vector<std::unordered_map<int, data::Atom*>> scenesAtoms;
-	public:
-		static DataHandler* getInstance();
+		//std::vector<Matter> matter;
+		//std::vector<std::unordered_map<int, Matter>> scenes;
 
-		void loadData(std::string Datafilename, std::string scenesFilename);
+	public:
+		static DataHandler getInstance();
+
+		void loadData();
 
 	};
 

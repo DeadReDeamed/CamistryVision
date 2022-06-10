@@ -1,54 +1,31 @@
 #include "GameObject.h"
 
-using namespace camvis;
-
 namespace camvis
 {
-	void GameObject::addComponent(component::Component* component)
+	void GameObject::addComponent(component::Component& component)
 	{
-		component->setGameObject(this);
-
-		components.push_back(component);
-
-		// Checking if component is a drawComponent
-		if (component::DrawComponent* drawComponent = dynamic_cast<component::DrawComponent*>(component))
-			drawComponents.push_back(drawComponent);
+		throw "Function not implemented!";
 	}
 
 	void GameObject::update(float deltaTime)
 	{
-		if (!shouldShow) return;
-
-		// Update all components
-		for (auto* component : components)
-			component->update(deltaTime);
-
-		// Updating all the linked gameobjects
-		for (auto* gameObject : gameObjects)
-			gameObject->update(deltaTime);
-		
+		throw "Function not implemented!";
 	}
 	
 	void GameObject::draw()
 	{
-		if (!shouldShow) return;
+		throw "Function not implemented!";
+	}
 
-		// Drawing all drawcomponents
-		for (auto* drawComponent : drawComponents)
-			drawComponent->draw();
-
-		// Drawing all the nested gameobjects
-		for (auto* gameObject : gameObjects)
-			gameObject->draw();
+	template<class T>
+	T GameObject::getComponent()
+	{
+		throw "Function not implemented!";
 	}
 	
-	void GameObject::removeComponent(component::Component* component)
+	template<class T>
+	void GameObject::removeComponent()
 	{
-		components.remove(component);
-
-		// Remove component if it is a drawcomponent
-		if (component::DrawComponent* v = dynamic_cast<component::DrawComponent*>(component))
-			drawComponents.remove(v);
+		throw "Function not implemented!";
 	}
-
 }
