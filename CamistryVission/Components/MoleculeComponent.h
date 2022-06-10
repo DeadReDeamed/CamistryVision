@@ -17,10 +17,11 @@ namespace camvis {
 		private:
 			const int grid_offset = 5;
 			std::map<int,int> atomMap;
+			std::vector<data::Atom> existingAtomsMolecule;
 			std::vector<std::vector<std::pair<glm::vec3, glm::vec4>>> cores;
 			std::vector<std::pair<glm::vec3, std::vector<std::pair<glm::vec3, glm::vec4>>>> drawList;
 		public:
-			std::vector<data::Atom>& atoms;
+			std::vector<data::Atom> atoms;
 		public:
 			MoleculeComponent(std::map<int,int> _atomMap, std::vector<data::Atom>& _atoms);
 			void update(float deltaTime);

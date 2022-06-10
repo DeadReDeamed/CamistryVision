@@ -150,42 +150,59 @@ namespace camvis {
 					if (!object2->shouldShow) continue;
 					float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
 				
-					if (length < 1 && length != 0) {
-						std::cout << "Collision" << std::endl;
+					if (length < 0.3f && length != 0) {
 						bool leftOrRight = rand() % 2;
 						GameObject* objects[2] = { object, object2 };
 
 						GameObject* mergeTo = objects[leftOrRight];
 						// if leftOrRight is 1 then result is 0. If it is 0 then it would be -1 which would be converted back to 1.
 						GameObject* other = objects[-(leftOrRight - 1)];
-						std::vector<data::Atom> atoms;
+						std::vector<data::Atom> atomsToMerge;
 						
+						bool twoHaveElements = true;
+						for (int k = 0; k < 2; k++) {
+							component::AtomComponent* a = objects[k]->getComponent<component::AtomComponent>();
+							component::MoleculeComponent* m = objects[k]->getComponent<component::MoleculeComponent>();
+							twoHaveElements = twoHaveElements && (a || m);
+						}
+						if (!twoHaveElements) break;
 						for (int k = 0; k < 2; k++) {
 							GameObject* object = objects[k];
 							component::AtomComponent* atom = object->getComponent<component::AtomComponent>();
 							if (atom) {
-								if (atom->atomData) {
-									atoms.push_back(*atom->atomData);
+								if (object->shouldShow) {
+									if (atom->atomData) {
+										atomsToMerge.push_back(*atom->atomData);
+									}
+									object->removeComponent(atom);
+									object->removeComponent(object->getComponent<component::ElectronComponent>());
 								}
-								object->removeComponent(atom);
-								object->removeComponent(object->getComponent<component::ElectronComponent>());
+								else {
+									break;
+								}
 							}
 							else {
 								component::MoleculeComponent* molecule = object->getComponent<component::MoleculeComponent>();
-								if (molecule) {
-									atoms.insert(atoms.end(), molecule->atoms.begin(), molecule->atoms.end());
-									object->removeComponent(molecule);
+
+								if (object->shouldShow) {
+									if (molecule) {
+										atomsToMerge.insert(atomsToMerge.end(), molecule->atoms.begin(), molecule->atoms.end());
+										object->removeComponent(molecule);
+									}
+									else {
+										// is a blank card and we only check collision between two cards that have an atom or a molecule on them.
+										break;
+									}
 								}
 								else {
-									// is a blank card and we only check collision between two cards that have an atom or a molecule on them.
 									break;
 								}
 							}
 						}
-						if (atoms.size() <= 1) continue;
+						if (atomsToMerge.size() <= 1) continue;
 						//atoms here must be the atom database
 						component::MergeComponent* mergeComponent = new component::MergeComponent(mergeTo, existingAtoms);
-						mergeComponent->Combine(atoms);
+						mergeComponent->Combine(atomsToMerge);
 					
 					}
 				}

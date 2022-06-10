@@ -47,11 +47,17 @@ namespace camvis {
 		void MergeComponent::Combine(std::vector<camvis::data::Atom> atoms) {
 			std::map<int, int> atomMap;
 			for (auto& a : atoms) {
-				if (atomMap.count(a.atomNumber)) {
-					atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
-				}
-				else {
-					atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
+				for (int i = 0; i < existingAtoms.size(); i++) {
+					data::Atom atom = existingAtoms[i];
+					if (a.atomNumber == atom.atomNumber) {
+						if (atomMap.count(a.atomNumber)) {
+							atomMap[a.atomNumber] = atomMap[i] + 1;
+						}
+						else {
+							atomMap.insert(std::pair<int, int>(i, 1));
+						}
+						break;
+					}
 				}
 			}
 
