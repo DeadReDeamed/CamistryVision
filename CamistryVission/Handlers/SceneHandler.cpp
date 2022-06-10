@@ -1,23 +1,33 @@
 #include "SceneHandler.h"
 
+#include "../debuging/DebugWindow.h"
+#include "../debuging/imgui/imgui.h"
+
+#define DEBUG_ENABLED
+
 #include "DataHandler.h"
 #include "../Components/AtomComponent.h"
 #include "../Components/MoleculeComponent.h"
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
 #include "../Components/MergeComponent.h"
+#include "../Util/CamMath.h"
 #include <vector>
 #include <random>
+#include <xhash>
 
-namespace camvis { 
-	namespace handlers {
+#define lerpScale 5.f
+
+namespace camvis 
+{ 
+	namespace handlers 
+	{
 		
-
 		bool showCardsDebug = true;
 
 		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
 		{
-			//emptyGameObject = new GameObject();
+			
 		}
 
 		void SceneHandler::update(float deltaTime)
@@ -29,7 +39,7 @@ namespace camvis {
 			}
 
 			// Update Aruco data
-			updateAruco();
+			updateAruco(deltaTime);
 			checkCollision();
 		}
 
@@ -43,7 +53,6 @@ namespace camvis {
 
 				glm::mat4 modelMatrix = glm::mat4(1.0f);
 
-				// TODO fix
 				modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 
 				gameobject->transform = modelMatrix;
@@ -56,16 +65,14 @@ namespace camvis {
 		void SceneHandler::changeScene(int index)
 		{
 			parseScene(index);
-			//activeScene->gameObjects.push_back(emptyGameObject);
 		}
 
 		SceneHandler::~SceneHandler()
 		{
-			//activeScene->gameObjects.remove(emptyGameObject);
-			delete emptyGameObject;
+			
 		}
 
-		void SceneHandler::updateAruco()
+		void SceneHandler::updateAruco(float deltaTime)
 		{
 			// Disable all should show of gameobject
 			for (auto& gameobject : activeScene->gameObjects)
@@ -109,18 +116,39 @@ namespace camvis {
 
 				// Updating the camera
 				auto gameObjectIt = activeScene->linkedGameObjects.find(detectedMarkers[i].id);
+				bool empty = gameObjectIt == activeScene->linkedGameObjects.end();
 
-				if (gameObjectIt == activeScene->linkedGameObjects.end())
+				handleEmptyCard(detectedMarkers[i], empty);
+				
+				GameObject* gameObject = gameObjectIt->second;
+
+				if (empty) continue;
+				
+
+				if (gameObject->firstPos)
 				{
-					handleEmptyCard(detectedMarkers[i]);
-					continue;
+					gameObject->currentPos = glmMatrix;
+					gameObject->firstPos = false;
 				}
 
+#define posMatrix gameObject->currentPos
+
+				float adjLerp = deltaTime * lerpScale;
+
+				posMatrix = {
+					{CamMath::lerp(posMatrix[0][0], glmMatrix[0][0], adjLerp), CamMath::lerp(posMatrix[0][1], glmMatrix[0][1], adjLerp), CamMath::lerp(posMatrix[0][2], glmMatrix[0][2], adjLerp), CamMath::lerp(posMatrix[0][3], glmMatrix[0][3], adjLerp)},
+					{CamMath::lerp(posMatrix[1][0], glmMatrix[1][0], adjLerp), CamMath::lerp(posMatrix[1][1], glmMatrix[1][1], adjLerp), CamMath::lerp(posMatrix[1][2], glmMatrix[1][2], adjLerp), CamMath::lerp(posMatrix[1][3], glmMatrix[1][3], adjLerp)},
+					{CamMath::lerp(posMatrix[2][0], glmMatrix[2][0], adjLerp), CamMath::lerp(posMatrix[2][1], glmMatrix[2][1], adjLerp), CamMath::lerp(posMatrix[2][2], glmMatrix[2][2], adjLerp), CamMath::lerp(posMatrix[2][3], glmMatrix[2][3], adjLerp)},
+					{CamMath::lerp(posMatrix[3][0], glmMatrix[3][0], adjLerp), CamMath::lerp(posMatrix[3][1], glmMatrix[3][1], adjLerp), CamMath::lerp(posMatrix[3][2], glmMatrix[3][2], adjLerp), glmMatrix[3][3]}
+				};
+
+#undef posMatrix
+
 				// Updating the position of the model
-				gameObjectIt->second->cameraTransform = glmMatrix;
+				gameObject->cameraTransform = gameObject->currentPos;
 
 				// Enable showing the gameobject
-				gameObjectIt->second->shouldShow = true;
+				gameObject->shouldShow = true;
 
 			}
 
@@ -245,7 +273,7 @@ namespace camvis {
 						component::Shell* shell = new component::Shell();
 						shell->amount = atom->electrons[i];
 						shell->distance = 10 + (2 * i);
-						shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
+						shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 0);
 						shells.push_back(shell);
 					}
 				object->addComponent(new component::ElectronComponent(shells));
@@ -272,9 +300,47 @@ namespace camvis {
 		/// a Maximum of one empty card will be detected in frame at a time
 		/// </summary>
 		/// <param name="detectedMarker">The empty marker</param>
-		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker)
+		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty)
 		{
-			//emptyGameObject->shouldShow = true;
+			// Check if the detectedMarker is in the clear list
+			if (emptyGameObjects.find(detectedMarker.id) == emptyGameObjects.end() && empty)
+			{
+				// If the marker is not in the list and empty == true create a new object
+				GameObject* objectP = new GameObject();
+				std::pair<int, GameObject*> pair = std::make_pair(detectedMarker.id, objectP);
+				emptyGameObjects.insert(pair);
+
+				// Setting the should show of the object to true
+				objectP->shouldShow = true;
+
+				// All actions for found are completed
+				return;
+			}
+			
+			// When the object is in the list + the card is empty, set the should show to false
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && empty)
+			{
+				// If empty set the should show to true
+				emptyGameObjects.find(detectedMarker.id)->second->shouldShow = true;
+
+				return;
+			}
+
+			// If empty is false && the object is in the list, retreive the object, delte the pointer, remove the entry
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && !empty)
+			{
+
+				GameObject* entryPair = emptyGameObjects.find(detectedMarker.id)->second;
+
+				// Delete the pair
+				delete entryPair;
+
+				// Remove the entry
+				emptyGameObjects.erase(detectedMarker.id);
+
+				return;
+			}
+			
 		}
 
 
