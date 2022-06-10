@@ -11,13 +11,16 @@ namespace camvis { namespace handlers {
 		{
 		private:
 			data::Scene* activeScene = nullptr;
+			GameObject* emptyGameObject;
 			std::vector<data::Atom> existingAtoms = handlers::DataHandler::getInstance()->atoms;
 			std::vector<data::Molecule> existingMolecules = handlers::DataHandler::getInstance()->molecules;
+
 
 			Aruco::ArucoHandler* cardHandler;
 
 		public:
-			SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr) {};
+			SceneHandler(Aruco::ArucoHandler* cardHandler);
+			~SceneHandler();
 
 			void update(float deltaTime);
 			void draw();
@@ -28,6 +31,7 @@ namespace camvis { namespace handlers {
 			void updateAruco();
 			void checkCollision();
 			void parseScene(int index);
+			void handleEmptyCard(Aruco::MarkerData detectedMarker);
 
 
 		};

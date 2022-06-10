@@ -111,72 +111,18 @@ void init()
 	sceneHandler = new handlers::SceneHandler(&a);
 	sceneHandler->changeScene(0);
 
-	// Create first test gameobject
-	GameObject* testCore = new GameObject();
-	
-	
-	int atomIndex = 1;
-	//REMOVE
-	/*std::map<int, int> atomMap;
-	for (auto& a : molecules[8].atoms) {
-		if (atomMap.count(a.atomNumber)) {
-			atomMap[a.atomNumber] = atomMap[a.atomNumber] + 1;
-		}
-		else {
-			atomMap.insert(std::pair<int, int>(a.atomNumber, 1));
-		}
-	}*/
-	
-	/*
-	component::MoleculeComponent* molecule = new component::MoleculeComponent(atomMap, atoms);
-	testCore->addComponent(molecule);
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::RotationComponent* rotate = new component::RotationComponent();
-	testCore->addComponent(rotate);
-	testCore->scale(glm::vec3(1, 1, 1));
-	gameObjects.push_back(testCore);
-	*/
-
-	//load and init atom from the json data
-	testCore->transform = glm::translate(testCore->transform, glm::vec3(0, -5, -50));
-	component::AtomComponent* atomComponent = new component::AtomComponent(atoms[atomIndex].atomNumber + atoms[atomIndex].neutrons, &atoms[atomIndex]);
-	testCore->addComponent(atomComponent);
-	
-
-	std::vector<component::Shell*> shells;
-
-	//load all electrons from the json data.
-	for (size_t i = 0; i < atoms[atomIndex].electrons.size(); i++)
-	{
-		component::Shell* shell = new component::Shell();
-		shell->amount = atoms[atomIndex].electrons[i];
-		shell->distance = 10 + (2 * i);
-		shell->speed = glm::vec3(30.0f + (i * 3), 30.0f + (i * 3), 30.0f + (i * 3));
-		shells.push_back(shell);
-	}
-	
-	component::ElectronComponent* electronComponent = new component::ElectronComponent(shells);
-	testCore->addComponent(electronComponent);
-	
-	gameObjects.push_back(testCore);
-	
-	component::AtomComponent* comp = testCore->getComponent<component::AtomComponent>();
-	
-	GameObject* test = new GameObject();
-	test->translate({ 100,10,10 });
-	gameObjects.push_back(test);
-	/*GameObject* test2 = new GameObject();
-	gameObjects.push_back(test2);
-	GameObject* test3 = new GameObject();
-	gameObjects.push_back(test3);*/
-	// Give the gameobject to which the merged result will be put upon.
-	// MergeComponent does not delete the atoms/molecules on the cards previous to the combine. This should be done outside of the mergecomponent.
-	// To go from atomcomponent to data we will need a list a data::Atom. Find a way to do this since we cannot retrieve which atom is in an AtomComponent.
-
-	component::MergeComponent* mergeComponent = new component::MergeComponent(test,atoms);
-	mergeComponent->Combine({ atoms[0], atoms[0] });
-
-	delete mergeComponent;
+	tigl::shader->enableLighting(true);
+	tigl::shader->setLightCount(2);
+	tigl::shader->setLightDirectional(0, false);
+	tigl::shader->setLightPosition(0, glm::vec3(0, 20, 0));
+	tigl::shader->setLightPosition(1, glm::vec3(0, -20, 0));
+	tigl::shader->setLightAmbient(0, glm::vec3(0.2f, 0.2f, 0.3f));
+	tigl::shader->setLightAmbient(1, glm::vec3(0.05f, 0.05f, 0.075f));
+	tigl::shader->setLightDiffuse(0, glm::vec3(0.9f, 0.9f, 0.9f));
+	tigl::shader->setLightDiffuse(1, glm::vec3(0.5f, 0.5f, 0.5f));
+	tigl::shader->setLightSpecular(0, glm::vec3(0, 0, 0));
+	tigl::shader->setLightSpecular(1, glm::vec3(0, 0, 0));
+	tigl::shader->setShinyness(30);
 }
 
 bool showGeneralDebug = true;
