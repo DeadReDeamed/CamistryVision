@@ -1,11 +1,17 @@
 #include "SceneHandler.h"
 
+#include "../debuging/DebugWindow.h"
+#include "../debuging/imgui/imgui.h"
+
+#define DEBUG_ENABLED
+
 #include "DataHandler.h"
 #include "../Components/AtomComponent.h"
 #include "../Components/MoleculeComponent.h"
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
 #include <vector>
+#include <xhash>
 
 using namespace camvis;
 
@@ -17,7 +23,7 @@ namespace camvis {
 
 		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
 		{
-			emptyGameObject = new GameObject();
+			
 		}
 
 		void SceneHandler::update(float deltaTime)
@@ -42,7 +48,6 @@ namespace camvis {
 
 				glm::mat4 modelMatrix = glm::mat4(1.0f);
 
-				// TODO fix
 				modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
 
 				gameobject->transform = modelMatrix;
@@ -55,13 +60,11 @@ namespace camvis {
 		void SceneHandler::changeScene(int index)
 		{
 			parseScene(index);
-			activeScene->gameObjects.push_back(emptyGameObject);
 		}
 
 		SceneHandler::~SceneHandler()
 		{
-			activeScene->gameObjects.remove(emptyGameObject);
-			delete emptyGameObject;
+			
 		}
 
 		void SceneHandler::updateAruco()
@@ -108,12 +111,12 @@ namespace camvis {
 
 				// Updating the camera
 				auto gameObjectIt = activeScene->linkedGameObjects.find(detectedMarkers[i].id);
+				bool empty = gameObjectIt == activeScene->linkedGameObjects.end();
 
-				if (gameObjectIt == activeScene->linkedGameObjects.end())
-				{
-					handleEmptyCard(detectedMarkers[i]);
-					continue;
-				}
+				handleEmptyCard(detectedMarkers[i], empty);
+
+				if (empty) continue;
+				
 
 				// Updating the position of the model
 				gameObjectIt->second->cameraTransform = glmMatrix;
@@ -195,9 +198,47 @@ namespace camvis {
 		/// a Maximum of one empty card will be detected in frame at a time
 		/// </summary>
 		/// <param name="detectedMarker">The empty marker</param>
-		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker)
+		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty)
 		{
-			emptyGameObject->shouldShow = true;
+			// Check if the detectedMarker is in the clear list
+			if (emptyGameObjects.find(detectedMarker.id) == emptyGameObjects.end() && empty)
+			{
+				// If the marker is not in the list and empty == true create a new object
+				GameObject* objectP = new GameObject();
+				std::pair<int, GameObject*> pair = std::make_pair(detectedMarker.id, objectP);
+				emptyGameObjects.insert(pair);
+
+				// Setting the should show of the object to true
+				objectP->shouldShow = true;
+
+				// All actions for found are completed
+				return;
+			}
+			
+			// When the object is in the list + the card is empty, set the should show to false
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && empty)
+			{
+				// If empty set the should show to true
+				emptyGameObjects.find(detectedMarker.id)->second->shouldShow = true;
+
+				return;
+			}
+
+			// If empty is false && the object is in the list, retreive the object, delte the pointer, remove the entry
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && !empty)
+			{
+
+				GameObject* entryPair = emptyGameObjects.find(detectedMarker.id)->second;
+
+				// Delete the pair
+				delete entryPair;
+
+				// Remove the entry
+				emptyGameObjects.erase(detectedMarker.id);
+
+				return;
+			}
+			
 		}
 
 
