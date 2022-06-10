@@ -77,6 +77,9 @@ namespace camvis {
 
 		Model::Model(std::string fileName)
 		{
+			if (fileName._Equal("Resources\\models\\ball.obj")) {
+				
+			}
 			std::cout << "Loading " << fileName << std::endl;
 			std::string dirName = fileName;
 			if (dirName.rfind("/") != std::string::npos)

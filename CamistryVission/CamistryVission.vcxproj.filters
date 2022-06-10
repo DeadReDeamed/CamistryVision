@@ -261,5 +261,8 @@
     <ClInclude Include="Util\CamMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Data\Model\BallModelSingleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
