@@ -200,10 +200,20 @@ namespace camvis {
 		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty)
 		{
 			// Check if the detectedMarker is in the clear list
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end())
+			{
+				// If the marker is not in the list and empty == true create a new object
+				GameObject* objectP = new GameObject();
+				std::pair<int, GameObject*> pair = std::make_pair(detectedMarker.id, objectP);
+				emptyGameObjects.insert(pair);
+
+				// Setting the should show of the object to true
+				objectP->shouldShow = true;
+			}
 
 			// if so update the should show
 
-			// Else create a new marken
+			
 		}
 
 
