@@ -209,9 +209,19 @@ namespace camvis {
 
 				// Setting the should show of the object to true
 				objectP->shouldShow = true;
+
+				// All actions for found are completed
+				return;
+			}
+			
+			//
+			if (!empty)
+			{
+				
 			}
 
-			// if so update the should show
+			// If empty set the should show to true
+			emptyGameObjects.find(detectedMarker.id)->second->shouldShow = false;
 
 			
 		}
