@@ -137,7 +137,7 @@ namespace camvis {
 					GameObject* object2 = gameObjects[j];
 					if (!object2->shouldShow) continue;
 					float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
-					length = 0.5f;
+				
 					if (length < 1 && length != 0) {
 						std::cout << "Collision" << std::endl;
 						bool leftOrRight = rand() % 2;
@@ -170,12 +170,11 @@ namespace camvis {
 								}
 							}
 						}
-						if (atoms.size() <= 0) continue;
+						if (atoms.size() <= 1) continue;
 						//atoms here must be the atom database
 						component::MergeComponent* mergeComponent = new component::MergeComponent(mergeTo, existingAtoms);
 						mergeComponent->Combine(atoms);
-						
-						delete mergeComponent;
+					
 					}
 				}
 			}
