@@ -11,6 +11,7 @@
 #include "../Components/ElectronComponent.h"
 #include "../Components/RotationComponent.h"
 #include <vector>
+#include <xhash>
 
 using namespace camvis;
 
@@ -63,7 +64,7 @@ namespace camvis {
 
 		SceneHandler::~SceneHandler()
 		{
-			;
+			
 		}
 
 		void SceneHandler::updateAruco()
@@ -200,7 +201,7 @@ namespace camvis {
 		void SceneHandler::handleEmptyCard(Aruco::MarkerData detectedMarker, bool empty)
 		{
 			// Check if the detectedMarker is in the clear list
-			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end())
+			if (emptyGameObjects.find(detectedMarker.id) == emptyGameObjects.end() && empty)
 			{
 				// If the marker is not in the list and empty == true create a new object
 				GameObject* objectP = new GameObject();
@@ -214,15 +215,29 @@ namespace camvis {
 				return;
 			}
 			
-			//
-			if (!empty)
+			// When the object is in the list + the card is empty, set the should show to false
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && empty)
 			{
-				
+				// If empty set the should show to true
+				emptyGameObjects.find(detectedMarker.id)->second->shouldShow = true;
+
+				return;
 			}
 
-			// If empty set the should show to true
-			emptyGameObjects.find(detectedMarker.id)->second->shouldShow = false;
+			// If empty is false && the object is in the list, retreive the object, delte the pointer, remove the entry
+			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && !empty)
+			{
 
+				GameObject* entryPair = emptyGameObjects.find(detectedMarker.id)->second;
+
+				// Delete the pair
+				delete entryPair;
+
+				// Remove the entry
+				emptyGameObjects.erase(detectedMarker.id);
+
+				return;
+			}
 			
 		}
 
