@@ -2,7 +2,7 @@
 #define ATOM_COMP_H
 
 #include "DrawComponent.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include "../Data/Matter/Atom.h"
 
 namespace camvis {
 	namespace component
@@ -10,22 +10,34 @@ namespace camvis {
 		class AtomComponent : public DrawComponent
 		{
 		private:
-
-			std::vector<std::tuple<glm::mat4, glm::vec4>> core;
-
-			// Atom structure
+			// Number of parts in the atom
 			int bolAmount;
 
 		public:
 
-			AtomComponent(int bolAmount) : bolAmount(bolAmount) {};
+			data::Atom* atomData;
 
+			// Atom structure
+			std::vector<std::pair<glm::vec3, glm::vec4>> core;
+			/// <summary>
+			/// Constructs the atom component with the given amound of size
+			/// </summary>
+			/// <param name="bolAmount">The number of parts in the core</param>
+			AtomComponent(int bolAmount, data::Atom* _atomData = nullptr) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount), atomData(_atomData) { generateCore(bolAmount, glm::mat4(1.0f)); };
+
+			/// <summary>
+			/// Updates the component
+			/// </summary>
+			/// <param name="deltaTime">delta time since last frame</param>
 			void update(float deltaTime);
+
+			/// <summary>
+			/// Draws the compenent parts to the screen
+			/// </summary>
 			void draw();
 
-		private:
-			void drawCube(glm::mat4 model, glm::vec4 color);
 			void generateCore(int size, glm::mat4 model);
+		private:
 			glm::vec4 selectCoreColor();
 
 		};
