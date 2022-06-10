@@ -159,6 +159,7 @@ namespace camvis {
 						GameObject* other = objects[-(leftOrRight - 1)];
 						std::vector<data::Atom> atomsToMerge;
 						
+						//Check if the object has atleast an atom or a molecole in it's components. Otherwise it is an empty card.
 						bool twoHaveElements = true;
 						for (int k = 0; k < 2; k++) {
 							component::AtomComponent* a = objects[k]->getComponent<component::AtomComponent>();
@@ -166,6 +167,8 @@ namespace camvis {
 							twoHaveElements = twoHaveElements && (a || m);
 						}
 						if (!twoHaveElements) break;
+
+						// Copy the data of the cards into a vector of data::Atom. This will be used to create a new molecule.
 						for (int k = 0; k < 2; k++) {
 							GameObject* object = objects[k];
 							component::AtomComponent* atom = object->getComponent<component::AtomComponent>();
@@ -174,6 +177,7 @@ namespace camvis {
 									if (atom->atomData) {
 										atomsToMerge.push_back(*atom->atomData);
 									}
+									// Remove the atom and electrons from the card after copying the data.
 									object->removeComponent(atom);
 									object->removeComponent(object->getComponent<component::ElectronComponent>());
 								}
@@ -187,6 +191,7 @@ namespace camvis {
 								if (object->shouldShow) {
 									if (molecule) {
 										atomsToMerge.insert(atomsToMerge.end(), molecule->atoms.begin(), molecule->atoms.end());
+										// Remove the molecule from the card after copying the data.
 										object->removeComponent(molecule);
 									}
 									else {
