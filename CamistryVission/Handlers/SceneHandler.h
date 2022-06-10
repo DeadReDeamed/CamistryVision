@@ -27,7 +27,7 @@ namespace camvis { namespace handlers {
 			void changeScene(int index);
 
 		private:
-			void updateAruco();
+			void updateAruco(float deltaTime);
 			void parseScene(int index);
 			void handleEmptyCard(Aruco::MarkerData detectedMarker);
 
