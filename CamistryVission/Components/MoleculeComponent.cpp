@@ -46,7 +46,7 @@ namespace camvis {
 			return list;
 		}
 
-		MoleculeComponent::MoleculeComponent(std::map<int, int> _atomMap, std::vector<data::Atom>& _atoms) : atomMap(_atomMap), existingAtomsMolecule(_atoms), DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")) {
+		MoleculeComponent::MoleculeComponent(std::map<int, int> _atomMap, std::vector<data::Atom>& _atoms) : atomMap(_atomMap), existingAtomsMolecule(_atoms), DrawComponent(data::BallModelSingleton::getInstance().ballModel) {
 			std::vector<data::Atom> atomArray;
 			//Create molecule model.
 			for (auto& pair : atomMap) {

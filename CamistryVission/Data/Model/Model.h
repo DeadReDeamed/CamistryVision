@@ -8,9 +8,10 @@
 namespace camvis
 {
 	namespace data
-	{
+	{	
 		class Model
 		{
+
 		public:
 			std::vector<glm::vec3> vertexPositions, normals;
 			std::vector<glm::vec2> texCoords;
@@ -19,6 +20,7 @@ namespace camvis
 			Model(std::string);
 		};
 	}
+
 }
 
 #endif
