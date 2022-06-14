@@ -3,6 +3,9 @@
 #include <opencv2/aruco.hpp>
 #include <thread>
 
+#include "../debuging/imgui/imgui.h"
+#include "../debuging/DebugWindow.h"
+
 #include "MarkerData.h"
 namespace Aruco{
 	void ArucoHandler::run() { 
@@ -20,25 +23,26 @@ namespace Aruco{
 				lastImage = img;
 
 				// Gray-scale image
-				cv::Mat grey = cv::Mat();
-				cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
+				cv::Mat* grey = new cv::Mat(img.rows, img.cols, img.type());
+				cv::cvtColor(img, *grey, cv::COLOR_BGR2GRAY);
 
 				// Detect the markers
-				Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
+				Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(*grey);
+
+				delete grey;
 
 				// Draw image and return if no code found
 				if (simpleData.ids.size() <= 0)
 				{
-					cv::imshow("ArucoDebug", img);
-					cv::waitKey(1);
 					DetectedMarkers.clear();
 					continue;
 				}
 
-				//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
-
 				// Calculate transform of markers
 				Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
+
+				if (camvis::debugging::DebugWindow::isDebugEnabled())
+					cv::aruco::drawDetectedMarkers(img, simpleData.corners);
 
 				if (simpleData.ids.size() <= 0) continue;
 				if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
@@ -52,9 +56,6 @@ namespace Aruco{
 				}
 
 				DetectedMarkers = markerList;
-
-				cv::imshow("ArucoDebug", img);
-				cv::waitKey(1);
 			}
 		}
 		camera.release();
@@ -90,9 +91,9 @@ namespace Aruco{
 
 	cv::Mat ArucoHandler::getLastImage() {	
 
-		cv::Mat convertedImage = cv::Mat();
+		cv::Mat convertedImage = cv::Mat(lastImage.rows, lastImage.cols, lastImage.type());
 
-		if (lastImage.empty()) {
+		if (lastImage.rows == 0) {
 			std::cout << "image empty" << std::endl;
 		}
 		else {

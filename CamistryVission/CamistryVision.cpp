@@ -29,7 +29,7 @@
 #include "debuging/imgui/imgui.h"
 
 
-//#define DEBUG_ENABLED
+#define DEBUG_ENABLED
 
 double lastUpdateTime;
 void update();
@@ -112,7 +112,19 @@ int main()
 void init()
 {
 
-	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {  isRunning = false; a.stop(); glfwTerminate(); });
+	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+		isRunning = false; a.stop(); glfwTerminate(); 
+		}
+	);
+
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			if (key == GLFW_KEY_ESCAPE)
+				glfwSetWindowShouldClose(window, true);
+			if (key == GLFW_KEY_Q && action == GLFW_RELEASE)
+				debugging::DebugWindow::isDebugEnabled(true);
+		});
+
 	lastUpdateTime = glfwGetTime();	
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");
@@ -147,11 +159,14 @@ void update()
     sceneHandler->update(deltaTime);
 
 #ifdef DEBUG_ENABLED
-    // Show Frame statistics
-	ImGui::Begin("Stats", &showGeneralDebug);
-	ImGui::Text("Frame time: %.2f", deltaTime);
-	ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
-	ImGui::End();
+	if (debugging::DebugWindow::isDebugEnabled())
+	{
+		// Show Frame statistics
+		ImGui::Begin("Stats", &showGeneralDebug);
+		ImGui::Text("Frame time: %.2f", deltaTime);
+		ImGui::Text("FPS: %.2f", 1.0f / deltaTime);
+		ImGui::End();
+	}
 #endif
    
 }
@@ -185,7 +200,6 @@ void drawBackground() {
 	tigl::end();																
 
 	tigl::shader->enableTexture(false);
-
 }
 
 void draw()

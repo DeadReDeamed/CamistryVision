@@ -81,8 +81,17 @@ namespace camvis
 			// Get the detected markers from Aruco
 			std::vector<Aruco::MarkerData> detectedMarkers = cardHandler->getMarkers();
 
+#ifdef DEBUG_ENABLED
+			if (debugging::DebugWindow::isDebugEnabled())
+			{
+				ImGui::Begin("Cards", &showCardsDebug);
+				sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
+			}
+#endif
+
 			for (int i = 0; i < detectedMarkers.size(); i++)
 			{
+
 				//Calculate rodrigues transform 
 				cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
 				cv::Mat rodrigues;
@@ -149,20 +158,48 @@ namespace camvis
 				// Enable showing the gameobject
 				gameObject->shouldShow = markerLossDelay;
 
+
+#ifdef DEBUG_ENABLED
+				if (debugging::DebugWindow::isDebugEnabled())
+				{
+					ImGui::BeginChild("Marker");
+					ImGui::Text("ID: %d", detectedMarkers[i].id);
+					ImGui::Text("Pos: %.1f, %.1f, %.1f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
+					ImGui::Text("rot: %.1f, %.1f, %.1f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
+					
+					component::AtomComponent* comp = gameObject->getComponent<component::AtomComponent>();
+					component::MoleculeComponent* mol = gameObject->getComponent<component::MoleculeComponent>();
+
+					if (comp)
+					{
+						ImGui::Text("");
+						ImGui::Text("Atomnr.: %d", comp->atomData->atomNumber);
+						ImGui::Text("Neutrons.: %d", comp->atomData->neutrons);
+						ImGui::Text("Protons.: %d", comp->atomData->atomNumber);
+						ImGui::Text("Core.: %d", comp->atomData->atomNumber + comp->atomData->neutrons);
+						ImGui::Text("");
+					}
+
+					if (mol) {
+						ImGui::Text("");
+						ImGui::Text("Atoms with molecule: ");
+						for (data::Atom atom : mol->atoms) {
+							ImGui::Text("	Atomnr: %d", atom.atomNumber);
+						}
+						ImGui::Text("");
+					}
+
+					ImGui::EndChild();
+				}
+#endif
+
 			}
 
 #ifdef DEBUG_ENABLED
-			ImGui::Begin("Cards", &showCardsDebug);
-			sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
-			for (int i = 0; i < detectedMarkers.size(); i++)
+			if (debugging::DebugWindow::isDebugEnabled())
 			{
-				ImGui::BeginChild("Marker");
-				ImGui::Text("ID: %d", detectedMarkers[i].id);
-				ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
-				ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
-				ImGui::EndChild();
+				ImGui::End();
 			}
-			ImGui::End();
 #endif
 		}
 

@@ -36,6 +36,16 @@ namespace camvis
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
+
+		bool DebugWindow::isDebugEnabled(bool flip)
+		{
+			static bool enabled = false;
+
+			if (flip) enabled = !enabled;
+
+			return enabled;
+		}
+
 	}
 
 }
