@@ -5,19 +5,19 @@
       "atoms": [
         {
           "code": 0,
-          "index": 6
-        },
-        {
-          "code": 2,
-          "index": 2
+          "index": 0
         },
         {
           "code": 1,
           "index": 1
         },
         {
+          "code": 2,
+          "index": 4
+        },
+        {
           "code": 3,
-          "index": 6
+          "index": 5
         },
         {
           "code": 4,
