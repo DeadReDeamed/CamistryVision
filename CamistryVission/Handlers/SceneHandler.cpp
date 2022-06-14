@@ -152,17 +152,20 @@ namespace camvis
 			}
 
 #ifdef DEBUG_ENABLED
-			ImGui::Begin("Cards", &showCardsDebug);
-			sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
-			for (int i = 0; i < detectedMarkers.size(); i++)
+			if (debugging::DebugWindow::isDebugEnabled())
 			{
-				ImGui::BeginChild("Marker");
-				ImGui::Text("ID: %d", detectedMarkers[i].id);
-				ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
-				ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
-				ImGui::EndChild();
+				ImGui::Begin("Cards", &showCardsDebug);
+				sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
+				for (int i = 0; i < detectedMarkers.size(); i++)
+				{
+					ImGui::BeginChild("Marker");
+					ImGui::Text("ID: %d", detectedMarkers[i].id);
+					ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
+					ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
+					ImGui::EndChild();
+				}
+				ImGui::End();
 			}
-			ImGui::End();
 #endif
 		}
 

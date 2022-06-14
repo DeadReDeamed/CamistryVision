@@ -3,6 +3,9 @@
 #include <opencv2/aruco.hpp>
 #include <thread>
 
+#include "../debuging/imgui/imgui.h"
+#include "../debuging/DebugWindow.h"
+
 #include "MarkerData.h"
 namespace Aruco{
 	void ArucoHandler::run() { 
@@ -29,16 +32,15 @@ namespace Aruco{
 				// Draw image and return if no code found
 				if (simpleData.ids.size() <= 0)
 				{
-					cv::imshow("ArucoDebug", img);
-					cv::waitKey(1);
 					DetectedMarkers.clear();
 					continue;
 				}
 
-				//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
-
 				// Calculate transform of markers
 				Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
+
+				if (camvis::debugging::DebugWindow::isDebugEnabled())
+					cv::aruco::drawDetectedMarkers(img, simpleData.corners);
 
 				if (simpleData.ids.size() <= 0) continue;
 				if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
@@ -52,9 +54,6 @@ namespace Aruco{
 				}
 
 				DetectedMarkers = markerList;
-
-				cv::imshow("ArucoDebug", img);
-				cv::waitKey(1);
 			}
 		}
 		camera.release();

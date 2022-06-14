@@ -17,6 +17,7 @@ namespace camvis
 			static void startFrame();
 			static void endFrame();
 
+			static bool isDebugEnabled(bool flip = false);
 		
 		};
 
