@@ -166,6 +166,29 @@ namespace camvis
 					ImGui::Text("ID: %d", detectedMarkers[i].id);
 					ImGui::Text("Pos: %.1f, %.1f, %.1f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
 					ImGui::Text("rot: %.1f, %.1f, %.1f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
+					
+					component::AtomComponent* comp = gameObject->getComponent<component::AtomComponent>();
+					component::MoleculeComponent* mol = gameObject->getComponent<component::MoleculeComponent>();
+
+					if (comp)
+					{
+						ImGui::Text("");
+						ImGui::Text("Atomnr.: %d", comp->atomData->atomNumber);
+						ImGui::Text("Neutrons.: %d", comp->atomData->neutrons);
+						ImGui::Text("Protons.: %d", comp->atomData->atomNumber);
+						ImGui::Text("Core.: %d", comp->atomData->atomNumber + comp->atomData->neutrons);
+						ImGui::Text("");
+					}
+
+					if (mol) {
+						ImGui::Text("");
+						ImGui::Text("Atoms with molecule: ");
+						for (data::Atom atom : mol->atoms) {
+							ImGui::Text("	Atomnr: %d", atom.atomNumber);
+						}
+						ImGui::Text("");
+					}
+
 					ImGui::EndChild();
 				}
 #endif
