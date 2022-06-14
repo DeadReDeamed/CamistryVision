@@ -15,7 +15,6 @@
 #include "../Components/AtomComponent.h"
 #include "../Components/ElectronComponent.h"
 
-#define DEBUG_ENABLED
 #include "handlers/SceneHandler.h"
 #include "handlers/DataHandler.h"
 
@@ -30,7 +29,7 @@
 #include "debuging/imgui/imgui.h"
 
 
-#define DEBUG_ENABLED
+//#define DEBUG_ENABLED
 
 double lastUpdateTime;
 void update();
