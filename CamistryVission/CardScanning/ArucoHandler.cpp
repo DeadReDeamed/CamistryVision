@@ -4,8 +4,8 @@
 #include <thread>
 
 #include "MarkerData.h"
-
-	void ArucoHandler::run() {
+namespace Aruco{
+	void ArucoHandler::run() { 
 
 		while (*isRunning) {
 			if (camera.grab()) {
