@@ -3,6 +3,7 @@
 
 #include "DrawComponent.h"
 #include "../Data/Matter/Atom.h"
+#include "../Data/Model/BallModelSingleton.h"
 
 namespace camvis {
 	namespace component
@@ -23,7 +24,7 @@ namespace camvis {
 			/// Constructs the atom component with the given amound of size
 			/// </summary>
 			/// <param name="bolAmount">The number of parts in the core</param>
-			AtomComponent(int bolAmount, data::Atom* _atomData = nullptr) : DrawComponent(new camvis::data::Model("Resources\\models\\ball.obj")), bolAmount(bolAmount), atomData(_atomData) { generateCore(bolAmount, glm::mat4(1.0f)); };
+			AtomComponent(int bolAmount, data::Atom* _atomData = nullptr) : DrawComponent(data::BallModelSingleton::getInstance().ballModel), bolAmount(bolAmount), atomData(_atomData) { generateCore(bolAmount, glm::mat4(1.0f)); };
 
 			/// <summary>
 			/// Updates the component
