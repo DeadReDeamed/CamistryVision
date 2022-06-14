@@ -29,8 +29,8 @@ namespace Aruco {
 			// Draw image and return if no code found
 			if (simpleData.ids.size() <= 0)
 			{
-				cv::imshow("ArucoDebug", img);
-				cv::waitKey(1);
+				//cv::imshow("ArucoDebug", img);
+				//cv::waitKey(1);
 				DetectedMarkers.clear();
 				continue;
 			}
@@ -53,8 +53,8 @@ namespace Aruco {
 
 			DetectedMarkers = markerList;
 			
-			cv::imshow("ArucoDebug", img);
-			cv::waitKey(1);
+			//cv::imshow("ArucoDebug", img);
+			//cv::waitKey(1);
 		}
 		camera.release();
 	}
@@ -64,7 +64,7 @@ namespace Aruco {
 
 		// Starting the camera capture
 		camera = cv::VideoCapture();
-		camera.open(1);
+		camera.open(0);
 
 		// Starting OpenCV Thread
 		arucothread = (std::thread(&ArucoHandler::run, this));
@@ -88,13 +88,16 @@ namespace Aruco {
 
 		//if (!lastImage.empty())
 		//	return lastImage;
+		cv::Mat convertedImage = cv::Mat();
 
 		if (lastImage.empty()) {
 			std::cout << "bruh";
 		}
-		//return lastImage;
-		cv::Mat convertedImage = cv::Mat();
-		cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		else 
+		{
+			//return lastImage;
+			cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
+		}
 		return convertedImage;
 	}
 
