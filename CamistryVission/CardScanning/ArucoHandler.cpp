@@ -4,11 +4,13 @@
 #include <thread>
 
 #include "MarkerData.h"
-namespace Aruco {
 
-	void ArucoHandler::run() {
-
-		while (camera.grab() && isRunning) {
+namespace Aruco 
+{
+	void ArucoHandler::run() 
+	{
+		while (camera.grab() && isRunning) 
+		{
 			cv::Mat img;
 
 			// Get latest image
@@ -44,11 +46,10 @@ namespace Aruco {
 			if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
 
 			std::vector<MarkerData> markerList;
-			for (int i = 0; i < simpleData.ids.size(); i++) {
-
+			for (int i = 0; i < simpleData.ids.size(); i++) 
+			{
 				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData.rvecs[i], advancedData.tvecs[i]);
 				markerList.push_back(md);
-
 			}
 
 			DetectedMarkers = markerList;
@@ -59,7 +60,8 @@ namespace Aruco {
 		camera.release();
 	}
 
-	void ArucoHandler::start() {
+	void ArucoHandler::start() 
+	{
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
 
 		// Starting the camera capture
@@ -71,26 +73,30 @@ namespace Aruco {
 		isRunning = true;
 	}
 
-	void ArucoHandler::stop() {
+	void ArucoHandler::stop() 
+	{
 		isRunning = false;
 		arucothread.join();
 	}
 
-	std::vector<MarkerData> ArucoHandler::getMarkers() {
+	std::vector<MarkerData> ArucoHandler::getMarkers() 
+	{
 		return DetectedMarkers;
 	}
 
-	cv::Vec2d ArucoHandler::getCameraData() {
+	cv::Vec2d ArucoHandler::getCameraData() 
+	{
 		return cv::Vec2d(lastImage.rows, lastImage.cols);
 	}
 
-	cv::Mat ArucoHandler::getLastImage() {	
-
+	cv::Mat ArucoHandler::getLastImage() 
+	{
 		//if (!lastImage.empty())
 		//	return lastImage;
 		cv::Mat convertedImage = cv::Mat();
 
-		if (lastImage.empty()) {
+		if (lastImage.empty()) 
+		{
 			std::cout << "bruh";
 		}
 		else 
@@ -101,7 +107,8 @@ namespace Aruco {
 		return convertedImage;
 	}
 
-	void CalibrateCamera() {
+	void CalibrateCamera() 
+	{
 
 	}
 
