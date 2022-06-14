@@ -16,7 +16,7 @@
 #include <random>
 #include <xhash>
 
-static constexpr float lerpScale = 5.f;
+static constexpr float lerpScale = 6.f;
 static constexpr float markerLossDelay = 0.25f;
 
 namespace camvis 
