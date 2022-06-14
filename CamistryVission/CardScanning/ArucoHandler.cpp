@@ -4,9 +4,8 @@
 #include <thread>
 
 #include "MarkerData.h"
-namespace Aruco {
-
-	void ArucoHandler::run() {
+namespace Aruco{
+	void ArucoHandler::run() { 
 
 		while (*isRunning) {
 			if (camera.grab()) {
@@ -61,12 +60,13 @@ namespace Aruco {
 		camera.release();
 	}
 
-	void ArucoHandler::start() {
+	void ArucoHandler::start() 
+	{
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
 
 		// Starting the camera capture
 		camera = cv::VideoCapture();
-		camera.open(1);
+		camera.open(0);
 
 		// Starting OpenCV Thread
 		arucothread = (std::thread(&ArucoHandler::run, this));
@@ -78,11 +78,13 @@ namespace Aruco {
 		arucothread.join();
 	}
 
-	std::vector<MarkerData> ArucoHandler::getMarkers() {
+	std::vector<MarkerData> ArucoHandler::getMarkers() 
+	{
 		return DetectedMarkers;
 	}
 
-	cv::Vec2d ArucoHandler::getCameraData() {
+	cv::Vec2d ArucoHandler::getCameraData() 
+	{
 		return cv::Vec2d(lastImage.rows, lastImage.cols);
 	}
 
@@ -99,7 +101,8 @@ namespace Aruco {
 		return convertedImage;
 	}
 
-	void CalibrateCamera() {
+	void CalibrateCamera() 
+	{
 
 	}
 

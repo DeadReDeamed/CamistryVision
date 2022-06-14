@@ -16,7 +16,7 @@ namespace camvis
 	public:
 		glm::mat4 cameraTransform = glm::mat4(1.0f);
 		glm::mat4 transform = glm::mat4(1.0f);
-		bool shouldShow = false;
+		float shouldShow = false;
 		bool firstPos = true;
 		glm::mat4 currentPos;
 

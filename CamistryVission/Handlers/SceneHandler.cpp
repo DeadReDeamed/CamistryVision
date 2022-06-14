@@ -16,13 +16,13 @@
 #include <random>
 #include <xhash>
 
-#define lerpScale 5.f
+static constexpr float lerpScale = 5.f;
+static constexpr float markerLossDelay = 0.25f;
 
 namespace camvis 
 { 
 	namespace handlers 
 	{
-		
 		bool showCardsDebug = true;
 
 		SceneHandler::SceneHandler(Aruco::ArucoHandler* cardHandler) : cardHandler(cardHandler), activeScene(nullptr)
@@ -75,8 +75,8 @@ namespace camvis
 		void SceneHandler::updateAruco(float deltaTime)
 		{
 			// Disable all should show of gameobject
-			for (auto& gameobject : activeScene->gameObjects)
-				gameobject->shouldShow = false;
+			/*for (auto& gameobject : activeScene->gameObjects)
+				gameobject->shouldShow = false;*/
 
 			// Get the detected markers from Aruco
 			std::vector<Aruco::MarkerData> detectedMarkers = cardHandler->getMarkers();
@@ -147,7 +147,7 @@ namespace camvis
 				gameObject->cameraTransform = gameObject->currentPos;
 
 				// Enable showing the gameobject
-				gameObject->shouldShow = true;
+				gameObject->shouldShow = markerLossDelay;
 
 			}
 
@@ -171,10 +171,10 @@ namespace camvis
 
 			for (int i = 0; i < gameObjects.size() - 1; i++) {
 				GameObject* object = gameObjects[i];
-				if (!object->shouldShow) continue;
+				if (object->shouldShow <= 0) continue;
 				for (int j = i + 1; j < gameObjects.size(); j++) {
 					GameObject* object2 = gameObjects[j];
-					if (!object2->shouldShow) continue;
+					if (object2->shouldShow <= 0) continue;
 					float length = glm::length(object->cameraTransform[3] - object2->cameraTransform[3]);
 				
 					if (length < 0.3f && length != 0) {
@@ -200,7 +200,7 @@ namespace camvis
 							GameObject* object = objects[k];
 							component::AtomComponent* atom = object->getComponent<component::AtomComponent>();
 							if (atom) {
-								if (object->shouldShow) {
+								if (object->shouldShow > 0) {
 									if (atom->atomData) {
 										atomsToMerge.push_back(*atom->atomData);
 									}
@@ -215,7 +215,7 @@ namespace camvis
 							else {
 								component::MoleculeComponent* molecule = object->getComponent<component::MoleculeComponent>();
 
-								if (object->shouldShow) {
+								if (object->shouldShow > 0) {
 									if (molecule) {
 										atomsToMerge.insert(atomsToMerge.end(), molecule->atoms.begin(), molecule->atoms.end());
 										// Remove the molecule from the card after copying the data.
@@ -310,7 +310,7 @@ namespace camvis
 				emptyGameObjects.insert(pair);
 
 				// Setting the should show of the object to true
-				objectP->shouldShow = true;
+				objectP->shouldShow = markerLossDelay;
 
 				// All actions for found are completed
 				return;
@@ -320,7 +320,7 @@ namespace camvis
 			if (emptyGameObjects.find(detectedMarker.id) != emptyGameObjects.end() && empty)
 			{
 				// If empty set the should show to true
-				emptyGameObjects.find(detectedMarker.id)->second->shouldShow = true;
+				emptyGameObjects.find(detectedMarker.id)->second->shouldShow = markerLossDelay;
 
 				return;
 			}
