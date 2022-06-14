@@ -23,11 +23,13 @@ namespace Aruco{
 				lastImage = img;
 
 				// Gray-scale image
-				cv::Mat grey = cv::Mat();
-				cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
+				cv::Mat* grey = new cv::Mat(img.rows, img.cols, img.type());
+				cv::cvtColor(img, *grey, cv::COLOR_BGR2GRAY);
 
 				// Detect the markers
-				Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
+				Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(*grey);
+
+				delete grey;
 
 				// Draw image and return if no code found
 				if (simpleData.ids.size() <= 0)
@@ -89,9 +91,9 @@ namespace Aruco{
 
 	cv::Mat ArucoHandler::getLastImage() {	
 
-		cv::Mat convertedImage = cv::Mat();
+		cv::Mat convertedImage = cv::Mat(lastImage.rows, lastImage.cols, lastImage.type());
 
-		if (lastImage.empty()) {
+		if (lastImage.rows == 0) {
 			std::cout << "image empty" << std::endl;
 		}
 		else {

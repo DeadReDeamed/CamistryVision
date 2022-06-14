@@ -8,6 +8,10 @@
           "index": 6
         },
         {
+          "code": 2,
+          "index": 2
+        },
+        {
           "code": 1,
           "index": 1
         },
@@ -17,7 +21,7 @@
         },
         {
           "code": 4,
-          "index": 7
+          "index": 6
         }
       ],
       "molecules": [
