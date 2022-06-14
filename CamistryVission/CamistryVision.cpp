@@ -53,7 +53,7 @@ std::vector<GameObject*> gameObjects;
 
 std::vector<data::Atom> atoms; //temporary varialbe for testing
 std::vector<data::Molecule> molecules; // same here
-
+bool isRunning = true;
 
 int main()
 {
@@ -89,7 +89,7 @@ int main()
 
 	init();
 
-	while (!glfwWindowShouldClose(window))
+	while (isRunning && !glfwWindowShouldClose(window))
 	{
 #ifdef DEBUG_ENABLED
 		debugging::DebugWindow::startFrame();
@@ -104,6 +104,7 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+	a.stop();
 	glfwTerminate();
 
 	return 0;
@@ -111,6 +112,8 @@ int main()
 
 void init()
 {
+
+	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {  isRunning = false; a.stop(); glfwTerminate(); });
 	lastUpdateTime = glfwGetTime();	
 
 	handlers::DataHandler::getInstance()->loadData("Resources/VisualCamistryJSON.json", "Resources/scenes.json");

@@ -5,57 +5,57 @@
 
 #include "MarkerData.h"
 
-namespace Aruco 
-{
-	void ArucoHandler::run() 
-	{
-		while (camera.grab() && isRunning) 
-		{
-			cv::Mat img;
+	void ArucoHandler::run() {
 
-			// Get latest image
-			camera.retrieve(img);
+		while (*isRunning) {
+			if (camera.grab()) {
+				cv::Mat img;
 
-			if (img.empty())
-				continue;
+				// Get latest image
+				camera.retrieve(img);
 
-			lastImage = img;
+				if (img.empty())
+					continue;
 
-			// Gray-scale image
-			cv::Mat grey = cv::Mat();
-			cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
-			
-			// Detect the markers
-			Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
+				lastImage = img;
 
-			// Draw image and return if no code found
-			if (simpleData.ids.size() <= 0)
-			{
-				//cv::imshow("ArucoDebug", img);
-				//cv::waitKey(1);
-				DetectedMarkers.clear();
-				continue;
+				// Gray-scale image
+				cv::Mat grey = cv::Mat();
+				cv::cvtColor(img, grey, cv::COLOR_BGR2GRAY);
+
+				// Detect the markers
+				Aruco::SimpleMarkerData simpleData = aruco.detectMarkers(grey);
+
+				// Draw image and return if no code found
+				if (simpleData.ids.size() <= 0)
+				{
+					cv::imshow("ArucoDebug", img);
+					cv::waitKey(1);
+					DetectedMarkers.clear();
+					continue;
+				}
+
+				//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
+
+				// Calculate transform of markers
+				Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
+
+				if (simpleData.ids.size() <= 0) continue;
+				if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
+
+				std::vector<MarkerData> markerList;
+				for (int i = 0; i < simpleData.ids.size(); i++) {
+
+					MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData.rvecs[i], advancedData.tvecs[i]);
+					markerList.push_back(md);
+
+				}
+
+				DetectedMarkers = markerList;
+
+				cv::imshow("ArucoDebug", img);
+				cv::waitKey(1);
 			}
-
-			//cv::aruco::drawDetectedMarkers(img, simpleData.corners, simpleData.ids);
-
-			// Calculate transform of markers
-			Aruco::AdvancedMarkerData advancedData = aruco.estimateMarkerPosition(simpleData.corners);
-
-			if (simpleData.ids.size() <= 0) continue;
-			if (simpleData.ids.size() == 1) aruco.drawFrameAxes(img, simpleData.ids.size(), advancedData);
-
-			std::vector<MarkerData> markerList;
-			for (int i = 0; i < simpleData.ids.size(); i++) 
-			{
-				MarkerData md = MarkerData(simpleData.ids[i], simpleData.corners[i], advancedData.tvecs[i], advancedData.rvecs[i], advancedData.rvecs[i], advancedData.tvecs[i]);
-				markerList.push_back(md);
-			}
-
-			DetectedMarkers = markerList;
-			
-			//cv::imshow("ArucoDebug", img);
-			//cv::waitKey(1);
 		}
 		camera.release();
 	}
@@ -70,12 +70,11 @@ namespace Aruco
 
 		// Starting OpenCV Thread
 		arucothread = (std::thread(&ArucoHandler::run, this));
-		isRunning = true;
+		*isRunning = true;
 	}
 
-	void ArucoHandler::stop() 
-	{
-		isRunning = false;
+	void ArucoHandler::stop() {
+		*isRunning = false;
 		arucothread.join();
 	}
 
@@ -89,19 +88,14 @@ namespace Aruco
 		return cv::Vec2d(lastImage.rows, lastImage.cols);
 	}
 
-	cv::Mat ArucoHandler::getLastImage() 
-	{
-		//if (!lastImage.empty())
-		//	return lastImage;
+	cv::Mat ArucoHandler::getLastImage() {	
+
 		cv::Mat convertedImage = cv::Mat();
 
-		if (lastImage.empty()) 
-		{
-			std::cout << "bruh";
+		if (lastImage.empty()) {
+			std::cout << "image empty" << std::endl;
 		}
-		else 
-		{
-			//return lastImage;
+		else {
 			cv::cvtColor(lastImage, convertedImage, cv::COLOR_BGR2RGB);
 		}
 		return convertedImage;

@@ -194,6 +194,7 @@
     <None Include="Resources\VisualCamistryJSON.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\Model\BallModelSingleton.h" />
     <ClInclude Include="Data\Model\CameraTexture.h" />
     <ClInclude Include="Components\AtomComponent.h" />
     <ClInclude Include="Components\CardComponent.h" />

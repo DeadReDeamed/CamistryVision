@@ -112,8 +112,8 @@ namespace Aruco {
         //cv::Mat undistorted;
         //image.copyTo(undistorted);
         //cv::undistort(image, undistorted, cameraMatrix, distCoeffs);
-        
         cv::aruco::detectMarkers(image, dictionary, markerdata.corners, markerdata.ids);
+        
         return markerdata;
     }
     Aruco::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
