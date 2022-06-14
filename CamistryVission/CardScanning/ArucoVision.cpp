@@ -97,12 +97,13 @@ namespace Aruco {
         //cv::destroyWindow("Camera Calibration");
     }
 
-    SimpleMarkerData ArucoVision::detectMarkers(cv::InputArray image) {
+    SimpleMarkerData ArucoVision::detectMarkers(cv::Mat image) {
         Aruco::SimpleMarkerData markerdata;
-        cv::Mat undistorted;
-        image.copyTo(undistorted);
-        cv::undistort(image, undistorted, cameraMatrix, distCoeffs);
-        cv::aruco::detectMarkers(undistorted, dictionary, markerdata.corners, markerdata.ids);
+        //cv::Mat undistorted;
+        //image.copyTo(undistorted);
+        //cv::undistort(image, undistorted, cameraMatrix, distCoeffs);
+        
+        cv::aruco::detectMarkers(image, dictionary, markerdata.corners, markerdata.ids);
         return markerdata;
     }
     Aruco::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
@@ -112,9 +113,6 @@ namespace Aruco {
         return markerdata;
     }
     void ArucoVision::drawFrameAxes(cv::InputOutputArray image, int markerAmount, Aruco::AdvancedMarkerData markerdata) {
-       
-        cv::drawFrameAxes(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1);
-        
-        
+        //cv::aruco::drawAxis(image, cameraMatrix, distCoeffs, markerdata.rvecs, markerdata.tvecs, 0.1); 
     }
 }

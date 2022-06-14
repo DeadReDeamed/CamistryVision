@@ -11,7 +11,11 @@ namespace camvis
 	class GameObject
 	{
 	public:
-		glm::vec3 position, rotation, scale;
+		glm::mat4 cameraTransform = glm::mat4(1.0f);
+		glm::mat4 transform = glm::mat4(1.0f);
+		float shouldShow = false;
+		bool firstPos = true;
+		glm::mat4 currentPos;
 
 	private:
 	    std::list<component::DrawComponent*> drawComponents;

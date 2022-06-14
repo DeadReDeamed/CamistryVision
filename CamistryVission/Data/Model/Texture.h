@@ -7,12 +7,13 @@ namespace camvis
 	{
 		class Texture
 		{
-		public:
-			int id;
+		protected:
+			GLuint id;
 
 		public:
-			Texture(int id)
-				: id(id) {}
+			Texture() {};
+			Texture(const std::string& fileName);
+			void bind();
 		};
 	}
 }

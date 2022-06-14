@@ -19,11 +19,13 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-!x64/
+CamistryVission/x64/Debug/
+*.exe
+*.pdb
+CamistryVission/x64/Release/
+*.exe
+*.pdb
 x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/

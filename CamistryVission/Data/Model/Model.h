@@ -8,9 +8,10 @@
 namespace camvis
 {
 	namespace data
-	{
+	{	
 		class Model
 		{
+
 		public:
 			std::vector<glm::vec3> vertexPositions, normals, texCoords;
 			std::vector<Group*> groups;
@@ -20,6 +21,7 @@ namespace camvis
 				: vertexPositions(vertexPositions), normals(normals), texCoords(texCoords), groups(groups) {}
 		};
 	}
+
 }
 
 #endif

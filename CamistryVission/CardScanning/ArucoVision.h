@@ -38,7 +38,7 @@ namespace Aruco {
 		* @param[out] image is the input image.
 		* @return a struct of SimpleMarkerData.
 		*/
-		SimpleMarkerData detectMarkers(cv::InputArray image);
+		SimpleMarkerData detectMarkers(cv::Mat image);
 		/*
 		* Used to estimate the 3d position of markers.
 		* @param[in] corners is an InputArrayOfArrays.

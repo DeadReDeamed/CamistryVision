@@ -9,13 +9,23 @@ namespace camvis
 
 	void GameObject::update(float deltaTime)
 	{
-		throw "Function not implemented!";
+		if (shouldShow <= 0) return;
+
+		shouldShow -= deltaTime;
+
+		// Update all components
+		for (auto* component : components)
+			component->update(deltaTime);
+
+		// Updating all the linked gameobjects
+		for (auto* gameObject : gameObjects)
+			gameObject->update(deltaTime);
+		
 	}
 	
 	void GameObject::draw()
 	{
-		throw "Function not implemented!";
-	}
+		if (shouldShow <= 0) return;
 
 	template<class T>
 	T GameObject::getComponent()

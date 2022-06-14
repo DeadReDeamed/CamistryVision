@@ -14,11 +14,11 @@ namespace Aruco {
 		std::thread arucothread;
 
 		cv::VideoCapture camera;
-		bool isRunning;
+		bool* isRunning = new bool(false);
 	private:
 		void run();
 	public:
-		ArucoHandler() { isRunning = false; }
+		ArucoHandler() { *isRunning = false; }
 
 		/**
 		* Used to start marker detection.

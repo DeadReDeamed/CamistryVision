@@ -8,7 +8,7 @@
       <AdditionalIncludeDirectories>$(OPENCV_DIR)\build\install\include;$(SolutionDir)CamistryVission\lib\glm;$(SolutionDir)CamistryVission\lib\glew-2.1.0\include;$(SolutionDir)CamistryVission\lib\glfw-3.3.2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OPENCV_DIR)\build\install\x64\vc17\lib;$(SolutionDir)CamistryVission\lib\glfw-3.3.2\$(Platform);$(SolutionDir)CamistryVission\lib\glew-2.1.0\lib\Release\$(Platform)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CamistryVission\lib\glfw-3.3.2\$(Platform);$(SolutionDir)CamistryVission\lib\glew-2.1.0\lib\Release\$(Platform)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

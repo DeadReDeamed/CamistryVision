@@ -1,0 +1,63 @@
+{
+  "Scenes": [
+    {
+      "name": "Standaard scene",
+      "atoms": [
+        {
+          "code": 0,
+          "index": 0
+        },
+        {
+          "code": 1,
+          "index": 1
+        },
+        {
+          "code": 2,
+          "index": 4
+        },
+        {
+          "code": 3,
+          "index": 5
+        },
+        {
+          "code": 4,
+          "index": 6
+        }
+      ],
+      "molecules": [
+        {
+          "code": 4,
+          "index": 0
+        },
+        {
+          "code": 5,
+          "index": 1
+        }
+      ]
+
+    },
+
+    {
+      "name": "Alternative scene",
+      "atoms": [
+        {
+          "code": 0,
+          "index": 6
+        },
+        {
+          "code": 1,
+          "index": 5
+        }
+      ],
+      "molecules": [
+        {
+          "code": 2,
+          "index": 0
+        }
+      ]
+
+    }
+
+  ]
+
+}
