@@ -81,8 +81,17 @@ namespace camvis
 			// Get the detected markers from Aruco
 			std::vector<Aruco::MarkerData> detectedMarkers = cardHandler->getMarkers();
 
+#ifdef DEBUG_ENABLED
+			if (debugging::DebugWindow::isDebugEnabled())
+			{
+				ImGui::Begin("Cards", &showCardsDebug);
+				sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
+			}
+#endif
+
 			for (int i = 0; i < detectedMarkers.size(); i++)
 			{
+
 				//Calculate rodrigues transform 
 				cv::Mat viewMatrix = cv::Mat::zeros(4, 4, 5);
 				cv::Mat rodrigues;
@@ -149,21 +158,23 @@ namespace camvis
 				// Enable showing the gameobject
 				gameObject->shouldShow = markerLossDelay;
 
+
+#ifdef DEBUG_ENABLED
+				if (debugging::DebugWindow::isDebugEnabled())
+				{
+					ImGui::BeginChild("Marker");
+					ImGui::Text("ID: %d", detectedMarkers[i].id);
+					ImGui::Text("Pos: %.1f, %.1f, %.1f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
+					ImGui::Text("rot: %.1f, %.1f, %.1f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
+					ImGui::EndChild();
+				}
+#endif
+
 			}
 
 #ifdef DEBUG_ENABLED
 			if (debugging::DebugWindow::isDebugEnabled())
 			{
-				ImGui::Begin("Cards", &showCardsDebug);
-				sort(detectedMarkers.begin(), detectedMarkers.end(), [&](Aruco::MarkerData x, Aruco::MarkerData y) { return x.id < y.id; });
-				for (int i = 0; i < detectedMarkers.size(); i++)
-				{
-					ImGui::BeginChild("Marker");
-					ImGui::Text("ID: %d", detectedMarkers[i].id);
-					ImGui::Text("Pos: %.2f, %.2f, %.2f", detectedMarkers[i].transform[0], detectedMarkers[i].transform[1], detectedMarkers[i].transform[2]);
-					ImGui::Text("rot: %.2f, %.2f, %.2f", detectedMarkers[i].rotation[0], detectedMarkers[i].rotation[1], detectedMarkers[i].rotation[2]);
-					ImGui::EndChild();
-				}
 				ImGui::End();
 			}
 #endif
