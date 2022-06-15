@@ -31,21 +31,11 @@ namespace Aruco {
     ArucoVision::ArucoVision(std::string cameraParamPath,
         cv::aruco::PREDEFINED_DICTIONARY_NAME dictionaryType) {
         printf("Loading camera parameters");
-        
-        /*if (readCameraParameters(cameraParamPath, cameraMatrix, distCoeffs))
+        if (readCameraParameters(cameraParamPath, cameraMatrix, distCoeffs))
             printf("Loaded camera parameters succesfully");
-        else printf("Failed loading camera parameters");*/
+        else printf("Failed loading camera parameters");
         dictionary = cv::aruco::getPredefinedDictionary(dictionaryType);
         //calibrateCamera();
-
-        double dist_[] = { 0, 0, 0, 0, 0 };
-        cv::Mat distCoeffs = cv::Mat(5, 1, CV_64F, dist_).clone();
-
-        double baseCamera[3][3] =
-        { { 675, 0, 320 },
-        { 0, 675, 240 },
-        { 0, 0, 1 } };
-        cameraMatrix = cv::Mat(3, 3, CV_64F, baseCamera).clone();
     }
 
     
@@ -118,7 +108,7 @@ namespace Aruco {
     }
     Aruco::AdvancedMarkerData ArucoVision::estimateMarkerPosition(cv::InputArrayOfArrays corners) {
         Aruco::AdvancedMarkerData markerdata;
-        cv::aruco::estimatePoseSingleMarkers(corners, 1.75, cameraMatrix, distCoeffs,
+        cv::aruco::estimatePoseSingleMarkers(corners, 0.05, cameraMatrix, distCoeffs,
             markerdata.rvecs, markerdata.tvecs);
         return markerdata;
     }

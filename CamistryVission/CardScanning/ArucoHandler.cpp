@@ -64,8 +64,6 @@ namespace Aruco{
 	void ArucoHandler::start() 
 	{
 		aruco = Aruco::ArucoVision("Resources/cam_params.yml", cv::aruco::DICT_6X6_250);
-
-		// Starting the camera capture
 		camera = cv::VideoCapture();
 		camera.open(0);
 

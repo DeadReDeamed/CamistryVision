@@ -1,9 +1,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "Group.h"
 #include <vector>
-#include <glm/fwd.hpp>
+#include <glm/vec3.hpp>
+#include "Group.h"
 
 namespace camvis
 {
@@ -13,11 +13,12 @@ namespace camvis
 		{
 
 		public:
-			std::vector<glm::vec3> vertexPositions, normals;
-			std::vector<glm::vec2> texCoords;
+			std::vector<glm::vec3> vertexPositions, normals, texCoords;
 			std::vector<Group*> groups;
 
-			Model(std::string);
+		public:
+			Model(std::vector<glm::vec3> vertexPositions, std::vector <glm::vec3> normals, std::vector <glm::vec3> texCoords, std::vector<Group*> groups)
+				: vertexPositions(vertexPositions), normals(normals), texCoords(texCoords), groups(groups) {}
 		};
 	}
 

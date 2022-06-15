@@ -9,6 +9,10 @@ namespace camvis
 		{
 		public:
 			int positionIndex, normalIndex, texCoordIndex;
+
+		public:
+			Vertex(int positionIndex, int normalIndex, int texCoordIndex)
+				: positionIndex(positionIndex), normalIndex(normalIndex), texCoordIndex(texCoordIndex) {}
 		};
 	}
 }
