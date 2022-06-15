@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tigl.cpp">
+    <ClCompile Include="lib\tigl\tigl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\FiloIO.cpp">
@@ -31,9 +31,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CardScanning\ArucoHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CamistryVision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Components\AtomComponent.cpp">
@@ -118,9 +115,12 @@
     </None>
     <None Include="OPENCV_DEBUG.props" />
     <None Include="OPENGL_DEBUG.props" />
+    <None Include="..\..\..\..\..\..\..\..\Downloads\VisualCamistryJSON.json" />
+    <None Include="imgui.ini" />
+    <None Include="Resources\scenes.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="tigl.h">
+    <ClInclude Include="lib\tigl\tigl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Util\FiloIO.h">

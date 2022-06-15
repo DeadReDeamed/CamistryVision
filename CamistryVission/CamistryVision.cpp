@@ -1,6 +1,7 @@
 #include <iostream>
 #include <opencv2/aruco.hpp>
-#include "tigl.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "lib/tigl/tigl.h"
 #include <GLFW/glfw3.h>
 
 #include "debuging/imgui/imgui.h"
@@ -54,9 +55,12 @@ std::vector<data::Molecule> molecules; // same here
 bool isRunning = true;
 
 int main()
-{	
-	
+{
+
 	std::cout << "start camistry vision" << std::endl;
+
+	a = Aruco::ArucoHandler();
+	a.start();
 
 	if (!glfwInit())
 		throw "Could not initialize glwf";
@@ -75,14 +79,27 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
+	// Starting the debug gui
+#ifdef DEBUG_ENABLED
+	debugging::DebugWindow::init(window);
+#endif // DEBUG_ENABLED
+
 	tigl::init();
 
 	init();
 
 	while (isRunning && !glfwWindowShouldClose(window))
 	{
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::startFrame();
+#endif
+
 		update();
 		draw();
+
+#ifdef DEBUG_ENABLED
+		debugging::DebugWindow::endFrame();
+#endif
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -132,6 +149,7 @@ void init()
 	tigl::shader->setShinyness(30);
 }
 
+bool showGeneralDebug = true;
 void update()
 {
 	double timeNow = glfwGetTime();
@@ -186,6 +204,8 @@ void drawBackground() {
 
 void draw()
 {
+	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	drawBackground();
 

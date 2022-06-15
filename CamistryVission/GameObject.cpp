@@ -1,10 +1,18 @@
 #include "GameObject.h"
 
+using namespace camvis;
+
 namespace camvis
 {
-	void GameObject::addComponent(component::Component& component)
+	void GameObject::addComponent(component::Component* component)
 	{
-		throw "Function not implemented!";
+		component->setGameObject(this);
+
+		components.push_back(component);
+
+		// Checking if component is a drawComponent
+		if (component::DrawComponent* drawComponent = dynamic_cast<component::DrawComponent*>(component))
+			drawComponents.push_back(drawComponent);
 	}
 
 	void GameObject::update(float deltaTime)
@@ -27,15 +35,22 @@ namespace camvis
 	{
 		if (shouldShow <= 0) return;
 
-	template<class T>
-	T GameObject::getComponent()
-	{
-		throw "Function not implemented!";
+		// Drawing all drawcomponents
+		for (auto* drawComponent : drawComponents)
+			drawComponent->draw();
+
+		// Drawing all the nested gameobjects
+		for (auto* gameObject : gameObjects)
+			gameObject->draw();
 	}
 	
-	template<class T>
-	void GameObject::removeComponent()
+	void GameObject::removeComponent(component::Component* component)
 	{
-		throw "Function not implemented!";
+		components.remove(component);
+
+		// Remove component if it is a drawcomponent
+		if (component::DrawComponent* v = dynamic_cast<component::DrawComponent*>(component))
+			drawComponents.remove(v);
 	}
+
 }

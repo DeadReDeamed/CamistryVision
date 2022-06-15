@@ -1,5 +1,10 @@
 #include "MoleculeComponent.h"
 
+#include "AtomComponent.h"
+#include "../GameObject.h"
+#include "../lib/tigl/tigl.h"
+#include <time.h>
+
 namespace camvis {
 	namespace component
 	{
@@ -63,12 +68,57 @@ namespace camvis {
 
 		void MoleculeComponent::update(float deltaTime)
 		{
-			throw "Function not implemented!";
+			//throw "Function not implemented!";
 		}
 
 		void MoleculeComponent::draw()
 		{
-			throw "Function not implemented!";
+			// first we draw the C then the O then the H
+
+			// save the positions of the molecules in an 3d array that will be used to draw
+			for (auto& corePair : drawList) {
+				glm::vec3 pos = corePair.first;
+				pos *= grid_offset;
+
+				gameObject->translate(pos);
+
+				for (auto& coreAtom : corePair.second) {
+					gameObject->translate(coreAtom.first);
+					DrawComponent::draw(coreAtom.second);
+					gameObject->translate(-coreAtom.first);
+				}
+
+				gameObject->translate(-pos);
+			}
+
+			//draw a line between the molecules.
+			if (drawList.size() <= 1) return;
+
+			if (drawList.size() > 2) {
+				glm::vec3 firstPos;
+				glm::vec3 prevPos = drawList[0].first;
+				prevPos *= grid_offset;
+				firstPos = prevPos;
+				gameObject->translate(firstPos);
+				tigl::shader->setModelMatrix(gameObject->transform);
+				tigl::begin(GL_LINE_STRIP);
+				tigl::addVertex(tigl::Vertex::P(glm::vec3(0, 0, 0)));
+
+				for (int i = 1; i < drawList.size(); i++) {
+					gameObject->translate(prevPos);
+					
+					glm::vec3 nextPos = drawList[i].first;
+					nextPos *= grid_offset;
+					nextPos -= firstPos;
+					tigl::addVertex(tigl::Vertex::P(nextPos));
+					gameObject->translate(-prevPos);
+					prevPos = nextPos;
+				}
+
+				tigl::end();
+				gameObject->translate(-firstPos);
+			}
+		
 		}
 	}
 }

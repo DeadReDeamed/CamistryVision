@@ -16,10 +16,6 @@ namespace camvis
 			std::string name;
 			std::list<Face> faces;
 			Texture* texture;
-
-		public:
-			Group(std::string name, std::list<Face> faces, Texture* texture)
-				: name(name), faces(faces), texture(texture) {}
 		};
 	}
 }

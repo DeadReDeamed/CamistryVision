@@ -67,7 +67,7 @@ namespace camvis
 			parseScene(index);
 		}
 
-		void SceneHandler::handleArucoUpdate()
+		SceneHandler::~SceneHandler()
 		{
 			
 		}
