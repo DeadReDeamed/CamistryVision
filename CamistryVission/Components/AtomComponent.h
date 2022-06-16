@@ -11,15 +11,12 @@ namespace camvis {
 		class AtomComponent : public DrawComponent
 		{
 		private:
-
-			std::vector<std::tuple<glm::mat4, glm::vec4>> core;
-
-			// Atom structure
+			// Number of parts in the atom
 			int bolAmount;
 
 		public:
 
-			AtomComponent(int bolAmount) : bolAmount(bolAmount) {};
+			data::Atom* atomData;
 
 			// Atom structure
 			std::vector<std::pair<glm::vec3, glm::vec4>> core;
@@ -34,11 +31,14 @@ namespace camvis {
 			/// </summary>
 			/// <param name="deltaTime">delta time since last frame</param>
 			void update(float deltaTime);
+
+			/// <summary>
+			/// Draws the compenent parts to the screen
+			/// </summary>
 			void draw();
 
-		private:
-			void drawCube(glm::mat4 model, glm::vec4 color);
 			void generateCore(int size, glm::mat4 model);
+		private:
 			glm::vec4 selectCoreColor();
 
 		};

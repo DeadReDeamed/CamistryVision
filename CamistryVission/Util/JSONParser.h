@@ -4,18 +4,27 @@
 #include <string>
 #include <vector>
 
+
+#include "../json.hpp"
+#include "../Data/Matter/Atom.h"
+#include "../Data/Matter/Molecule.h"
+
+
 namespace camvis
 {
 	class JsonParser
 	{
-		template<class T>
-		static T deserializeObject(const std::string& jsonString);
+	public:
+		JsonParser() {};
 
-		template<class T>
-		static std::vector<T> deserializeList(const std::string& jsonString);
+		template<typename T>
+		static T deserializeObject(const nlohmann::json& json);
 
-		template<class T>
+		template<typename T>
 		static std::string serializeObject(const T& object);
+
+		static std::vector<data::Atom> deserializeAtoms(const nlohmann::json& jsonObject);
+		static std::vector<data::Molecule> deserializeMolecules(const nlohmann::json& jsonObject, std::vector<data::Atom> atoms);
 	};
 }
 

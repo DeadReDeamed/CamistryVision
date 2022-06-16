@@ -4,7 +4,7 @@
       "name": "Waterstof",
       "symbol": "H",
       "protons": 1,
-      "neutrons": 1,
+      "neutrons": 0,
       "elektrons": [
         1
       ],
@@ -18,6 +18,7 @@
       "protons": 6,
       "neutrons": 8,
       "elektrons": [
+        2,
         4
       ],
       "description": "Koolstof is een atoom",
@@ -28,8 +29,9 @@
       "name": "Stikstof",
       "symbol": "N",
       "protons": 7,
-      "netrons": 10,
+      "neutrons": 10,
       "elektrons": [
+        2,
         5
       ],
       "description": "Stikstof is een atoom",
@@ -40,7 +42,7 @@
       "name": "Zuurstof",
       "symbol": "O",
       "protons": 8,
-      "netrons": 12,
+      "neutrons": 12,
       "elektrons": [
         2,
         6
@@ -53,7 +55,7 @@
       "name": "Natrium",
       "symbol": "Na",
       "protons": 11,
-      "netrons": 18,
+      "neutrons": 18,
       "elektrons": [
         2,
         8,
@@ -67,7 +69,7 @@
       "name": "Chloor",
       "symbol": "Cl",
       "protons": 17,
-      "netrons": 28,
+      "neutrons": 28,
       "elektrons": [
         2,
         8,
@@ -81,7 +83,7 @@
       "name": "Uranium",
       "symbol": "U",
       "protons": 92,
-      "netrons": 217,
+      "neutrons": 217,
       "elektrons": [
         2,
         8,
@@ -94,6 +96,33 @@
       "description": "Uranium is een atoom",
       "mass": 238.02891,
       "atomnumber": 92
+    },
+    {
+      "name": "Jasperium",
+      "symbol": "Ja",
+      "protons": 42,
+      "neutrons": 69,
+      "elektrons": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "description": "Jasper is een makker",
+      "mass": 69.420,
+      "atomnumber": 42
     }
   ],
   "substances": [
@@ -137,6 +166,7 @@
         1,
         1,
         1
+
       ]
     },
     {
